@@ -3,7 +3,7 @@
 // Versión: gc-admin-v11-login-sync
 // =====================================================
 
-const VERSION = 'gc-admin-v11-login-sync';
+const VERSION = 'gc-admin-v16-abierto';
 
 const CACHE_NAME = 'glow-crunch-' + VERSION;
 const RECURSOS = [

@@ -13,7 +13,6 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='66' font-size='44' text-anchor='middle' fill='%23fff' font-family='Georgia' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E">
 
-  <!-- ✅ NUEVAS LIBRERÍAS para PDF (reemplazan html2pdf) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -1548,15 +1547,51 @@
     });
     $("botonCerrarSesion").addEventListener("click", async () => { await signOut(auth); });
 
+    /* ============ ✅ LOGIN ARREGLADO: espera + reintentos ============ */
     onAuthStateChanged(auth, async (usuario) => {
-      if (!usuario) { usuarioActual = null; mostrarLogin(); return; }
+      if (!usuario) {
+        usuarioActual = null;
+        mostrarLogin();
+        return;
+      }
+
+      // Mostrar mensaje de espera
+      mostrarMensaje("mensajeLogin", "Verificando permisos...", "aviso");
+
+      // ⏳ Esperar 800ms a que Firestore sincronice el token
+      await new Promise(r => setTimeout(r, 800));
+
+      // 🔄 Hasta 3 intentos de leer el doc del usuario
+      let snap = null;
+      let errorFinal = null;
+      for (let intento = 0; intento < 3; intento++) {
+        try {
+          snap = await getDoc(doc(db, "usuarios", usuario.email));
+          errorFinal = null;
+          break;
+        } catch (e) {
+          errorFinal = e;
+          console.warn("Intento " + (intento + 1) + " falló:", e.message);
+          if (intento < 2) await new Promise(r => setTimeout(r, 700));
+        }
+      }
+
+      if (!snap) {
+        console.error("No se pudo leer el doc después de 3 intentos:", errorFinal);
+        mostrarMensaje("mensajeLogin",
+          "No se pudo verificar tu cuenta. Revisa tu conexión e intenta de nuevo.",
+          "error");
+        await signOut(auth);
+        return;
+      }
+
       try {
-        const ref = doc(db, "usuarios", usuario.email);
-        const snap = await getDoc(ref);
         if (!snap.exists() || snap.data().rol !== "admin") {
           mostrarMensaje("mensajeLogin", "Este sitio solo es para personal autorizado.", "error");
-          await signOut(auth); return;
+          await signOut(auth);
+          return;
         }
+
         usuarioActual = usuario;
         perfilDatos = snap.data();
         const nombreMostrar = perfilDatos.nombre || usuario.displayName || "Administrador";
@@ -1569,6 +1604,7 @@
         $("perfilTelefono").value = perfilDatos.telefono || "";
         $("perfilUltimoIngreso").textContent = perfilDatos.ultimoIngreso || fechaLocal();
 
+        ocultarMensaje("mensajeLogin");
         mostrarPanel();
         await cargarRegistros();
         if (ajustes.fogata) {
@@ -1577,7 +1613,10 @@
           document.addEventListener("touchstart", reanudar, { once: true });
         }
       } catch (error) {
-        mostrarMensaje("mensajeLogin", "No se pudo verificar tu autorización. " + error.message, "error");
+        console.error("Error verificando autorización:", error);
+        mostrarMensaje("mensajeLogin",
+          "No se pudo verificar tu autorización: " + error.message,
+          "error");
         await signOut(auth);
       }
     });
@@ -1980,14 +2019,12 @@
         throw new Error("jsPDF no cargó. Recarga la página.");
       }
 
-      // 1) Crear iframe oculto
       const iframe = document.createElement("iframe");
       iframe.setAttribute("aria-hidden", "true");
       iframe.style.cssText = "position:fixed;left:-10000px;top:0;width:794px;height:2400px;border:0;visibility:hidden;";
       document.body.appendChild(iframe);
 
       try {
-        // 2) Escribir el HTML del comprobante dentro del iframe
         const idoc = iframe.contentDocument || iframe.contentWindow.document;
         idoc.open();
         idoc.write(`<!doctype html><html><head><meta charset="UTF-8">
@@ -1999,7 +2036,6 @@
         </head><body>${construirHTMLComprobante(datos)}</body></html>`);
         idoc.close();
 
-        // 3) Esperar render + fuentes
         try { if (idoc.fonts && idoc.fonts.ready) await idoc.fonts.ready; } catch {}
         await new Promise(r => setTimeout(r, 600));
 
@@ -2010,7 +2046,6 @@
         iframe.style.height = altoReal + "px";
         await new Promise(r => setTimeout(r, 300));
 
-        // 4) Capturar con html2canvas
         const canvas = await html2canvas(target, {
           scale: 2,
           useCORS: true,
@@ -2022,7 +2057,6 @@
           height: altoReal
         });
 
-        // 5) Generar PDF con jsPDF (una sola página A4)
         const imgData = canvas.toDataURL("image/jpeg", 0.95);
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
@@ -2042,7 +2076,6 @@
 
         return { blob, nombreArchivo };
       } finally {
-        // 6) Limpiar iframe SIEMPRE
         try { iframe.remove(); } catch {}
       }
     }

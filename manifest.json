@@ -1,0 +1,33 @@
+{
+  "name": "Glow & Crunch — Panel administrativo",
+  "short_name": "G&C Admin",
+  "description": "Panel administrativo, pedidos y reservas de Glow & Crunch",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FCE4EC",
+  "theme_color": "#9D6377",
+  "lang": "es",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%239D6377'/%3E%3Crect x='14' y='14' width='164' height='164' rx='30' fill='none' stroke='%23FFF6E5' stroke-width='4' opacity='0.35'/%3E%3Ctext x='96' y='122' font-size='78' text-anchor='middle' fill='%23FFF6E5' font-family='Georgia,serif' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%239D6377'/%3E%3Crect x='38' y='38' width='436' height='436' rx='80' fill='none' stroke='%23FFF6E5' stroke-width='10' opacity='0.35'/%3E%3Ctext x='256' y='326' font-size='208' text-anchor='middle' fill='%23FFF6E5' font-family='Georgia,serif' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%239D6377'/%3E%3Ctext x='256' y='326' font-size='208' text-anchor='middle' fill='%23FFF6E5' font-family='Georgia,serif' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,17 +1,19 @@
 // =====================================================
 // Service Worker — Glow & Crunch Admin
-// Versión: gc-admin-v4-rosa
-// Al cambiar el número de versión, fuerza actualización
+// Versión: gc-admin-v5-final
+// Al cambiar este número, fuerza actualización
 // en TODOS los dispositivos automáticamente.
 // =====================================================
 
-const VERSION = 'gc-admin-v4-rosa';
+const VERSION = 'gc-admin-v5-final';
 
 const CACHE_NAME = `glow-crunch-${VERSION}`;
 const RECURSOS = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './firma.png',
+  './ALACR%C3%81N.mp4'
 ];
 
 // -------- INSTALAR: toma control inmediato --------
@@ -20,9 +22,15 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(RECURSOS).catch((err) => {
-        console.warn('[SW] No se pudieron pre-cachear todos los recursos:', err);
-      });
+      // addAll es estricto: si un archivo falla, falla todo.
+      // Usamos add() uno por uno para que sea tolerante.
+      return Promise.all(
+        RECURSOS.map((r) =>
+          cache.add(r).catch((err) => {
+            console.warn('[SW] No se pudo cachear:', r, err);
+          })
+        )
+      );
     })
   );
 });
@@ -44,12 +52,12 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// -------- FETCH: HTML siempre desde la red --------
+// -------- FETCH --------
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Ignorar Firebase, Google, etc.
+  // Ignorar externos (Firebase, Google, CDN)
   if (
     url.hostname.includes('firebase') ||
     url.hostname.includes('google') ||
@@ -75,6 +83,20 @@ self.addEventListener('fetch', (event) => {
           return resp;
         })
         .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Video → NETWORK FIRST (por si es pesado, no bloquear)
+  if (req.destination === 'video' || url.pathname.endsWith('.mp4')) {
+    event.respondWith(
+      fetch(req)
+        .then((resp) => {
+          const copia = resp.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copia));
+          return resp;
+        })
+        .catch(() => caches.match(req))
     );
     return;
   }

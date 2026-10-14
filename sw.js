@@ -1,13 +1,11 @@
 // =====================================================
 // Service Worker — Glow & Crunch Admin
-// Versión: gc-admin-v6-perfil
-// Al cambiar este número, fuerza actualización
-// en TODOS los dispositivos automáticamente.
+// Versión: gc-admin-v8-pdf-iframe
 // =====================================================
 
-const VERSION = 'gc-admin-v6-perfil';
+const VERSION = 'gc-admin-v8-pdf-iframe';
 
-const CACHE_NAME = `glow-crunch-${VERSION}`;
+const CACHE_NAME = 'glow-crunch-' + VERSION;
 const RECURSOS = [
   './',
   './index.html',
@@ -16,53 +14,54 @@ const RECURSOS = [
   './ALACR%C3%81N.mp4'
 ];
 
-// -------- INSTALAR: toma control inmediato --------
-self.addEventListener('install', (event) => {
+// -------- INSTALAR --------
+self.addEventListener('install', function(event) {
   console.log('[SW] Instalando versión:', VERSION);
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      // add() uno por uno para que sea tolerante si algún archivo no existe
+    caches.open(CACHE_NAME).then(function(cache) {
       return Promise.all(
-        RECURSOS.map((r) =>
-          cache.add(r).catch((err) => {
+        RECURSOS.map(function(r) {
+          return cache.add(r).catch(function(err) {
             console.warn('[SW] No se pudo cachear:', r, err);
-          })
-        )
+          });
+        })
       );
     })
   );
 });
 
-// -------- ACTIVAR: borra TODOS los cachés viejos --------
-self.addEventListener('activate', (event) => {
+// -------- ACTIVAR --------
+self.addEventListener('activate', function(event) {
   console.log('[SW] Activando versión:', VERSION);
   event.waitUntil(
-    caches.keys().then((nombres) => {
+    caches.keys().then(function(nombres) {
       return Promise.all(
-        nombres.map((nombre) => {
+        nombres.map(function(nombre) {
           if (nombre !== CACHE_NAME) {
             console.log('[SW] Borrando caché antiguo:', nombre);
             return caches.delete(nombre);
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(function() {
+      return self.clients.claim();
+    })
   );
 });
 
 // -------- FETCH --------
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
+self.addEventListener('fetch', function(event) {
+  var req = event.request;
+  var url = new URL(req.url);
 
   // Ignorar externos (Firebase, Google, CDN)
   if (
-    url.hostname.includes('firebase') ||
-    url.hostname.includes('google') ||
-    url.hostname.includes('gstatic') ||
-    url.hostname.includes('cdnjs') ||
-    url.hostname.includes('jsdelivr')
+    url.hostname.indexOf('firebase') !== -1 ||
+    url.hostname.indexOf('google') !== -1 ||
+    url.hostname.indexOf('gstatic') !== -1 ||
+    url.hostname.indexOf('cdnjs') !== -1 ||
+    url.hostname.indexOf('jsdelivr') !== -1
   ) {
     return;
   }
@@ -72,48 +71,60 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // HTML → NETWORK FIRST (siempre la última versión)
+  // HTML → NETWORK FIRST
   if (req.mode === 'navigate' || req.destination === 'document') {
     event.respondWith(
       fetch(req)
-        .then((resp) => {
-          const copia = resp.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copia));
+        .then(function(resp) {
+          var copia = resp.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(req, copia);
+          });
           return resp;
         })
-        .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
+        .catch(function() {
+          return caches.match(req).then(function(r) {
+            return r || caches.match('./index.html');
+          });
+        })
     );
     return;
   }
 
-  // Video → NETWORK FIRST (por si es pesado, no bloquear)
-  if (req.destination === 'video' || url.pathname.endsWith('.mp4')) {
+  // Video → NETWORK FIRST
+  if (req.destination === 'video' || url.pathname.indexOf('.mp4') !== -1) {
     event.respondWith(
       fetch(req)
-        .then((resp) => {
-          const copia = resp.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copia));
+        .then(function(resp) {
+          var copia = resp.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(req, copia);
+          });
           return resp;
         })
-        .catch(() => caches.match(req))
+        .catch(function() {
+          return caches.match(req);
+        })
     );
     return;
   }
 
-  // Resto → CACHE FIRST con respaldo en red
+  // Resto → CACHE FIRST
   event.respondWith(
-    caches.match(req).then((cacheado) => {
-      return cacheado || fetch(req).then((resp) => {
-        const copia = resp.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, copia));
+    caches.match(req).then(function(cacheado) {
+      return cacheado || fetch(req).then(function(resp) {
+        var copia = resp.clone();
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(req, copia);
+        });
         return resp;
       });
     })
   );
 });
 
-// -------- Mensaje para forzar skipWaiting desde la app --------
-self.addEventListener('message', (event) => {
+// -------- Mensaje para forzar skipWaiting --------
+self.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }

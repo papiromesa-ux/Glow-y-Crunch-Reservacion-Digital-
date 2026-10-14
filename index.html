@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#70452f">
+  <meta name="theme-color" content="#9D6377">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,23 +12,31 @@
   <title>Glow & Crunch | Panel administrativo</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2370452f'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2370452f'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
 
   <style>
     :root {
-      --madera-oscura: #70452f;
-      --madera: #976548;
-      --crema: #fff8ec;
-      --crema-oscura: #f7ead8;
-      --durazno: #ffd8c7;
-      --menta: #cfe9dc;
-      --lavanda: #ddd3f4;
-      --texto: #453229;
+      /* ====== Cabaña rosa pastel ====== */
+      --madera-oscura: #9D6377;   /* rosa profundo (techo de cabaña) */
+      --madera: #D49BAE;          /* rosa polvoriento */
+      --crema: #FFF8FA;           /* crema rosado */
+      --crema-oscura: #FDEFF3;    /* blush claro */
+      --durazno: #FFC7D6;         /* rosa pastel (botón principal) */
+      --menta: #E8D9EE;           /* lavanda suave */
+      --lavanda: #E4D0EE;         /* lila pastel */
+      --texto: #4B2C3A;           /* ciruela oscuro */
       --blanco: #ffffff;
-      --rojo: #efb0a8;
-      --verde: #bfe5c7;
-      --sombra: 0 12px 28px rgba(77, 48, 29, 0.2);
+      --rojo: #F5B5BE;            /* rosa coral pastel */
+      --verde: #CDE5D3;
+
+      /* Extras cabaña */
+      --madera-clara: #E9CDD5;
+      --brillo: #FFEAF0;
+      --fuego: #FF8A5B;
+
+      --sombra: 0 12px 28px rgba(157, 99, 119, 0.22);
+      --sombra-suave: 0 4px 12px rgba(157, 99, 119, 0.12);
       --radio: 26px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -45,15 +53,22 @@
       color: var(--texto);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background:
-        linear-gradient(135deg, rgba(255, 248, 236, 0.8), rgba(207, 233, 220, 0.8)),
-        #ead7c1;
+        radial-gradient(circle at 12% 8%, rgba(255, 199, 214, 0.55), transparent 45%),
+        radial-gradient(circle at 88% 92%, rgba(228, 208, 238, 0.55), transparent 45%),
+        linear-gradient(160deg, #FFF3F7 0%, #FCE4EC 50%, #F4D9E5 100%);
+      background-attachment: fixed;
       overscroll-behavior-y: contain;
     }
 
+    /* Patrón sutil de "puntitos de cabaña" */
     body::before {
       content: "";
-      position: fixed; inset: 0; pointer-events: none; opacity: 0.08;
-      background: repeating-linear-gradient(8deg, transparent 0 20px, var(--madera-oscura) 21px 23px);
+      position: fixed; inset: 0; pointer-events: none; opacity: 0.06;
+      background-image:
+        radial-gradient(circle, var(--madera-oscura) 1px, transparent 1.5px),
+        radial-gradient(circle, var(--madera) 1px, transparent 1.5px);
+      background-size: 26px 26px, 26px 26px;
+      background-position: 0 0, 13px 13px;
       z-index: -1;
     }
 
@@ -65,19 +80,25 @@
       border-radius: 18px; padding: 14px 18px;
       min-height: 48px;
       background: var(--menta);
-      box-shadow: 0 4px 0 rgba(103, 145, 121, 0.45);
-      transition: transform 0.15s ease, filter 0.15s ease;
+      box-shadow: 0 4px 0 rgba(164, 128, 178, 0.35);
+      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
       -webkit-user-select: none; user-select: none; touch-action: manipulation;
     }
 
-    button:hover { filter: brightness(1.04); transform: translateY(-2px); }
-    button:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(103, 145, 121, 0.45); }
+    button:hover { filter: brightness(1.05); transform: translateY(-2px); }
+    button:active { transform: translateY(1px) scale(0.985); box-shadow: 0 2px 0 rgba(164, 128, 178, 0.35); }
     button:disabled { cursor: not-allowed; opacity: 0.6; transform: none; }
 
-    .boton-principal { background: var(--durazno); box-shadow: 0 4px 0 rgba(187, 126, 99, 0.45); }
-    .boton-secundario { background: var(--lavanda); box-shadow: 0 4px 0 rgba(127, 106, 166, 0.35); }
+    .boton-principal {
+      background: linear-gradient(180deg, #FFD3DF 0%, var(--durazno) 100%);
+      box-shadow: 0 4px 0 rgba(184, 111, 133, 0.45);
+    }
+    .boton-secundario {
+      background: linear-gradient(180deg, #EFE0F6 0%, var(--lavanda) 100%);
+      box-shadow: 0 4px 0 rgba(127, 106, 166, 0.35);
+    }
     .boton-peligro { background: var(--rojo); box-shadow: 0 4px 0 rgba(165, 91, 82, 0.35); }
-    .boton-blanco { background: var(--blanco); box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); }
+    .boton-blanco { background: var(--blanco); box-shadow: 0 4px 0 rgba(157, 99, 119, 0.22); }
 
     .oculto { display: none !important; }
     .contenedor { width: min(1240px, calc(100% - 24px)); margin: 0 auto; }
@@ -86,10 +107,22 @@
       padding: 18px;
       border: 2px solid var(--blanco);
       border-radius: var(--radio);
-      background: rgba(255, 250, 240, 0.96);
+      background:
+        linear-gradient(180deg, rgba(255, 251, 253, 0.98), rgba(255, 243, 247, 0.98));
       box-shadow: var(--sombra);
+      position: relative;
+      overflow: hidden;
     }
 
+    /* Cintita superior rosa sutil en cada tarjeta */
+    .tarjeta::before {
+      content: "";
+      position: absolute; left: 0; right: 0; top: 0; height: 5px;
+      background: linear-gradient(90deg, var(--durazno), var(--lavanda), var(--durazno));
+      opacity: 0.7;
+    }
+
+    /* ====== LOGIN ====== */
     .login-pantalla {
       min-height: 100vh; min-height: 100dvh;
       display: grid; place-items: center;
@@ -99,20 +132,31 @@
     .login-tarjeta { width: min(440px, 100%); text-align: center; }
 
     .logo-grande {
-      width: 92px; height: 92px;
+      width: 96px; height: 96px;
       display: grid; place-items: center;
       margin: 0 auto 14px; border-radius: 50%;
-      font-size: 46px; background: var(--madera);
-      box-shadow: inset 0 -7px 0 rgba(65, 34, 20, 0.2), var(--sombra);
+      font-size: 48px;
+      background:
+        radial-gradient(circle at 35% 30%, #FFE1EB 0%, var(--durazno) 60%, var(--madera) 100%);
+      box-shadow:
+        inset 0 -7px 0 rgba(157, 99, 119, 0.22),
+        0 14px 30px rgba(157, 99, 119, 0.35);
+      border: 3px solid #fff;
     }
 
-    .login-tarjeta h1 { margin: 0 0 8px; color: var(--madera-oscura); }
+    .login-tarjeta h1 {
+      margin: 0 0 8px;
+      color: var(--madera-oscura);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 0.5px;
+    }
     .login-tarjeta p { line-height: 1.5; }
 
     .mensaje { margin-top: 14px; padding: 12px; border-radius: 16px; background: var(--menta); }
     .mensaje.error { background: var(--rojo); }
     .mensaje.aviso { background: var(--durazno); }
 
+    /* ====== ENCABEZADO ====== */
     .encabezado {
       display: flex; align-items: center; justify-content: space-between;
       gap: 14px; margin-top: calc(14px + var(--safe-top));
@@ -120,22 +164,39 @@
       color: var(--blanco);
       border: 2px solid var(--blanco);
       border-radius: var(--radio);
-      background: var(--madera-oscura);
+      background:
+        linear-gradient(135deg, #9D6377 0%, #C48B9F 100%);
       box-shadow: var(--sombra);
+      position: relative;
+      overflow: hidden;
     }
 
-    .marca h1 { margin: 0; font-size: 19px; }
-    .marca small { opacity: 0.86; font-size: 12px; }
+    /* Brillo superior tipo "tejado" */
+    .encabezado::after {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 8px;
+      background: linear-gradient(90deg, #FFD3DF, #EFE0F6, #FFD3DF);
+      opacity: 0.85;
+    }
+
+    .marca h1 {
+      margin: 0; font-size: 19px;
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 0.5px;
+    }
+    .marca small { opacity: 0.9; font-size: 12px; }
 
     .usuario-barra { display: flex; align-items: center; gap: 10px; text-align: right; }
     .usuario-barra strong { font-size: 14px; }
     .usuario-barra small {
       display: block; max-width: 200px; font-size: 11px;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      opacity: 0.9;
     }
 
     .boton-salir { padding: 10px 14px; min-height: 42px; font-size: 13px; }
 
+    /* ====== ESTRUCTURA ====== */
     .estructura {
       display: grid;
       grid-template-columns: 225px 1fr;
@@ -146,25 +207,31 @@
       height: max-content; padding: 14px;
       border: 2px solid var(--blanco);
       border-radius: var(--radio);
-      background: rgba(255, 250, 240, 0.96);
+      background: rgba(255, 250, 252, 0.98);
       box-shadow: var(--sombra);
     }
 
     .navegacion button { width: 100%; margin: 4px 0; text-align: left; }
     .navegacion button.activo {
-      background: var(--durazno);
-      box-shadow: 0 4px 0 rgba(187, 126, 99, 0.45);
+      background: linear-gradient(180deg, #FFD3DF, var(--durazno));
+      box-shadow: 0 4px 0 rgba(184, 111, 133, 0.45);
+      color: #6B3040;
     }
 
-    .vista { display: none; animation: aparecer 0.25s ease; }
+    .vista { display: none; animation: aparecer 0.35s cubic-bezier(.2,.7,.3,1); }
     .vista.activa { display: block; }
-    .vista h2 { margin-top: 0; color: var(--madera-oscura); }
+    .vista h2 {
+      margin-top: 0; color: var(--madera-oscura);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 0.3px;
+    }
 
     @keyframes aparecer {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(8px) scale(0.995); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    /* ====== CUADRÍCULAS ====== */
     .cuadricula {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -172,7 +239,10 @@
     }
 
     .estadistica h3 { margin: 0 0 10px; font-size: 14px; }
-    .numero-grande { font-size: 28px; font-weight: bold; color: var(--madera-oscura); }
+    .numero-grande {
+      font-size: 28px; font-weight: bold; color: var(--madera-oscura);
+      font-family: "Georgia", serif;
+    }
 
     .fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
@@ -181,87 +251,119 @@
     input, select, textarea {
       width: 100%; margin: 6px 0 14px; padding: 14px 14px;
       color: var(--texto);
-      border: 2px solid #ead5bf; border-radius: 15px;
-      outline: none; background: #fffdf9;
+      border: 2px solid var(--madera-clara); border-radius: 15px;
+      outline: none; background: #FFFBFC;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--madera);
-      box-shadow: 0 0 0 3px rgba(151, 101, 72, 0.14);
+      box-shadow: 0 0 0 3px rgba(212, 155, 174, 0.22);
     }
 
     textarea { min-height: 90px; resize: vertical; }
-    .separador { height: 1px; margin: 18px 0; background: #eadaca; }
-    .texto-suave { color: #765f51; }
+    .separador { height: 1px; margin: 18px 0; background: linear-gradient(90deg, transparent, var(--madera-clara), transparent); }
+    .texto-suave { color: #8B6070; }
     .texto-centro { text-align: center; }
     .margen-arriba { margin-top: 16px; }
     .margen-abajo { margin-bottom: 16px; }
 
+    /* ====== CALCULADORA ====== */
     #pantallaCalculadora {
       width: 100%; margin-bottom: 14px; padding: 18px;
       text-align: right; font-size: 30px; font-weight: bold;
-      color: var(--madera-oscura); background: #fffdf9;
+      color: var(--madera-oscura); background: #FFF6F9;
+      border: 2px solid var(--madera-clara);
     }
 
     .calculadora-grid { grid-template-columns: repeat(4, minmax(60px, 1fr)); }
     .calculadora-grid button { padding: 16px 8px; font-size: 18px; }
     .calculadora-grid button:last-child { grid-column: 1 / -1; }
 
+    /* ====== PRODUCTOS ====== */
     .producto-factura {
       display: flex; flex-direction: column; justify-content: space-between;
-      min-height: 155px; padding: 15px;
-      border: 2px solid #ead5bf; border-radius: 22px;
-      background: var(--blanco);
-      box-shadow: 0 5px 12px rgba(93, 54, 30, 0.09);
+      min-height: 145px; padding: 14px;
+      border: 2px solid var(--madera-clara); border-radius: 20px;
+      background: #FFFBFC;
+      box-shadow: 0 5px 12px rgba(157, 99, 119, 0.12);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .producto-factura h3 { margin: 0 0 8px; color: var(--madera-oscura); font-size: 16px; }
-    .producto-precio { margin-bottom: 12px; font-size: 19px; font-weight: bold; }
+    .producto-factura:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(157, 99, 119, 0.18);
+    }
+
+    .producto-factura h3 { margin: 0 0 6px; color: var(--madera-oscura); font-size: 15px; }
+    .producto-precio { margin-bottom: 10px; font-size: 18px; font-weight: bold; color: #7A4457; }
 
     .producto-cantidad {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
     }
 
-    .producto-cantidad button { min-width: 48px; min-height: 44px; padding: 8px 12px; font-size: 18px; }
-    .producto-cantidad span { min-width: 30px; text-align: center; font-weight: bold; font-size: 18px; }
+    .producto-cantidad button {
+      min-width: 44px; min-height: 42px; padding: 6px 10px; font-size: 18px;
+      background: linear-gradient(180deg, #FFE3ED, #FFC7D6);
+      box-shadow: 0 3px 0 rgba(184, 111, 133, 0.35);
+    }
+    .producto-cantidad span { min-width: 28px; text-align: center; font-weight: bold; font-size: 18px; }
 
+    /* ====== REGISTROS ====== */
     .registro {
-      margin: 10px 0; padding: 13px;
-      border: 2px solid #ead5bf; border-radius: 17px;
-      background: var(--blanco); line-height: 1.5;
+      margin: 10px 0; padding: 14px;
+      border: 2px solid var(--madera-clara); border-radius: 17px;
+      background: #FFFBFC; line-height: 1.5;
       font-size: 14px; word-break: break-word;
+      box-shadow: var(--sombra-suave);
     }
 
     .registro-cabecera {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; margin-bottom: 6px;
+      gap: 10px; margin-bottom: 8px;
+    }
+
+    .registro-cabecera strong { font-size: 15px; color: var(--madera-oscura); }
+
+    .registro .campo { margin: 3px 0; }
+    .registro .campo strong { color: var(--madera-oscura); }
+    .registro .total-linea {
+      margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--madera-clara);
+      font-size: 15px;
+    }
+
+    .boton-imprimir {
+      margin-top: 10px; width: 100%;
+      padding: 11px 14px; min-height: 44px; font-size: 13px;
     }
 
     .etiqueta {
-      display: inline-block; padding: 5px 9px; border-radius: 99px;
-      font-size: 11px; font-weight: bold; background: var(--lavanda);
+      display: inline-block; padding: 5px 10px; border-radius: 99px;
+      font-size: 11px; font-weight: bold;
+      background: linear-gradient(135deg, var(--durazno), var(--lavanda));
+      color: #6B3040;
     }
 
     .sin-registros { padding: 14px; border-radius: 15px; background: var(--crema-oscura); }
 
     .tabla-factura { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
     .tabla-factura th, .tabla-factura td {
-      padding: 9px; text-align: left; border-bottom: 1px solid #eadaca;
+      padding: 9px; text-align: left; border-bottom: 1px solid var(--madera-clara);
     }
     .tabla-factura th:last-child, .tabla-factura td:last-child { text-align: right; }
 
-    /* Botón flotante para instalar PWA */
+    /* ====== BOTÓN INSTALAR ====== */
     #botonInstalar {
       position: fixed;
       bottom: calc(24px + var(--safe-bottom));
       right: 20px;
       z-index: 900;
       padding: 14px 22px;
-      background: #70452f;
+      background: linear-gradient(135deg, #9D6377, #C48B9F);
       color: #ffffff;
       font-size: 14px;
       font-weight: bold;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(157, 99, 119, 0.4);
       border-radius: 999px;
       display: none;
       align-items: center;
@@ -271,18 +373,50 @@
 
     #botonInstalar.visible { display: inline-flex; }
 
-    /* Barra inferior de navegación móvil */
+    /* ====== BOTÓN SONIDO (fogata) ====== */
+    #botonSonido {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 20px;
+      z-index: 950;
+      width: 54px; height: 54px;
+      padding: 0;
+      min-height: 54px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 8px 22px rgba(157, 99, 119, 0.32);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 2px solid #fff;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    #botonSonido.activo {
+      background: radial-gradient(circle at 50% 60%, #FFD3A0, #FF8A5B 70%);
+      color: #fff;
+      box-shadow: 0 8px 26px rgba(255, 138, 91, 0.55);
+      animation: latirFuego 2.6s ease-in-out infinite;
+    }
+
+    @keyframes latirFuego {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.06); }
+    }
+
+    /* ====== NAV MÓVIL ====== */
     .nav-movil {
       display: none;
       position: fixed;
       bottom: 0; left: 0; right: 0;
       z-index: 800;
       padding: 6px 8px calc(6px + var(--safe-bottom));
-      background: rgba(255, 250, 240, 0.98);
-      border-top: 2px solid #ead5bf;
+      background: rgba(255, 250, 252, 0.98);
+      border-top: 2px solid var(--madera-clara);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 -6px 20px rgba(77, 48, 29, 0.15);
+      box-shadow: 0 -6px 20px rgba(157, 99, 119, 0.18);
     }
 
     .nav-movil-inner {
@@ -310,20 +444,39 @@
     .nav-movil button .icono { font-size: 20px; line-height: 1; }
 
     .nav-movil button.activo {
-      background: var(--durazno);
-      box-shadow: 0 3px 0 rgba(187, 126, 99, 0.4);
+      background: linear-gradient(180deg, #FFD3DF, var(--durazno));
+      box-shadow: 0 3px 0 rgba(184, 111, 133, 0.4);
+      color: #6B3040;
     }
+
+    /* ====== IMPRESIÓN ====== */
+    #areaImpresion { display: none; }
 
     @media print {
       body * { visibility: hidden !important; }
       #areaImpresion, #areaImpresion * { visibility: visible !important; }
       #areaImpresion {
         display: block !important;
-        position: absolute; inset: 0; padding: 30px;
+        position: absolute; top: 0; left: 0; right: 0;
+        padding: 28px;
         color: #000; background: #fff;
+        font-family: Arial, sans-serif;
+      }
+      #areaImpresion h1 { margin: 0; font-size: 26px; }
+      #areaImpresion h2 { font-size: 18px; margin-top: 6px; }
+      #areaImpresion .encabezado-print {
+        border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 14px;
+      }
+      #areaImpresion .info-linea { margin: 3px 0; font-size: 13px; }
+      #areaImpresion .tabla-factura th,
+      #areaImpresion .tabla-factura td { border-bottom: 1px solid #ccc; padding: 6px; }
+      #areaImpresion .total-final {
+        margin-top: 14px; padding-top: 10px;
+        border-top: 2px solid #000; font-size: 20px; text-align: right;
       }
     }
 
+    /* ====== RESPONSIVE ====== */
     @media (max-width: 820px) {
       .estructura {
         grid-template-columns: 1fr;
@@ -349,6 +502,12 @@
       #botonInstalar {
         bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px);
       }
+
+      #botonSonido {
+        bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px);
+        width: 48px; height: 48px; min-height: 48px;
+        font-size: 20px;
+      }
     }
 
     @media (max-width: 380px) {
@@ -363,7 +522,7 @@
   <!-- ============ LOGIN ============ -->
   <section id="pantallaLogin" class="login-pantalla">
     <div class="tarjeta login-tarjeta">
-      <div class="logo-grande">🌿</div>
+      <div class="logo-grande">🌸</div>
       <h1>Glow & Crunch</h1>
       <p class="texto-suave">Panel privado de administración y facturación.</p>
       <p>Solo el personal autorizado con rol <strong>admin</strong> puede entrar.</p>
@@ -375,6 +534,10 @@
       <p id="pistaInstalar" class="texto-suave oculto" style="font-size:12px;margin-top:18px;">
         💡 Consejo: una vez dentro, usa el menú del navegador → <strong>"Añadir a pantalla de inicio"</strong> para instalarla como app.
       </p>
+
+      <p class="texto-suave" style="font-size:11px;margin-top:10px;">
+        🔥 Toca el botón flotante de abajo a la izquierda para activar el sonido de fogata.
+      </p>
     </div>
   </section>
 
@@ -384,7 +547,7 @@
 
       <header class="encabezado">
         <div class="marca">
-          <h1>🌿 Glow & Crunch</h1>
+          <h1>🌸 Glow & Crunch</h1>
           <small>Panel administrativo</small>
         </div>
 
@@ -401,7 +564,6 @@
 
         <nav class="navegacion">
           <button class="boton-menu activo" data-vista="inicio">🏠 Inicio</button>
-          <button class="boton-menu" data-vista="facturacion">🧾 Facturación</button>
           <button class="boton-menu" data-vista="pedidos">🛍️ Pedidos</button>
           <button class="boton-menu" data-vista="reservas">📅 Reservas</button>
           <button class="boton-menu" data-vista="calculadora">🧮 Calculadora</button>
@@ -409,7 +571,6 @@
         </nav>
 
         <main>
-
           <!-- INICIO -->
           <section id="vista-inicio" class="vista activa">
             <div class="cuadricula">
@@ -433,50 +594,8 @@
 
             <div class="tarjeta margen-arriba">
               <h2>Bienvenida al panel</h2>
-              <p>Esta plataforma permite administrar la facturación, registrar pedidos, crear reservas y acceder a la página principal de Glow & Crunch.</p>
+              <p>Esta plataforma permite registrar pedidos, crear reservas, agregar los productos de cada uno y generar su comprobante en PDF listo para imprimir.</p>
               <p class="texto-suave">Tu cuenta tiene permisos administrativos porque Firebase confirmó el rol <strong>admin</strong>.</p>
-            </div>
-          </section>
-
-          <!-- FACTURACIÓN -->
-          <section id="vista-facturacion" class="vista">
-            <div class="tarjeta">
-              <h2>Nueva factura</h2>
-              <p class="texto-suave">Selecciona productos, revisa el total y guarda la factura.</p>
-
-              <div class="fila">
-                <div>
-                  <label for="facturaCliente">Nombre del usuario</label>
-                  <input id="facturaCliente" type="text" placeholder="Nombre del cliente">
-                </div>
-                <div>
-                  <label for="facturaTipo">Tipo de operación</label>
-                  <select id="facturaTipo">
-                    <option value="pedido">Pedido</option>
-                    <option value="reserva">Reserva</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="separador"></div>
-              <h3>Productos</h3>
-              <div id="listaProductos" class="cuadricula"></div>
-              <div class="separador"></div>
-
-              <h3>Total: <span id="facturaTotal">$0.00</span></h3>
-              <p id="facturaPagoReserva" class="texto-suave"></p>
-
-              <button id="botonGuardarFactura" class="boton-principal" style="width:100%;margin-bottom:10px;">Guardar factura</button>
-              <button id="botonImprimirFactura" class="boton-secundario" style="width:100%;">Imprimir factura</button>
-
-              <div id="mensajeFactura" class="mensaje oculto"></div>
-            </div>
-
-            <div class="tarjeta margen-arriba">
-              <h2>Últimas facturas</h2>
-              <div id="listaFacturas">
-                <p class="texto-suave">Todavía no hay facturas registradas.</p>
-              </div>
             </div>
           </section>
 
@@ -502,7 +621,13 @@
                   </div>
                 </div>
 
-                <button type="submit" class="boton-principal" style="width:100%;">Guardar pedido</button>
+                <div class="separador"></div>
+                <h3>Productos del pedido</h3>
+                <div id="productosPedido" class="cuadricula"></div>
+                <div class="separador"></div>
+                <h3>Total: <span id="totalPedido">$0.00</span></h3>
+
+                <button type="submit" class="boton-principal" style="width:100%;margin-top:10px;">Guardar pedido</button>
               </form>
 
               <div id="mensajePedido" class="mensaje oculto"></div>
@@ -557,7 +682,14 @@
                 <label for="reservaDetalle">Comentarios o productos</label>
                 <textarea id="reservaDetalle" placeholder="Escribe información adicional"></textarea>
 
-                <button type="submit" class="boton-principal" style="width:100%;">Guardar reserva</button>
+                <div class="separador"></div>
+                <h3>Productos de la reserva</h3>
+                <div id="productosReserva" class="cuadricula"></div>
+                <div class="separador"></div>
+                <h3>Total: <span id="totalReserva">$0.00</span></h3>
+                <p id="pagoReservaInfo" class="texto-suave"></p>
+
+                <button type="submit" class="boton-principal" style="width:100%;margin-top:10px;">Guardar reserva</button>
               </form>
 
               <div id="mensajeReserva" class="mensaje oculto"></div>
@@ -616,7 +748,6 @@
               </div>
             </div>
           </section>
-
         </main>
       </div>
     </div>
@@ -627,10 +758,6 @@
         <button class="boton-menu activo" data-vista="inicio">
           <span class="icono">🏠</span>
           <span>Inicio</span>
-        </button>
-        <button class="boton-menu" data-vista="facturacion">
-          <span class="icono">🧾</span>
-          <span>Factura</span>
         </button>
         <button class="boton-menu" data-vista="pedidos">
           <span class="icono">🛍️</span>
@@ -655,38 +782,23 @@
   <!-- Botón instalar PWA -->
   <button id="botonInstalar">📲 Instalar app</button>
 
-  <div id="areaImpresion" class="oculto"></div>
+  <!-- Botón sonido (fogata) -->
+  <button id="botonSonido" title="Activar sonido de fogata" aria-label="Activar sonido">🔇</button>
+
+  <div id="areaImpresion"></div>
 
   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      signInWithRedirect,
-      getRedirectResult,
-      onAuthStateChanged,
-      signOut,
-      setPersistence,
+      getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+      getRedirectResult, onAuthStateChanged, signOut, setPersistence,
       browserLocalPersistence
-    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
-      getFirestore,
-      doc,
-      getDoc,
-      collection,
-      addDoc,
-      getDocs,
-      query,
-      orderBy,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+      getFirestore, doc, getDoc, collection, addDoc, getDocs,
+      query, orderBy, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ============ FIREBASE CONFIG (API KEY CORREGIDA ✅) ============
     const firebaseConfig = {
       apiKey: "AIzaSyDjaFVYXKncCU5ybtPRQXi4LKi8mkbXEe8",
       authDomain: "glow-y-crunch.firebaseapp.com",
@@ -701,15 +813,16 @@
     const db = getFirestore(app);
     const proveedorGoogle = new GoogleAuthProvider();
 
-    // Persistencia local para mantener la sesión en el celular
     setPersistence(auth, browserLocalPersistence).catch(console.error);
 
     const $ = (id) => document.getElementById(id);
 
     let usuarioActual = null;
-    let productosFactura = [];
-    let ultimoCodigoFactura = "";
     let expresionCalculadora = "";
+    let productosPedido = [];
+    let productosReserva = [];
+
+    const cacheImprimible = new Map();
 
     const productos = [
       { nombre: "Banderilla hot", categoria: "Comida", precio: 2.25 },
@@ -719,20 +832,271 @@
       { nombre: "Dragón Lagoon", categoria: "Bebida", precio: 1.25 }
     ];
 
+    /* ============================================================
+       🎧 SISTEMA DE AUDIO (Web Audio API — sin archivos externos)
+       ============================================================ */
+    let audioCtx = null;
+    let campfireActivo = false;
+    let campfireNodos = null;
+    let crackleTimeoutId = null;
+
+    function asegurarAudioCtx() {
+      if (!audioCtx) {
+        try {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          console.warn("Web Audio API no soportado:", e);
+          return null;
+        }
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    /* --- Chispa / crack de fogata --- */
+    function reproducirCrack(ctx, destino) {
+      const duracion = 0.015 + Math.random() * 0.035;
+      const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * duracion));
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const env = Math.pow(1 - i / bufferSize, 3);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+
+      const filtro = ctx.createBiquadFilter();
+      filtro.type = "highpass";
+      filtro.frequency.value = 1400 + Math.random() * 2200;
+      filtro.Q.value = 0.8;
+
+      const g = ctx.createGain();
+      g.gain.value = 0.05 + Math.random() * 0.1;
+
+      src.connect(filtro).connect(g).connect(destino);
+      src.start();
+    }
+
+    /* --- Programar chispas aleatorias --- */
+    function programarChispas() {
+      const ctx = audioCtx;
+      if (!ctx || !campfireActivo || !campfireNodos) return;
+
+      const siguiente = 90 + Math.random() * 500;
+      crackleTimeoutId = setTimeout(() => {
+        if (!campfireActivo || !campfireNodos) return;
+        // A veces doble chispa
+        reproducirCrack(ctx, campfireNodos.gain);
+        if (Math.random() < 0.25) {
+          setTimeout(() => reproducirCrack(ctx, campfireNodos.gain), 40 + Math.random() * 80);
+        }
+        programarChispas();
+      }, siguiente);
+    }
+
+    /* --- Iniciar fogata (ruido marrón filtrado + chispas) --- */
+    function iniciarFogata() {
+      const ctx = asegurarAudioCtx();
+      if (!ctx || campfireActivo) return;
+
+      // Ruido marrón (2s en loop)
+      const dur = 2;
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let ultimo = 0;
+      for (let i = 0; i < data.length; i++) {
+        const blanco = Math.random() * 2 - 1;
+        ultimo = (ultimo + 0.02 * blanco) / 1.02;
+        data[i] = ultimo * 3.5;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.loop = true;
+
+      // Filtro lowpass → sonido cálido de fondo
+      const filtro = ctx.createBiquadFilter();
+      filtro.type = "lowpass";
+      filtro.frequency.value = 650;
+      filtro.Q.value = 0.6;
+
+      // Ganancia general
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+
+      src.connect(filtro).connect(gain).connect(ctx.destination);
+      src.start();
+
+      // Fade-in suave
+      const ahora = ctx.currentTime;
+      gain.gain.cancelScheduledValues(ahora);
+      gain.gain.setValueAtTime(0, ahora);
+      gain.gain.linearRampToValueAtTime(0.14, ahora + 1.2);
+
+      campfireNodos = { src, filtro, gain };
+      campfireActivo = true;
+      programarChispas();
+    }
+
+    /* --- Detener fogata --- */
+    function detenerFogata() {
+      if (!audioCtx || !campfireNodos) return;
+      const ahora = audioCtx.currentTime;
+      const g = campfireNodos.gain;
+      g.gain.cancelScheduledValues(ahora);
+      g.gain.setValueAtTime(g.gain.value, ahora);
+      g.gain.linearRampToValueAtTime(0, ahora + 0.5);
+
+      const nodos = campfireNodos;
+      setTimeout(() => {
+        try { nodos.src.stop(); } catch {}
+      }, 600);
+
+      campfireActivo = false;
+      campfireNodos = null;
+      if (crackleTimeoutId) {
+        clearTimeout(crackleTimeoutId);
+        crackleTimeoutId = null;
+      }
+    }
+
+    /* --- Click suave de botón --- */
+    function sonidoClick() {
+      const ctx = asegurarAudioCtx();
+      if (!ctx) return;
+      const t = ctx.currentTime;
+
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.exponentialRampToValueAtTime(420, t + 0.08);
+
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.13, t + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+
+      osc.connect(g).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.13);
+    }
+
+    /* --- Página de libro al cambiar de sección --- */
+    function sonidoPagina() {
+      const ctx = asegurarAudioCtx();
+      if (!ctx) return;
+      const t = ctx.currentTime;
+      const dur = 0.42;
+
+      const bufferSize = Math.floor(ctx.sampleRate * dur);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const p = i / bufferSize;
+        // curva tipo "silbido que sube y baja"
+        const env = Math.sin(p * Math.PI) * (1 - p * 0.35);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+
+      const filtro = ctx.createBiquadFilter();
+      filtro.type = "bandpass";
+      filtro.frequency.setValueAtTime(1800, t);
+      filtro.frequency.exponentialRampToValueAtTime(700, t + dur);
+      filtro.Q.value = 1.6;
+
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.16, t + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+      src.connect(filtro).connect(g).connect(ctx.destination);
+      src.start(t);
+    }
+
+    /* --- Ding de éxito al guardar --- */
+    function sonidoExito() {
+      const ctx = asegurarAudioCtx();
+      if (!ctx) return;
+      const t = ctx.currentTime;
+      [660, 990].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const g = ctx.createGain();
+        const start = t + i * 0.08;
+        g.gain.setValueAtTime(0.0001, start);
+        g.gain.linearRampToValueAtTime(0.14, start + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, start + 0.35);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.4);
+      });
+    }
+
+    /* --- Botón flotante de sonido --- */
+    const botonSonido = $("botonSonido");
+    botonSonido.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const ctx = asegurarAudioCtx();
+      if (!ctx) return;
+
+      if (campfireActivo) {
+        detenerFogata();
+        botonSonido.textContent = "🔇";
+        botonSonido.classList.remove("activo");
+        botonSonido.title = "Activar sonido de fogata";
+      } else {
+        iniciarFogata();
+        botonSonido.textContent = "🔥";
+        botonSonido.classList.add("activo");
+        botonSonido.title = "Silenciar fogata";
+        sonidoClick();
+      }
+    });
+
+    /* --- Listener global de sonidos para botones --- */
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      if (btn === botonSonido) return;   // ya tiene su propio manejo
+      if (btn.classList.contains("boton-menu")) {
+        sonidoPagina();
+      } else if (btn.type === "submit") {
+        // deja que el envío del form suene como click
+        sonidoClick();
+      } else {
+        sonidoClick();
+      }
+    });
+
+    /* ============================================================
+       UTILIDADES
+       ============================================================ */
+    function escaparHTML(valor) {
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
     function mostrarMensaje(id, texto, tipo = "") {
-      const elemento = $(id);
-      if (!elemento) return;
-      elemento.textContent = texto;
-      elemento.className = "mensaje";
-      if (tipo) elemento.classList.add(tipo);
-      elemento.classList.remove("oculto");
+      const el = $(id); if (!el) return;
+      el.textContent = texto;
+      el.className = "mensaje";
+      if (tipo) el.classList.add(tipo);
+      el.classList.remove("oculto");
     }
 
     function ocultarMensaje(id) {
-      const elemento = $(id);
-      if (!elemento) return;
-      elemento.textContent = "";
-      elemento.className = "mensaje oculto";
+      const el = $(id); if (!el) return;
+      el.textContent = "";
+      el.className = "mensaje oculto";
     }
 
     function dinero(valor) {
@@ -745,18 +1109,6 @@
       return new Date().toLocaleString("es-SV");
     }
 
-    function crearCodigoFactura() {
-      const f = new Date();
-      const y = f.getFullYear();
-      const m = String(f.getMonth() + 1).padStart(2, "0");
-      const d = String(f.getDate()).padStart(2, "0");
-      const h = String(f.getHours()).padStart(2, "0");
-      const mi = String(f.getMinutes()).padStart(2, "0");
-      const s = String(f.getSeconds()).padStart(2, "0");
-      const r = Math.random().toString(36).substring(2, 7).toUpperCase();
-      return `GC-${y}${m}${d}-${h}${mi}${s}-${r}`;
-    }
-
     function mostrarLogin() {
       $("pantallaLogin").classList.remove("oculto");
       $("pantallaPanel").classList.add("oculto");
@@ -767,9 +1119,11 @@
       $("pantallaPanel").classList.remove("oculto");
     }
 
-    // ============ PRODUCTOS ============
-    function renderizarProductos() {
-      const contenedor = $("listaProductos");
+    /* ============================================================
+       SELECTOR DE PRODUCTOS
+       ============================================================ */
+    function renderizarProductosEn(contenedorId, tipo) {
+      const contenedor = $(contenedorId);
       contenedor.innerHTML = "";
 
       productos.forEach((producto, indice) => {
@@ -777,33 +1131,43 @@
         tarjeta.className = "producto-factura";
         tarjeta.innerHTML = `
           <div>
-            <span class="etiqueta">${producto.categoria}</span>
-            <h3>${producto.nombre}</h3>
+            <span class="etiqueta">${escaparHTML(producto.categoria)}</span>
+            <h3>${escaparHTML(producto.nombre)}</h3>
             <div class="producto-precio">${dinero(producto.precio)}</div>
           </div>
           <div class="producto-cantidad">
-            <button type="button" data-restar="${indice}">−</button>
-            <span id="cantidad-${indice}">0</span>
-            <button type="button" data-sumar="${indice}">+</button>
+            <button type="button" data-op="restar" data-tipo="${tipo}" data-idx="${indice}">−</button>
+            <span id="cant-${tipo}-${indice}">0</span>
+            <button type="button" data-op="sumar" data-tipo="${tipo}" data-idx="${indice}">+</button>
           </div>
         `;
         contenedor.appendChild(tarjeta);
       });
 
-      contenedor.querySelectorAll("[data-sumar]").forEach((b) => {
-        b.addEventListener("click", () => cambiarCantidad(Number(b.dataset.sumar), 1));
-      });
-      contenedor.querySelectorAll("[data-restar]").forEach((b) => {
-        b.addEventListener("click", () => cambiarCantidad(Number(b.dataset.restar), -1));
+      contenedor.querySelectorAll("button[data-op]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const i = Number(b.dataset.idx);
+          const cambio = b.dataset.op === "sumar" ? 1 : -1;
+          cambiarCantidad(b.dataset.tipo, i, cambio);
+        });
       });
     }
 
-    function cambiarCantidad(indice, cambio) {
+    function listaPorTipo(tipo) {
+      return tipo === "pedido" ? productosPedido : productosReserva;
+    }
+    function setListaPorTipo(tipo, nuevaLista) {
+      if (tipo === "pedido") productosPedido = nuevaLista;
+      else productosReserva = nuevaLista;
+    }
+
+    function cambiarCantidad(tipo, indice, cambio) {
       const producto = productos[indice];
-      const existente = productosFactura.find((i) => i.nombre === producto.nombre);
+      let lista = listaPorTipo(tipo);
+      const existente = lista.find((i) => i.nombre === producto.nombre);
 
       if (!existente && cambio > 0) {
-        productosFactura.push({
+        lista.push({
           nombre: producto.nombre,
           categoria: producto.categoria,
           precio: producto.precio,
@@ -812,73 +1176,45 @@
       } else if (existente) {
         existente.cantidad += cambio;
         if (existente.cantidad <= 0) {
-          productosFactura = productosFactura.filter((i) => i.nombre !== producto.nombre);
+          lista = lista.filter((i) => i.nombre !== producto.nombre);
         }
       }
-      actualizarFacturaVisual();
+      setListaPorTipo(tipo, lista);
+      actualizarVistaProductos(tipo);
     }
 
-    function totalFactura() {
-      return productosFactura.reduce((t, p) => t + p.precio * p.cantidad, 0);
+    function totalDe(tipo) {
+      return listaPorTipo(tipo).reduce((t, p) => t + p.precio * p.cantidad, 0);
     }
 
-    function actualizarFacturaVisual() {
+    function actualizarVistaProductos(tipo) {
       productos.forEach((producto, indice) => {
-        const sel = productosFactura.find((i) => i.nombre === producto.nombre);
-        const el = $(`cantidad-${indice}`);
+        const sel = listaPorTipo(tipo).find((i) => i.nombre === producto.nombre);
+        const el = $(`cant-${tipo}-${indice}`);
         if (el) el.textContent = sel ? sel.cantidad : 0;
       });
 
-      const total = totalFactura();
-      $("facturaTotal").textContent = dinero(total);
-
-      if ($("facturaTipo").value === "reserva" && total > 0) {
-        $("facturaPagoReserva").textContent =
-          `Pago adelantado requerido: ${dinero(total * 0.5)} (50%). ` +
-          `Saldo pendiente: ${dinero(total * 0.5)}.`;
+      const total = totalDe(tipo);
+      if (tipo === "pedido") {
+        $("totalPedido").textContent = dinero(total);
       } else {
-        $("facturaPagoReserva").textContent = "";
+        $("totalReserva").textContent = dinero(total);
+        if (total > 0) {
+          $("pagoReservaInfo").textContent =
+            `Pago adelantado requerido: ${dinero(total * 0.5)} (50%). ` +
+            `Saldo pendiente: ${dinero(total * 0.5)}.`;
+        } else {
+          $("pagoReservaInfo").textContent = "";
+        }
       }
     }
 
-    function prepararFacturaParaImprimir(datos) {
-      const filas = datos.productos.map((p) => `
-        <tr>
-          <td>${p.nombre}</td>
-          <td>${p.cantidad}</td>
-          <td>${dinero(p.precio)}</td>
-          <td>${dinero(p.precio * p.cantidad)}</td>
-        </tr>
-      `).join("");
+    renderizarProductosEn("productosPedido", "pedido");
+    renderizarProductosEn("productosReserva", "reserva");
 
-      $("areaImpresion").innerHTML = `
-        <h1>Glow & Crunch</h1>
-        <h2>Factura ${datos.codigo}</h2>
-        <p><strong>Fecha:</strong> ${datos.fecha}</p>
-        <p><strong>Tipo:</strong> ${datos.tipo}</p>
-        <p><strong>Cliente:</strong> ${datos.cliente}</p>
-        <p><strong>Cajero:</strong> ${datos.cajeroNombre}</p>
-        <p><strong>Cuenta del cajero:</strong> ${datos.cajeroCuenta}</p>
-        <table class="tabla-factura">
-          <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr></thead>
-          <tbody>${filas}</tbody>
-        </table>
-        <h2>Total: ${dinero(datos.total)}</h2>
-        ${datos.tipo === "reserva"
-          ? `<p><strong>Pago adelantado 50%:</strong> ${dinero(datos.pagoAdelantado)}</p>
-             <p><strong>Saldo pendiente:</strong> ${dinero(datos.saldoPendiente)}</p>`
-          : ""}
-      `;
-    }
-
-    function imprimirFacturaActual() {
-      if (!ultimoCodigoFactura) { alert("Primero guarda una factura."); return; }
-      window.print();
-    }
-
-    renderizarProductos();
-
-    // ============ LOGIN ============
+    /* ============================================================
+       LOGIN
+       ============================================================ */
     $("botonGoogle").addEventListener("click", async () => {
       const boton = $("botonGoogle");
       boton.disabled = true;
@@ -889,8 +1225,6 @@
         await signInWithPopup(auth, proveedorGoogle);
       } catch (error) {
         console.error("Error login:", error);
-
-        // En móviles, usar redirect es más estable
         if (
           error.code === "auth/popup-blocked" ||
           error.code === "auth/operation-not-supported-in-this-environment" ||
@@ -905,13 +1239,11 @@
         } else {
           mostrarMensaje("mensajeLogin", "No se pudo iniciar sesión con Google. " + error.message, "error");
         }
-
         boton.disabled = false;
         boton.textContent = "Iniciar sesión con Google";
       }
     });
 
-    // Capturamos el resultado si venimos de un redirect
     getRedirectResult(auth).catch((error) => {
       console.error("Error de redirect:", error);
       if (error && error.message) {
@@ -929,7 +1261,6 @@
         mostrarLogin();
         return;
       }
-
       try {
         const ref = doc(db, "usuarios", usuario.email);
         const snap = await getDoc(ref);
@@ -939,7 +1270,6 @@
           await signOut(auth);
           return;
         }
-
         usuarioActual = usuario;
         $("nombreUsuario").textContent =
           usuario.displayName || snap.data().nombre || "Administrador";
@@ -954,7 +1284,9 @@
       }
     });
 
-    // ============ NAVEGACIÓN ============
+    /* ============================================================
+       NAVEGACIÓN (con sonido de página)
+       ============================================================ */
     document.querySelectorAll(".boton-menu").forEach((boton) => {
       boton.addEventListener("click", () => {
         const nombreVista = boton.dataset.vista;
@@ -963,81 +1295,21 @@
         const vista = $(`vista-${nombreVista}`);
         if (vista) vista.classList.add("activa");
 
-        // Sincroniza ambas barras
         document.querySelectorAll(".boton-menu").forEach((item) => {
-          if (item.dataset.vista === nombreVista) {
-            item.classList.add("activo");
-          } else {
-            item.classList.remove("activo");
-          }
+          item.classList.toggle("activo", item.dataset.vista === nombreVista);
         });
 
         window.scrollTo({ top: 0, behavior: "smooth" });
 
-        if (nombreVista === "reservas" || nombreVista === "pedidos") cargarRegistros();
-        if (nombreVista === "facturacion") cargarFacturas();
+        if (nombreVista === "pedidos") cargarPedidos();
+        if (nombreVista === "reservas") cargarReservas();
+        if (nombreVista === "inicio") actualizarEstadisticas();
       });
     });
 
-    $("facturaTipo").addEventListener("change", actualizarFacturaVisual);
-
-    // ============ GUARDAR FACTURA ============
-    $("botonGuardarFactura").addEventListener("click", async () => {
-      if (!usuarioActual) {
-        mostrarMensaje("mensajeFactura", "Debes iniciar sesión.", "error");
-        return;
-      }
-      if (productosFactura.length === 0) {
-        mostrarMensaje("mensajeFactura", "Agrega al menos un producto.", "aviso");
-        return;
-      }
-
-      const boton = $("botonGuardarFactura");
-      boton.disabled = true;
-      boton.textContent = "Guardando...";
-
-      const tipo = $("facturaTipo").value;
-      const total = totalFactura();
-      const pagoAdelantado = tipo === "reserva" ? total * 0.5 : 0;
-      const saldoPendiente = tipo === "reserva" ? total - pagoAdelantado : 0;
-
-      const datosFactura = {
-        codigo: crearCodigoFactura(),
-        tipo,
-        cliente: $("facturaCliente").value.trim() || "Consumidor final",
-        productos: productosFactura,
-        total, pagoAdelantado, saldoPendiente,
-        fecha: fechaLocal(),
-        creadoEn: serverTimestamp(),
-        cajeroNombre: usuarioActual.displayName || "",
-        cajeroCuenta: usuarioActual.email,
-        usuarioCuenta: usuarioActual.email
-      };
-
-      try {
-        const ref = await addDoc(collection(db, "facturas"), datosFactura);
-        ultimoCodigoFactura = datosFactura.codigo;
-        prepararFacturaParaImprimir(datosFactura);
-        mostrarMensaje("mensajeFactura", `Factura guardada. Código: ${datosFactura.codigo}`, "");
-
-        $("facturaCliente").value = "";
-        productosFactura = [];
-        actualizarFacturaVisual();
-        await cargarFacturas();
-        await actualizarEstadisticas();
-        console.log("Factura ID:", ref.id);
-      } catch (error) {
-        console.error(error);
-        mostrarMensaje("mensajeFactura", "No se pudo guardar. " + error.message, "error");
-      } finally {
-        boton.disabled = false;
-        boton.textContent = "Guardar factura";
-      }
-    });
-
-    $("botonImprimirFactura").addEventListener("click", imprimirFacturaActual);
-
-    // ============ GUARDAR PEDIDO ============
+    /* ============================================================
+       GUARDAR PEDIDO
+       ============================================================ */
     $("formularioPedido").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!usuarioActual) return;
@@ -1045,11 +1317,16 @@
       const boton = e.target.querySelector("button[type='submit']");
       boton.disabled = true;
 
+      const total = totalDe("pedido");
+
       const datosPedido = {
+        tipoDocumento: "pedido",
         cliente: $("pedidoCliente").value.trim(),
         detalle: $("pedidoDetalle").value.trim(),
         paraCuando: $("pedidoFecha").value,
         hora: $("pedidoHora").value,
+        productos: [...productosPedido],
+        total,
         estado: "recibido",
         fechaRegistro: fechaLocal(),
         creadoEn: serverTimestamp(),
@@ -1060,6 +1337,9 @@
       try {
         await addDoc(collection(db, "pedidos"), datosPedido);
         e.target.reset();
+        productosPedido = [];
+        actualizarVistaProductos("pedido");
+        sonidoExito();
         mostrarMensaje("mensajePedido", "Pedido guardado correctamente.", "");
         await cargarPedidos();
         await actualizarEstadisticas();
@@ -1071,7 +1351,9 @@
       }
     });
 
-    // ============ GUARDAR RESERVA ============
+    /* ============================================================
+       GUARDAR RESERVA
+       ============================================================ */
     $("formularioReserva").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!usuarioActual) return;
@@ -1079,7 +1361,12 @@
       const boton = e.target.querySelector("button[type='submit']");
       boton.disabled = true;
 
+      const total = totalDe("reserva");
+      const pagoAdelantado = total * 0.5;
+      const saldoPendiente = total - pagoAdelantado;
+
       const datosReserva = {
+        tipoDocumento: "reserva",
         cliente: $("reservaCliente").value.trim(),
         cuentaUsuario: $("reservaCuenta").value.trim(),
         paraCuando: $("reservaFecha").value,
@@ -1087,8 +1374,12 @@
         mesas: Number($("reservaMesas").value || 0),
         sillas: Number($("reservaSillas").value || 0),
         detalle: $("reservaDetalle").value.trim(),
-        estado: "pendiente",
+        productos: [...productosReserva],
+        total,
+        pagoAdelantado,
+        saldoPendiente,
         pagoAdelantadoPorcentaje: 50,
+        estado: "pendiente",
         fechaRegistro: fechaLocal(),
         creadoEn: serverTimestamp(),
         recepcionistaNombre: usuarioActual.displayName || "",
@@ -1098,6 +1389,9 @@
       try {
         await addDoc(collection(db, "reservas"), datosReserva);
         e.target.reset();
+        productosReserva = [];
+        actualizarVistaProductos("reserva");
+        sonidoExito();
         mostrarMensaje("mensajeReserva", "Reserva guardada correctamente.", "");
         await cargarReservas();
         await actualizarEstadisticas();
@@ -1109,24 +1403,78 @@
       }
     });
 
-    // ============ RENDER REGISTROS ============
-    function crearRegistroHTML(titulo, datos, etiqueta) {
-      const contenido = Object.entries(datos)
-        .filter(([k]) => k !== "creadoEn")
+    /* ============================================================
+       RENDER REGISTROS
+       ============================================================ */
+    const etiquetasCampo = {
+      cliente: "Cliente",
+      detalle: "Detalle",
+      paraCuando: "Para cuándo",
+      hora: "Hora",
+      estado: "Estado",
+      fechaRegistro: "Registrado",
+      cuentaUsuario: "Cuenta",
+      mesas: "Mesas",
+      sillas: "Sillas",
+      productos: "Productos",
+      total: "Total",
+      pagoAdelantado: "Pago adelantado (50%)",
+      saldoPendiente: "Saldo pendiente",
+      cajeroNombre: "Cajero",
+      recepcionistaNombre: "Recepcionista"
+    };
+
+    const camposOcultos = new Set([
+      "creadoEn", "usuarioCuenta", "cajeroCuenta", "recepcionistaCuenta",
+      "pagoAdelantadoPorcentaje", "tipoDocumento"
+    ]);
+
+    function formatearValor(valor) {
+      if (valor === null || valor === undefined) return "";
+      if (Array.isArray(valor)) {
+        if (valor.length === 0) return "";
+        if (valor.every((v) => v && typeof v === "object" && "nombre" in v)) {
+          return valor.map((p) => `${p.cantidad ?? 1}× ${p.nombre}`).join(", ");
+        }
+        return valor.map((v) => formatearValor(v)).join(", ");
+      }
+      if (typeof valor === "object") {
+        if (typeof valor.toDate === "function") {
+          return valor.toDate().toLocaleString("es-SV");
+        }
+        return "";
+      }
+      return String(valor);
+    }
+
+    function crearRegistroHTML(id, titulo, datos, etiqueta) {
+      const filas = Object.entries(datos)
+        .filter(([k]) => !camposOcultos.has(k) && k !== "total")
         .map(([k, v]) => {
-          let val = v;
-          if (typeof v === "object" && v !== null) val = JSON.stringify(v);
-          return `<div><strong>${k}:</strong> ${val ?? ""}</div>`;
+          const texto = formatearValor(v);
+          if (!texto) return "";
+          const label = etiquetasCampo[k] || k;
+          return `<div class="campo"><strong>${escaparHTML(label)}:</strong> ${escaparHTML(texto)}</div>`;
         })
+        .filter(Boolean)
         .join("");
+
+      const total = Number(datos.total || 0);
+      const totalLinea = total > 0
+        ? `<div class="campo total-linea"><strong>Total:</strong> ${dinero(total)}</div>`
+        : "";
 
       return `
         <article class="registro">
           <div class="registro-cabecera">
-            <strong>${titulo}</strong>
-            <span class="etiqueta">${etiqueta}</span>
+            <strong>${escaparHTML(titulo)}</strong>
+            <span class="etiqueta">${escaparHTML(etiqueta)}</span>
           </div>
-          ${contenido}
+          ${filas}
+          ${totalLinea}
+          <button type="button" class="boton-secundario boton-imprimir" data-print-id="${escaparHTML(id)}">
+            📄 Imprimir / Guardar PDF
+          </button>
         </article>
       `;
     }
@@ -1134,15 +1482,27 @@
     async function cargarPedidos() {
       const c = $("listaPedidos");
       try {
-        const q = query(collection(db, "pedidos"), orderBy("creadoEn", "desc"));
-        const r = await getDocs(q);
-        if (r.empty) {
+        let docs;
+        try {
+          const q = query(collection(db, "pedidos"), orderBy("creadoEn", "desc"));
+          docs = (await getDocs(q)).docs;
+        } catch {
+          docs = [...(await getDocs(collection(db, "pedidos"))).docs].reverse();
+        }
+
+        if (docs.length === 0) {
           c.innerHTML = `<p class="sin-registros">Todavía no hay pedidos registrados.</p>`;
           return;
         }
-        c.innerHTML = r.docs.map((d) =>
-          crearRegistroHTML(d.data().cliente || "Pedido", d.data(), "Pedido")
-        ).join("");
+
+        c.innerHTML = docs.map((d) => {
+          const datos = d.data();
+          const idDoc = "pedido_" + d.id;
+          cacheImprimible.set(idDoc, datos);
+          return crearRegistroHTML(idDoc, datos.cliente || "Pedido", datos, "Pedido");
+        }).join("");
+
+        conectarBotonesImprimir();
       } catch (e) {
         console.error(e);
         c.innerHTML = `<p class="mensaje error">No se pudieron cargar los pedidos.</p>`;
@@ -1152,52 +1512,119 @@
     async function cargarReservas() {
       const c = $("listaReservas");
       try {
-        const q = query(collection(db, "reservas"), orderBy("creadoEn", "desc"));
-        const r = await getDocs(q);
-        if (r.empty) {
+        let docs;
+        try {
+          const q = query(collection(db, "reservas"), orderBy("creadoEn", "desc"));
+          docs = (await getDocs(q)).docs;
+        } catch {
+          docs = [...(await getDocs(collection(db, "reservas"))).docs].reverse();
+        }
+
+        if (docs.length === 0) {
           c.innerHTML = `<p class="sin-registros">Todavía no hay reservas registradas.</p>`;
           return;
         }
-        c.innerHTML = r.docs.map((d) =>
-          crearRegistroHTML(d.data().cliente || "Reserva", d.data(), "Reserva")
-        ).join("");
+
+        c.innerHTML = docs.map((d) => {
+          const datos = d.data();
+          const idDoc = "reserva_" + d.id;
+          cacheImprimible.set(idDoc, datos);
+          return crearRegistroHTML(idDoc, datos.cliente || "Reserva", datos, "Reserva");
+        }).join("");
+
+        conectarBotonesImprimir();
       } catch (e) {
         console.error(e);
         c.innerHTML = `<p class="mensaje error">No se pudieron cargar las reservas.</p>`;
       }
     }
 
-    async function cargarFacturas() {
-      const c = $("listaFacturas");
-      try {
-        const r = await getDocs(collection(db, "facturas"));
-        if (r.empty) {
-          c.innerHTML = `<p class="sin-registros">Todavía no hay facturas registradas.</p>`;
-          return;
-        }
-        const docs = [...r.docs].reverse();
-        c.innerHTML = docs.map((d) => {
-          const datos = d.data();
-          return crearRegistroHTML(datos.codigo || "Factura", datos, "Factura");
-        }).join("");
-      } catch (e) {
-        console.error(e);
-        c.innerHTML = `<p class="mensaje error">No se pudieron cargar las facturas.</p>`;
-      }
+    function conectarBotonesImprimir() {
+      document.querySelectorAll("button[data-print-id]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const datos = cacheImprimible.get(b.dataset.printId);
+          if (!datos) { alert("No se encontraron los datos para imprimir."); return; }
+          imprimirDocumento(datos);
+        });
+      });
     }
 
+    /* ============================================================
+       IMPRESIÓN / PDF
+       ============================================================ */
+    function imprimirDocumento(datos) {
+      const esReserva = datos.tipoDocumento === "reserva";
+      const titulo = esReserva ? "Comprobante de Reserva" : "Comprobante de Pedido";
+
+      const productosArr = Array.isArray(datos.productos) ? datos.productos : [];
+      const filas = productosArr.map((p) => `
+        <tr>
+          <td>${escaparHTML(p.nombre)}</td>
+          <td>${escaparHTML(p.cantidad)}</td>
+          <td>${dinero(p.precio)}</td>
+          <td>${dinero(p.precio * p.cantidad)}</td>
+        </tr>
+      `).join("");
+
+      const tablaProductos = productosArr.length > 0
+        ? `<table class="tabla-factura">
+             <thead>
+               <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
+             </thead>
+             <tbody>${filas}</tbody>
+           </table>`
+        : "";
+
+      const total = Number(datos.total || 0);
+
+      const bloqueReserva = esReserva
+        ? `<p class="info-linea"><strong>Mesas:</strong> ${escaparHTML(datos.mesas ?? 0)} &nbsp;|&nbsp; <strong>Sillas:</strong> ${escaparHTML(datos.sillas ?? 0)}</p>
+           ${total > 0 ? `<p class="info-linea"><strong>Pago adelantado (50%):</strong> ${dinero(total * 0.5)}</p>
+           <p class="info-linea"><strong>Saldo pendiente:</strong> ${dinero(total * 0.5)}</p>` : ""}`
+        : "";
+
+      $("areaImpresion").innerHTML = `
+        <div class="encabezado-print">
+          <h1>🌸 Glow & Crunch</h1>
+          <h2>${titulo}</h2>
+        </div>
+
+        <p class="info-linea"><strong>Fecha de emisión:</strong> ${escaparHTML(fechaLocal())}</p>
+        <p class="info-linea"><strong>Cliente:</strong> ${escaparHTML(datos.cliente || "—")}</p>
+        ${esReserva && datos.cuentaUsuario ? `<p class="info-linea"><strong>Cuenta:</strong> ${escaparHTML(datos.cuentaUsuario)}</p>` : ""}
+        <p class="info-linea"><strong>Para cuándo:</strong> ${escaparHTML(datos.paraCuando || "—")} ${escaparHTML(datos.hora || "")}</p>
+        ${datos.detalle ? `<p class="info-linea"><strong>Detalle:</strong> ${escaparHTML(datos.detalle)}</p>` : ""}
+        ${bloqueReserva}
+
+        ${tablaProductos}
+
+        ${total > 0 ? `<div class="total-final">Total: ${dinero(total)}</div>` : ""}
+
+        <p style="margin-top:24px;font-size:12px;color:#555;">
+          Atendido por: ${escaparHTML(datos.cajeroNombre || datos.recepcionistaNombre || "—")}
+          ${datos.cajeroCuenta || datos.recepcionistaCuenta ? `(${escaparHTML(datos.cajeroCuenta || datos.recepcionistaCuenta)})` : ""}
+        </p>
+        <p style="margin-top:6px;font-size:11px;color:#777;">Gracias por su preferencia 🌸</p>
+      `;
+
+      setTimeout(() => window.print(), 120);
+    }
+
+    /* ============================================================
+       ESTADÍSTICAS
+       ============================================================ */
     async function actualizarEstadisticas() {
       try {
-        const [f, p, r] = await Promise.all([
-          getDocs(collection(db, "facturas")),
+        const [p, r] = await Promise.all([
           getDocs(collection(db, "pedidos")),
           getDocs(collection(db, "reservas"))
         ]);
 
-        let total = 0;
-        f.forEach((d) => { total += Number(d.data().total || 0); });
+        let totalVentas = 0;
+        p.forEach((d) => { totalVentas += Number(d.data().total || 0); });
+        r.forEach((d) => { totalVentas += Number(d.data().total || 0); });
 
-        $("totalVentas").textContent = dinero(total);
+        $("totalVentas").textContent = dinero(totalVentas);
         $("cantidadPedidos").textContent = p.size;
         $("cantidadReservas").textContent = r.size;
       } catch (e) {
@@ -1206,22 +1633,32 @@
     }
 
     async function cargarRegistros() {
-      await Promise.all([cargarPedidos(), cargarReservas(), cargarFacturas()]);
+      await Promise.all([cargarPedidos(), cargarReservas()]);
       await actualizarEstadisticas();
     }
 
-    // ============ CALCULADORA ============
+    /* ============================================================
+       CALCULADORA
+       ============================================================ */
+    const caracteresValidos = /^[0-9+\-*/.() ]*$/;
+
     document.querySelectorAll("[data-calculadora]").forEach((b) => {
       b.addEventListener("click", () => {
         const t = b.dataset.calculadora;
-        if (t === "limpiar") expresionCalculadora = "";
-        else if (t === "=") {
+        if (t === "limpiar") {
+          expresionCalculadora = "";
+        } else if (t === "=") {
           try {
             if (!expresionCalculadora.trim()) return;
-            expresionCalculadora = String(
-              Function(`"use strict"; return (${expresionCalculadora})`)()
-            );
-          } catch { expresionCalculadora = "Error"; }
+            if (!caracteresValidos.test(expresionCalculadora)) {
+              expresionCalculadora = "Error";
+            } else {
+              const r = Function(`"use strict"; return (${expresionCalculadora})`)();
+              expresionCalculadora = Number.isFinite(r) ? String(r) : "Error";
+            }
+          } catch {
+            expresionCalculadora = "Error";
+          }
         } else {
           if (expresionCalculadora === "Error") expresionCalculadora = "";
           expresionCalculadora += t;
@@ -1230,7 +1667,9 @@
       });
     });
 
-    // ============ BOTONES EXTERNOS ============
+    /* ============================================================
+       BOTONES EXTERNOS
+       ============================================================ */
     $("botonAbrirGithub").addEventListener("click", () => {
       window.open("https://papiromesa-ux.github.io/Glow-y-Crunch-/", "_blank", "noopener,noreferrer");
     });
@@ -1238,16 +1677,17 @@
       window.open("https://glow-y-crunch.vercel.app/", "_blank", "noopener,noreferrer");
     });
 
-    // ============ PWA: SERVICE WORKER ============
+    /* ============================================================
+       PWA
+       ============================================================ */
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("sw.js")
           .then((reg) => console.log("SW registrado:", reg.scope))
-          .catch((err) => console.warn("SW error:", err));
+          .catch((err) => console.info("SW no disponible:", err.message));
       });
     }
 
-    // ============ PWA: BOTÓN INSTALAR ============
     let eventoInstalar = null;
     const botonInstalar = $("botonInstalar");
 
@@ -1272,7 +1712,6 @@
       eventoInstalar = null;
     });
 
-    // Tip para iOS
     const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const enStandalone = window.matchMedia("(display-mode: standalone)").matches
                       || window.navigator.standalone === true;

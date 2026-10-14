@@ -1,9 +1,9 @@
 // =====================================================
 // Service Worker — Glow & Crunch Admin
-// Versión: gc-admin-v8-pdf-iframe
+// Versión: gc-admin-v11-login-sync
 // =====================================================
 
-const VERSION = 'gc-admin-v8-pdf-iframe';
+const VERSION = 'gc-admin-v11-login-sync';
 
 const CACHE_NAME = 'glow-crunch-' + VERSION;
 const RECURSOS = [
@@ -14,7 +14,6 @@ const RECURSOS = [
   './ALACR%C3%81N.mp4'
 ];
 
-// -------- INSTALAR --------
 self.addEventListener('install', function(event) {
   console.log('[SW] Instalando versión:', VERSION);
   self.skipWaiting();
@@ -31,7 +30,6 @@ self.addEventListener('install', function(event) {
   );
 });
 
-// -------- ACTIVAR --------
 self.addEventListener('activate', function(event) {
   console.log('[SW] Activando versión:', VERSION);
   event.waitUntil(
@@ -50,12 +48,10 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// -------- FETCH --------
 self.addEventListener('fetch', function(event) {
   var req = event.request;
   var url = new URL(req.url);
 
-  // Ignorar externos (Firebase, Google, CDN)
   if (
     url.hostname.indexOf('firebase') !== -1 ||
     url.hostname.indexOf('google') !== -1 ||
@@ -66,12 +62,10 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  // Solo GET del mismo origen
   if (req.method !== 'GET' || url.origin !== self.location.origin) {
     return;
   }
 
-  // HTML → NETWORK FIRST
   if (req.mode === 'navigate' || req.destination === 'document') {
     event.respondWith(
       fetch(req)
@@ -91,7 +85,6 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  // Video → NETWORK FIRST
   if (req.destination === 'video' || url.pathname.indexOf('.mp4') !== -1) {
     event.respondWith(
       fetch(req)
@@ -109,7 +102,6 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  // Resto → CACHE FIRST
   event.respondWith(
     caches.match(req).then(function(cacheado) {
       return cacheado || fetch(req).then(function(resp) {
@@ -123,7 +115,6 @@ self.addEventListener('fetch', function(event) {
   );
 });
 
-// -------- Mensaje para forzar skipWaiting --------
 self.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();

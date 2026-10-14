@@ -1,0 +1,2305 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#9D6377">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="G&C Admin">
+  <meta name="description" content="Panel administrativo y facturación de Glow & Crunch">
+  <title>Glow & Crunch | Panel administrativo</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='66' font-size='44' text-anchor='middle' fill='%23fff' font-family='Georgia' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='66' font-size='44' text-anchor='middle' fill='%23fff' font-family='Georgia' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E">
+
+  <!-- 📄 html2pdf para generar PDFs reales y descargables -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --madera-oscura: #9D6377;
+      --madera: #D49BAE;
+      --crema: #FFF8FA;
+      --crema-oscura: #FDEFF3;
+      --durazno: #FFC7D6;
+      --menta: #E8D9EE;
+      --lavanda: #E4D0EE;
+      --texto: #4B2C3A;
+      --blanco: #ffffff;
+      --rojo: #F5B5BE;
+      --madera-clara: #E9CDD5;
+
+      --sombra: 0 12px 28px rgba(157, 99, 119, 0.22);
+      --sombra-suave: 0 4px 12px rgba(157, 99, 119, 0.12);
+      --radio: 26px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --alto-nav-movil: 74px;
+    }
+
+    /* ====== Temas alternativos ====== */
+    body[data-tema="menta"] {
+      --madera-oscura: #4F7A6B;
+      --madera: #8FBBA9;
+      --durazno: #C4E6D8;
+      --menta: #E0F2EA;
+      --lavanda: #D3E9E0;
+      --crema-oscura: #EDF7F2;
+      --madera-clara: #C8E0D5;
+      --texto: #2E463D;
+    }
+    body[data-tema="lavanda"] {
+      --madera-oscura: #6B5B95;
+      --madera: #A796C9;
+      --durazno: #D9CCF0;
+      --menta: #EDE5F8;
+      --lavanda: #DFD3F2;
+      --crema-oscura: #F3EEFB;
+      --madera-clara: #D5C9EB;
+      --texto: #3A3055;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      color: var(--texto);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 199, 214, 0.55), transparent 45%),
+        radial-gradient(circle at 88% 92%, rgba(228, 208, 238, 0.55), transparent 45%),
+        linear-gradient(160deg, #FFF3F7 0%, #FCE4EC 50%, #F4D9E5 100%);
+      background-attachment: fixed;
+      overscroll-behavior-y: contain;
+      perspective: 1200px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; opacity: 0.06;
+      background-image:
+        radial-gradient(circle, var(--madera-oscura) 1px, transparent 1.5px),
+        radial-gradient(circle, var(--madera) 1px, transparent 1.5px);
+      background-size: 26px 26px, 26px 26px;
+      background-position: 0 0, 13px 13px;
+      z-index: -1;
+    }
+
+    /* Bloquear 3D si el usuario lo apaga */
+    body.sin-3d * {
+      transform: none !important;
+      perspective: none !important;
+    }
+
+    input, select, textarea { font-size: 16px !important; }
+    button, input, select, textarea { font: inherit; }
+
+    button {
+      border: 0; cursor: pointer; color: var(--texto); font-weight: bold;
+      border-radius: 18px; padding: 14px 18px;
+      min-height: 48px;
+      background: var(--menta);
+      box-shadow: 0 4px 0 rgba(164, 128, 178, 0.35), 0 8px 18px rgba(157, 99, 119, 0.12);
+      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      -webkit-user-select: none; user-select: none; touch-action: manipulation;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    /* Efectos 3D al hover/press */
+    @media (hover: hover) {
+      button:hover {
+        filter: brightness(1.05);
+        transform: translateY(-3px) rotateX(6deg);
+        box-shadow: 0 6px 0 rgba(164, 128, 178, 0.35), 0 14px 26px rgba(157, 99, 119, 0.22);
+      }
+    }
+
+    button:active {
+      transform: translateY(2px) scale(0.98) rotateX(-2deg);
+      box-shadow: 0 2px 0 rgba(164, 128, 178, 0.35);
+    }
+
+    button:disabled { cursor: not-allowed; opacity: 0.6; transform: none; }
+
+    .boton-principal {
+      background: linear-gradient(180deg, #FFD3DF 0%, var(--durazno) 100%);
+      box-shadow: 0 4px 0 rgba(184, 111, 133, 0.45), 0 8px 18px rgba(157, 99, 119, 0.18);
+    }
+    .boton-secundario {
+      background: linear-gradient(180deg, #EFE0F6 0%, var(--lavanda) 100%);
+      box-shadow: 0 4px 0 rgba(127, 106, 166, 0.35), 0 8px 18px rgba(127, 106, 166, 0.15);
+    }
+    .boton-peligro { background: var(--rojo); box-shadow: 0 4px 0 rgba(165, 91, 82, 0.35); }
+    .boton-blanco { background: var(--blanco); box-shadow: 0 4px 0 rgba(157, 99, 119, 0.22); }
+
+    .oculto { display: none !important; }
+    .contenedor { width: min(1240px, calc(100% - 24px)); margin: 0 auto; }
+
+    .tarjeta {
+      padding: 18px;
+      border: 2px solid var(--blanco);
+      border-radius: var(--radio);
+      background:
+        linear-gradient(180deg, rgba(255, 251, 253, 0.98), rgba(255, 243, 247, 0.98));
+      box-shadow: var(--sombra);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(.2,.7,.3,1), box-shadow 0.35s;
+      transform-style: preserve-3d;
+    }
+
+    @media (hover: hover) {
+      .tarjeta:hover {
+        transform: translateY(-4px) rotateX(2deg);
+        box-shadow: 0 20px 40px rgba(157, 99, 119, 0.25);
+      }
+    }
+
+    .tarjeta::before {
+      content: "";
+      position: absolute; left: 0; right: 0; top: 0; height: 5px;
+      background: linear-gradient(90deg, var(--durazno), var(--lavanda), var(--durazno));
+      opacity: 0.7;
+    }
+
+    /* ====== LOGO MADERA "G&C" ====== */
+    .logo-madera {
+      width: 108px; height: 108px;
+      display: grid; place-items: center;
+      margin: 0 auto 14px;
+      border-radius: 24px;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-weight: 900;
+      font-size: 42px;
+      letter-spacing: -2px;
+      color: #FFF6E5;
+      background:
+        linear-gradient(135deg, #C48B9F 0%, #9D6377 45%, #6B3A4A 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 3px, transparent 3px 8px);
+      background-blend-mode: overlay;
+      border: 4px solid #6B3A4A;
+      box-shadow:
+        inset 0 -6px 0 rgba(0,0,0,0.15),
+        inset 0 4px 8px rgba(255,255,255,0.2),
+        0 14px 30px rgba(157, 99, 119, 0.4);
+      text-shadow: 0 2px 0 #4A2530, 0 3px 6px rgba(0,0,0,0.35);
+      transform-style: preserve-3d;
+      animation: girarLogo 8s ease-in-out infinite;
+    }
+
+    @keyframes girarLogo {
+      0%, 100% { transform: rotateY(0deg) rotateX(0deg); }
+      50%      { transform: rotateY(8deg) rotateX(-4deg); }
+    }
+
+    /* ====== LOGIN ====== */
+    .login-pantalla {
+      min-height: 100vh; min-height: 100dvh;
+      display: grid; place-items: center;
+      padding: 24px 20px calc(24px + var(--safe-bottom));
+    }
+
+    .login-tarjeta { width: min(440px, 100%); text-align: center; }
+
+    .login-tarjeta h1 {
+      margin: 0 0 8px;
+      color: var(--madera-oscura);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 0.5px;
+    }
+    .login-tarjeta p { line-height: 1.5; }
+
+    .mensaje { margin-top: 14px; padding: 12px; border-radius: 16px; background: var(--menta); }
+    .mensaje.error { background: var(--rojo); }
+    .mensaje.aviso { background: var(--durazno); }
+
+    /* ====== ENCABEZADO ====== */
+    .encabezado {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px; margin-top: calc(14px + var(--safe-top));
+      padding: 14px 16px;
+      color: var(--blanco);
+      border: 2px solid var(--blanco);
+      border-radius: var(--radio);
+      background: linear-gradient(135deg, #9D6377 0%, #C48B9F 100%);
+      box-shadow: var(--sombra);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .encabezado::after {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 8px;
+      background: linear-gradient(90deg, #FFD3DF, #EFE0F6, #FFD3DF);
+      opacity: 0.85;
+    }
+
+    .marca h1 {
+      margin: 0; font-size: 19px;
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 0.5px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .mini-logo-madera {
+      width: 30px; height: 30px;
+      display: inline-grid; place-items: center;
+      border-radius: 8px;
+      font-family: "Georgia", serif;
+      font-weight: 900; font-size: 12px;
+      color: #FFF6E5;
+      background: linear-gradient(135deg, #C48B9F, #6B3A4A);
+      border: 2px solid #6B3A4A;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+      text-shadow: 0 1px 0 #4A2530;
+    }
+
+    .marca small { opacity: 0.9; font-size: 12px; }
+
+    .usuario-barra { display: flex; align-items: center; gap: 8px; text-align: right; }
+    .usuario-barra strong { font-size: 14px; }
+    .usuario-barra small {
+      display: block; max-width: 180px; font-size: 11px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      opacity: 0.9;
+    }
+
+    .boton-salir { padding: 10px 14px; min-height: 42px; font-size: 13px; }
+
+    /* ====== ESTRUCTURA ====== */
+    .estructura {
+      display: grid;
+      grid-template-columns: 225px 1fr;
+      gap: 18px; margin: 18px 0 28px;
+    }
+
+    .navegacion {
+      height: max-content; padding: 14px;
+      border: 2px solid var(--blanco);
+      border-radius: var(--radio);
+      background: rgba(255, 250, 252, 0.98);
+      box-shadow: var(--sombra);
+      transform-style: preserve-3d;
+    }
+
+    .navegacion button { width: 100%; margin: 4px 0; text-align: left; }
+    .navegacion button.activo {
+      background: linear-gradient(180deg, #FFD3DF, var(--durazno));
+      box-shadow: 0 4px 0 rgba(184, 111, 133, 0.45), 0 10px 22px rgba(184, 111, 133, 0.25);
+      color: #6B3040;
+      transform: translateZ(6px);
+    }
+
+    .vista { display: none; animation: aparecer 0.4s cubic-bezier(.2,.7,.3,1); }
+    .vista.activa { display: block; }
+    .vista h2 {
+      margin-top: 0; color: var(--madera-oscura);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 0.3px;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(10px) rotateX(4deg); }
+      to { opacity: 1; transform: translateY(0) rotateX(0); }
+    }
+
+    /* ====== CUADRÍCULAS ====== */
+    .cuadricula {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .estadistica h3 { margin: 0 0 10px; font-size: 14px; }
+    .numero-grande {
+      font-size: 28px; font-weight: bold; color: var(--madera-oscura);
+      font-family: "Georgia", serif;
+    }
+
+    .fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+    label { display: block; margin-top: 6px; font-weight: bold; font-size: 14px; }
+
+    input, select, textarea {
+      width: 100%; margin: 6px 0 14px; padding: 14px 14px;
+      color: var(--texto);
+      border: 2px solid var(--madera-clara); border-radius: 15px;
+      outline: none; background: #FFFBFC;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--madera);
+      box-shadow: 0 0 0 3px rgba(212, 155, 174, 0.22), 0 6px 14px rgba(157, 99, 119, 0.12);
+      transform: translateY(-1px);
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+    .separador { height: 1px; margin: 18px 0; background: linear-gradient(90deg, transparent, var(--madera-clara), transparent); }
+    .texto-suave { color: #8B6070; }
+    .texto-centro { text-align: center; }
+    .margen-arriba { margin-top: 16px; }
+    .margen-abajo { margin-bottom: 16px; }
+
+    /* ====== CALCULADORA ====== */
+    #pantallaCalculadora {
+      width: 100%; margin-bottom: 14px; padding: 18px;
+      text-align: right; font-size: 30px; font-weight: bold;
+      color: var(--madera-oscura); background: #FFF6F9;
+      border: 2px solid var(--madera-clara);
+    }
+
+    .calculadora-grid { grid-template-columns: repeat(4, minmax(60px, 1fr)); }
+    .calculadora-grid button { padding: 16px 8px; font-size: 18px; }
+    .calculadora-grid button:last-child { grid-column: 1 / -1; }
+
+    /* ====== PRODUCTOS ====== */
+    .producto-factura {
+      display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 145px; padding: 14px;
+      border: 2px solid var(--madera-clara); border-radius: 20px;
+      background: #FFFBFC;
+      box-shadow: 0 5px 12px rgba(157, 99, 119, 0.12);
+      transition: transform 0.3s cubic-bezier(.2,.7,.3,1), box-shadow 0.3s;
+      transform-style: preserve-3d;
+    }
+
+    @media (hover: hover) {
+      .producto-factura:hover {
+        transform: translateY(-4px) rotateX(4deg) rotateY(-3deg);
+        box-shadow: 0 14px 26px rgba(157, 99, 119, 0.24);
+      }
+    }
+
+    .producto-factura h3 { margin: 0 0 6px; color: var(--madera-oscura); font-size: 15px; }
+    .producto-precio { margin-bottom: 10px; font-size: 18px; font-weight: bold; color: #7A4457; }
+
+    .producto-cantidad {
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    }
+
+    .producto-cantidad button {
+      min-width: 44px; min-height: 42px; padding: 6px 10px; font-size: 18px;
+      background: linear-gradient(180deg, #FFE3ED, #FFC7D6);
+      box-shadow: 0 3px 0 rgba(184, 111, 133, 0.35);
+    }
+    .producto-cantidad span { min-width: 28px; text-align: center; font-weight: bold; font-size: 18px; }
+
+    /* ====== REGISTROS ====== */
+    .registro {
+      margin: 10px 0; padding: 14px;
+      border: 2px solid var(--madera-clara); border-radius: 17px;
+      background: #FFFBFC; line-height: 1.5;
+      font-size: 14px; word-break: break-word;
+      box-shadow: var(--sombra-suave);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    @media (hover: hover) {
+      .registro:hover {
+        transform: translateY(-2px) rotateX(1deg);
+        box-shadow: 0 10px 22px rgba(157, 99, 119, 0.2);
+      }
+    }
+
+    .registro-cabecera {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-bottom: 8px;
+    }
+
+    .registro-cabecera strong { font-size: 15px; color: var(--madera-oscura); }
+
+    .registro .campo { margin: 3px 0; }
+    .registro .campo strong { color: var(--madera-oscura); }
+    .registro .total-linea {
+      margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--madera-clara);
+      font-size: 15px;
+    }
+
+    .botones-registro {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;
+    }
+
+    .botones-registro button {
+      padding: 11px 10px; min-height: 44px; font-size: 13px;
+    }
+
+    .etiqueta {
+      display: inline-block; padding: 5px 10px; border-radius: 99px;
+      font-size: 11px; font-weight: bold;
+      background: linear-gradient(135deg, var(--durazno), var(--lavanda));
+      color: #6B3040;
+    }
+
+    .sin-registros { padding: 14px; border-radius: 15px; background: var(--crema-oscura); }
+
+    /* ====== MODALES (Ajustes / Ayuda) ====== */
+    .modal {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(75, 44, 58, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      animation: fadeInModal 0.25s ease;
+    }
+
+    @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal-contenido {
+      width: min(520px, 100%);
+      max-height: 88vh; overflow-y: auto;
+      padding: 22px 20px;
+      border: 2px solid #fff;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #FFFBFC, #FDEFF3);
+      box-shadow: 0 30px 60px rgba(157, 99, 119, 0.4);
+      animation: subirModal 0.35s cubic-bezier(.2,.7,.3,1);
+    }
+
+    @keyframes subirModal {
+      from { transform: translateY(30px) scale(0.96); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-contenido h2 {
+      margin-top: 0; color: var(--madera-oscura);
+      font-family: "Georgia", serif;
+    }
+
+    .ajuste-fila {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 12px 0;
+      border-bottom: 1px dashed var(--madera-clara);
+    }
+    .ajuste-fila:last-of-type { border-bottom: 0; }
+    .ajuste-fila span { font-weight: bold; font-size: 14px; }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px; height: 30px;
+      flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0;
+      cursor: pointer;
+      background: #ddd;
+      border-radius: 30px;
+      transition: background 0.3s;
+    }
+    .slider::before {
+      content: "";
+      position: absolute; height: 22px; width: 22px;
+      left: 4px; top: 4px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .switch input:checked + .slider {
+      background: linear-gradient(135deg, #FF8A5B, #FFC7D6);
+    }
+    .switch input:checked + .slider::before { transform: translateX(22px); }
+
+    .instruccion {
+      margin: 14px 0; padding: 12px 14px;
+      background: #FFFBFC;
+      border-left: 5px solid var(--durazno);
+      border-radius: 10px;
+      font-size: 14px; line-height: 1.55;
+    }
+    .instruccion strong { color: var(--madera-oscura); display: block; margin-bottom: 4px; }
+
+    .gesto {
+      display: flex; align-items: center; gap: 12px;
+      margin: 10px 0;
+      padding: 10px 12px;
+      background: #FFFBFC;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+    .gesto-icono {
+      min-width: 60px; text-align: center;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    /* ====== BOTONES FLOTANTES (Ajustes + Ayuda) ====== */
+    .flotantes {
+      position: fixed;
+      top: calc(16px + var(--safe-top));
+      right: 16px;
+      z-index: 900;
+      display: flex;
+      gap: 8px;
+    }
+
+    .boton-flotante {
+      width: 46px; height: 46px; min-height: 46px;
+      padding: 0;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 6px 18px rgba(157, 99, 119, 0.3);
+      border: 2px solid #fff;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .boton-flotante.activo {
+      background: radial-gradient(circle at 50% 60%, #FFD3A0, #FF8A5B 70%);
+      color: #fff;
+      box-shadow: 0 6px 22px rgba(255, 138, 91, 0.55);
+      animation: latirFuego 2.6s ease-in-out infinite;
+    }
+
+    @keyframes latirFuego {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.08); }
+    }
+
+    /* ====== BOTÓN INSTALAR ====== */
+    #botonInstalar {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      right: 20px;
+      z-index: 850;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, #9D6377, #C48B9F);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(157, 99, 119, 0.4);
+      border-radius: 999px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      min-height: auto;
+    }
+    #botonInstalar.visible { display: inline-flex; }
+
+    /* ====== NAV MÓVIL ====== */
+    .nav-movil {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 800;
+      padding: 6px 8px calc(6px + var(--safe-bottom));
+      background: rgba(255, 250, 252, 0.98);
+      border-top: 2px solid var(--madera-clara);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 -6px 20px rgba(157, 99, 119, 0.18);
+    }
+
+    .nav-movil-inner {
+      display: flex; justify-content: space-around; align-items: center; gap: 4px;
+    }
+
+    .nav-movil button {
+      flex: 1;
+      background: transparent;
+      box-shadow: none;
+      padding: 8px 4px;
+      min-height: 56px;
+      font-size: 10px; font-weight: bold;
+      color: var(--madera-oscura);
+      border-radius: 14px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 3px; line-height: 1.1;
+    }
+
+    .nav-movil button .icono { font-size: 20px; line-height: 1; }
+
+    .nav-movil button.activo {
+      background: linear-gradient(180deg, #FFD3DF, var(--durazno));
+      box-shadow: 0 3px 0 rgba(184, 111, 133, 0.4);
+      color: #6B3040;
+    }
+
+    /* ====== PDF OCULTO (solo se usa para generar el PDF) ====== */
+    #plantillaPDF {
+      position: fixed;
+      left: -10000px; top: 0;
+      width: 800px;
+      padding: 40px;
+      background: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    #plantillaPDF h1 { font-family: Georgia, serif; margin: 0; color: #6B3A4A; }
+    #plantillaPDF h2 { font-size: 16px; margin: 4px 0 16px; color: #9D6377; }
+    #plantillaPDF .encabezado-print {
+      border-bottom: 3px solid #9D6377;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    #plantillaPDF .logo-pdf {
+      width: 60px; height: 60px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      font-family: Georgia, serif;
+      font-weight: bold; font-size: 22px;
+      color: #FFF6E5;
+      background: linear-gradient(135deg, #C48B9F, #6B3A4A);
+      border: 2px solid #6B3A4A;
+    }
+    #plantillaPDF .info-linea { margin: 4px 0; font-size: 13px; }
+    #plantillaPDF .tabla-factura {
+      width: 100%; border-collapse: collapse;
+      margin: 18px 0 12px;
+      font-size: 13px;
+    }
+    #plantillaPDF .tabla-factura th {
+      text-align: left; padding: 9px 8px;
+      background: #FDEFF3; color: #6B3A4A;
+      border-bottom: 2px solid #9D6377;
+    }
+    #plantillaPDF .tabla-factura td {
+      padding: 8px; border-bottom: 1px solid #eee;
+    }
+    #plantillaPDF .tabla-factura th:last-child,
+    #plantillaPDF .tabla-factura td:last-child { text-align: right; }
+    #plantillaPDF .total-final {
+      margin-top: 16px; padding-top: 12px;
+      border-top: 2px solid #9D6377;
+      font-size: 20px; text-align: right;
+      font-weight: bold; color: #6B3A4A;
+    }
+    #plantillaPDF .firma-bloque {
+      margin-top: 40px; padding-top: 20px;
+      border-top: 1px dashed #999;
+      display: flex; justify-content: space-between;
+      gap: 30px;
+    }
+    #plantillaPDF .firma-caja {
+      flex: 1; text-align: center;
+      font-size: 11px; color: #666;
+    }
+    #plantillaPDF .firma-linea {
+      height: 40px;
+      border-bottom: 1px solid #333;
+      margin-bottom: 4px;
+    }
+    #plantillaPDF .pie {
+      margin-top: 24px; font-size: 11px; color: #777;
+      text-align: center;
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 820px) {
+      .estructura {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin: 14px 0 calc(var(--alto-nav-movil) + var(--safe-bottom) + 20px);
+      }
+      .navegacion { display: none; }
+      .nav-movil { display: block; }
+
+      .encabezado { padding: 12px 14px; border-radius: 20px; }
+      .marca h1 { font-size: 16px; }
+      .marca small { font-size: 11px; }
+      .usuario-barra small { max-width: 100px; }
+
+      .fila { grid-template-columns: 1fr; }
+      .cuadricula { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .numero-grande { font-size: 22px; }
+      .estadistica h3 { font-size: 12px; }
+      .tarjeta { padding: 16px; border-radius: 22px; }
+      .login-tarjeta { padding: 24px 20px; }
+
+      #botonInstalar {
+        bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px);
+      }
+
+      .flotantes {
+        top: auto;
+        bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px);
+        right: 16px;
+      }
+
+      .botones-registro { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 380px) {
+      .usuario-barra small { max-width: 70px; }
+      .nav-movil button { font-size: 9px; }
+    }
+  </style>
+</head>
+
+<body data-tema="rosa">
+
+  <!-- ============ BOTONES FLOTANTES (Ajustes + Ayuda) ============ -->
+  <div class="flotantes">
+    <button id="botonAyuda" class="boton-flotante" title="Cómo usar" aria-label="Ayuda">📖</button>
+    <button id="botonAjustes" class="boton-flotante" title="Ajustes" aria-label="Ajustes">⚙️</button>
+  </div>
+
+  <!-- ============ LOGIN ============ -->
+  <section id="pantallaLogin" class="login-pantalla">
+    <div class="tarjeta login-tarjeta">
+      <div class="logo-madera">G&C</div>
+      <h1>Glow & Crunch</h1>
+      <p class="texto-suave">Panel privado de administración y facturación.</p>
+      <p>Solo el personal autorizado con rol <strong>admin</strong> puede entrar.</p>
+
+      <button id="botonGoogle" class="boton-principal" style="width:100%;">Iniciar sesión con Google</button>
+
+      <div id="mensajeLogin" class="mensaje oculto"></div>
+
+      <p id="pistaInstalar" class="texto-suave oculto" style="font-size:12px;margin-top:18px;">
+        💡 Consejo: una vez dentro, usa el menú del navegador → <strong>"Añadir a pantalla de inicio"</strong>.
+      </p>
+
+      <p class="texto-suave" style="font-size:11px;margin-top:12px;">
+        🔥 Toca el engranaje ⚙️ (arriba a la derecha) para activar el sonido de fogata.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ PANEL ============ -->
+  <section id="pantallaPanel" class="oculto">
+    <div class="contenedor">
+
+      <header class="encabezado">
+        <div class="marca">
+          <h1><span class="mini-logo-madera">G&C</span> Glow & Crunch</h1>
+          <small>Panel administrativo</small>
+        </div>
+
+        <div class="usuario-barra">
+          <div>
+            <strong id="nombreUsuario">Admin</strong>
+            <small id="correoUsuario"></small>
+          </div>
+          <button id="botonCerrarSesion" class="boton-blanco boton-salir">Salir</button>
+        </div>
+      </header>
+
+      <div class="estructura">
+
+        <nav class="navegacion">
+          <button class="boton-menu activo" data-vista="inicio">🏠 Inicio</button>
+          <button class="boton-menu" data-vista="pedidos">🛍️ Pedidos</button>
+          <button class="boton-menu" data-vista="reservas">📅 Reservas</button>
+          <button class="boton-menu" data-vista="calculadora">🧮 Calculadora</button>
+          <button class="boton-menu" data-vista="contenido">🎨 Página principal</button>
+        </nav>
+
+        <main>
+          <!-- INICIO -->
+          <section id="vista-inicio" class="vista activa">
+            <div class="cuadricula">
+              <article class="tarjeta estadistica">
+                <h3>Ventas registradas</h3>
+                <div id="totalVentas" class="numero-grande">$0.00</div>
+              </article>
+              <article class="tarjeta estadistica">
+                <h3>Pedidos registrados</h3>
+                <div id="cantidadPedidos" class="numero-grande">0</div>
+              </article>
+              <article class="tarjeta estadistica">
+                <h3>Reservas registradas</h3>
+                <div id="cantidadReservas" class="numero-grande">0</div>
+              </article>
+              <article class="tarjeta estadistica">
+                <h3>Estado de la cuenta</h3>
+                <div class="numero-grande">Admin</div>
+              </article>
+            </div>
+
+            <div class="tarjeta margen-arriba">
+              <h2>Bienvenida al panel</h2>
+              <p>Registra pedidos y reservas, agrega productos, imprime o comparte el comprobante en PDF con tus clientes.</p>
+              <p class="texto-suave">Toca el botón <strong>📖</strong> (arriba derecha) para ver las instrucciones completas y los atajos con gestos.</p>
+            </div>
+          </section>
+
+          <!-- PEDIDOS -->
+          <section id="vista-pedidos" class="vista">
+            <div class="tarjeta">
+              <h2>Registrar pedido</h2>
+              <form id="formularioPedido">
+                <label for="pedidoCliente">Nombre del usuario</label>
+                <input id="pedidoCliente" type="text" placeholder="Nombre del cliente" required>
+
+                <label for="pedidoDetalle">Detalle del pedido</label>
+                <textarea id="pedidoDetalle" placeholder="Escribe los productos o indicaciones" required></textarea>
+
+                <div class="fila">
+                  <div>
+                    <label for="pedidoFecha">Para cuándo</label>
+                    <input id="pedidoFecha" type="date" required>
+                  </div>
+                  <div>
+                    <label for="pedidoHora">Hora</label>
+                    <input id="pedidoHora" type="time" required>
+                  </div>
+                </div>
+
+                <div class="separador"></div>
+                <h3>Productos del pedido</h3>
+                <div id="productosPedido" class="cuadricula"></div>
+                <div class="separador"></div>
+                <h3>Total: <span id="totalPedido">$0.00</span></h3>
+
+                <button type="submit" class="boton-principal" style="width:100%;margin-top:10px;">Guardar pedido</button>
+              </form>
+
+              <div id="mensajePedido" class="mensaje oculto"></div>
+            </div>
+
+            <div class="tarjeta margen-arriba">
+              <h2>Pedidos registrados</h2>
+              <div id="listaPedidos">
+                <p class="texto-suave">Todavía no hay pedidos registrados.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- RESERVAS -->
+          <section id="vista-reservas" class="vista">
+            <div class="tarjeta">
+              <h2>Crear reserva</h2>
+              <form id="formularioReserva">
+                <div class="fila">
+                  <div>
+                    <label for="reservaCliente">Nombre del usuario</label>
+                    <input id="reservaCliente" type="text" placeholder="Nombre del cliente" required>
+                  </div>
+                  <div>
+                    <label for="reservaCuenta">Cuenta del usuario</label>
+                    <input id="reservaCuenta" type="email" placeholder="correo@ejemplo.com">
+                  </div>
+                </div>
+
+                <div class="fila">
+                  <div>
+                    <label for="reservaFecha">Para cuándo</label>
+                    <input id="reservaFecha" type="date" required>
+                  </div>
+                  <div>
+                    <label for="reservaHora">Hora de reserva</label>
+                    <input id="reservaHora" type="time" required>
+                  </div>
+                </div>
+
+                <div class="fila">
+                  <div>
+                    <label for="reservaMesas">Mesas</label>
+                    <input id="reservaMesas" type="number" min="0" value="0" required>
+                  </div>
+                  <div>
+                    <label for="reservaSillas">Sillas</label>
+                    <input id="reservaSillas" type="number" min="0" value="0" required>
+                  </div>
+                </div>
+
+                <label for="reservaDetalle">Comentarios o productos</label>
+                <textarea id="reservaDetalle" placeholder="Escribe información adicional"></textarea>
+
+                <div class="separador"></div>
+                <h3>Productos de la reserva</h3>
+                <div id="productosReserva" class="cuadricula"></div>
+                <div class="separador"></div>
+                <h3>Total: <span id="totalReserva">$0.00</span></h3>
+                <p id="pagoReservaInfo" class="texto-suave"></p>
+
+                <button type="submit" class="boton-principal" style="width:100%;margin-top:10px;">Guardar reserva</button>
+              </form>
+
+              <div id="mensajeReserva" class="mensaje oculto"></div>
+            </div>
+
+            <div class="tarjeta margen-arriba">
+              <h2>Reservas registradas</h2>
+              <div id="listaReservas">
+                <p class="texto-suave">Todavía no hay reservas registradas.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- CALCULADORA -->
+          <section id="vista-calculadora" class="vista">
+            <div class="tarjeta">
+              <h2>Calculadora</h2>
+              <input id="pantallaCalculadora" type="text" readonly placeholder="0">
+
+              <div class="cuadricula calculadora-grid">
+                <button type="button" data-calculadora="7">7</button>
+                <button type="button" data-calculadora="8">8</button>
+                <button type="button" data-calculadora="9">9</button>
+                <button type="button" data-calculadora="/">÷</button>
+
+                <button type="button" data-calculadora="4">4</button>
+                <button type="button" data-calculadora="5">5</button>
+                <button type="button" data-calculadora="6">6</button>
+                <button type="button" data-calculadora="*">×</button>
+
+                <button type="button" data-calculadora="1">1</button>
+                <button type="button" data-calculadora="2">2</button>
+                <button type="button" data-calculadora="3">3</button>
+                <button type="button" data-calculadora="-">−</button>
+
+                <button type="button" data-calculadora="0">0</button>
+                <button type="button" data-calculadora=".">.</button>
+                <button type="button" data-calculadora="=">=</button>
+                <button type="button" data-calculadora="+">+</button>
+
+                <button type="button" data-calculadora="limpiar" class="boton-peligro">Limpiar</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- CONTENIDO -->
+          <section id="vista-contenido" class="vista">
+            <div class="tarjeta">
+              <h2>Administrar página principal</h2>
+              <p>Desde aquí puedes dirigirte a la página principal de Glow & Crunch para administrar el contenido con tu cuenta autorizada.</p>
+              <p class="texto-suave">El acceso de edición seguirá protegido por las reglas de Firebase y por el rol <strong>admin</strong>.</p>
+
+              <div class="fila">
+                <button id="botonAbrirGithub" type="button" class="boton-principal">Abrir GitHub</button>
+                <button id="botonAbrirVercel" type="button" class="boton-secundario">Abrir Vercel</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Navegación inferior (móvil) -->
+    <nav class="nav-movil">
+      <div class="nav-movil-inner">
+        <button class="boton-menu activo" data-vista="inicio">
+          <span class="icono">🏠</span><span>Inicio</span>
+        </button>
+        <button class="boton-menu" data-vista="pedidos">
+          <span class="icono">🛍️</span><span>Pedidos</span>
+        </button>
+        <button class="boton-menu" data-vista="reservas">
+          <span class="icono">📅</span><span>Reservas</span>
+        </button>
+        <button class="boton-menu" data-vista="calculadora">
+          <span class="icono">🧮</span><span>Calc</span>
+        </button>
+        <button class="boton-menu" data-vista="contenido">
+          <span class="icono">🎨</span><span>Web</span>
+        </button>
+      </div>
+    </nav>
+  </section>
+
+  <!-- Botón instalar PWA -->
+  <button id="botonInstalar">📲 Instalar app</button>
+
+  <!-- ============ MODAL AJUSTES ============ -->
+  <div id="modalAjustes" class="modal oculto">
+    <div class="modal-contenido">
+      <h2>⚙️ Ajustes</h2>
+
+      <div class="ajuste-fila">
+        <span>🔥 Sonido de fogata</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleFogata">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="ajuste-fila">
+        <span>🔊 Sonidos de interfaz</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleSonidos" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="ajuste-fila">
+        <span>✨ Efectos 3D</span>
+        <label class="switch">
+          <input type="checkbox" id="toggle3D" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="ajuste-fila">
+        <span>👋 Atajos por gestos</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleGestos" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="ajuste-fila">
+        <span>🎨 Tema de colores</span>
+        <select id="selectTema" style="width:auto;margin:0;">
+          <option value="rosa">🌸 Rosa pastel</option>
+          <option value="menta">🌿 Menta fresca</option>
+          <option value="lavanda">💜 Lavanda suave</option>
+        </select>
+      </div>
+
+      <button id="cerrarAjustes" class="boton-principal" style="width:100%;margin-top:16px;">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL AYUDA ============ -->
+  <div id="modalAyuda" class="modal oculto">
+    <div class="modal-contenido">
+      <h2>📖 Cómo usar el panel</h2>
+
+      <div class="instruccion">
+        <strong>1️⃣ Cómo registrar un pedido</strong>
+        Entra a <b>🛍️ Pedidos</b> → escribe el nombre del cliente, detalle, fecha y hora → toca <b>+</b> en los productos que quieras agregar → verifica el total → toca <b>Guardar pedido</b>.
+      </div>
+
+      <div class="instruccion">
+        <strong>2️⃣ Cómo crear una reserva</strong>
+        Entra a <b>📅 Reservas</b> → llena datos del cliente, fecha, hora, mesas y sillas → agrega productos → revisa el adelanto (50%) que se calcula solo → toca <b>Guardar reserva</b>.
+      </div>
+
+      <div class="instruccion">
+        <strong>3️⃣ Cómo imprimir o descargar el PDF</strong>
+        En cualquier pedido o reserva ya guardada verás dos botones: <b>📄 PDF</b> (descarga el archivo) y <b>📤 Compartir</b> (lo envía por WhatsApp, Gmail, etc.).
+      </div>
+
+      <div class="instruccion">
+        <strong>4️⃣ Cómo usar la calculadora</strong>
+        Entra a <b>🧮 Calculadora</b> → toca los números y operadores → <b>=</b> para ver el resultado → <b>Limpiar</b> para empezar de cero.
+      </div>
+
+      <div class="instruccion">
+        <strong>5️⃣ Cómo activar el sonido de fogata</strong>
+        Toca el engranaje <b>⚙️</b> arriba a la derecha → activa <b>Sonido de fogata</b>. También puedes cambiar el tema de colores y los efectos 3D desde ahí.
+      </div>
+
+      <div class="instruccion">
+        <strong>6️⃣ Cómo administrar la página principal</strong>
+        Entra a <b>🎨 Página principal</b> → abre GitHub o Vercel con tu cuenta autorizada para editar el contenido.
+      </div>
+
+      <div class="instruccion">
+        <strong>👋 Atajos con gestos</strong>
+        <div class="gesto">
+          <div class="gesto-icono">✌️</div>
+          <div><b>2 dedos</b> → Ir a Pedidos</div>
+        </div>
+        <div class="gesto">
+          <div class="gesto-icono">🤟</div>
+          <div><b>3 dedos</b> → Ir a Reservas</div>
+        </div>
+        <div class="gesto">
+          <div class="gesto-icono">🖖</div>
+          <div><b>4 dedos</b> → Compartir el último pedido/reserva</div>
+        </div>
+        <div class="gesto">
+          <div class="gesto-icono">🖐️</div>
+          <div><b>5 dedos</b> → Ir al inicio</div>
+        </div>
+        <p class="texto-suave" style="font-size:12px;margin:8px 0 0;">
+          Los gestos funcionan en cualquier parte del panel mientras tengas sesión activa. Se pueden apagar desde ⚙️ Ajustes.
+        </p>
+      </div>
+
+      <button id="cerrarAyuda" class="boton-principal" style="width:100%;margin-top:16px;">Entendido ✓</button>
+    </div>
+  </div>
+
+  <!-- Plantilla oculta para generar PDF -->
+  <div id="plantillaPDF"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+      getRedirectResult, onAuthStateChanged, signOut, setPersistence,
+      browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc, collection, addDoc, getDocs,
+      query, orderBy, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDjaFVYXKncCU5ybtPRQXi4LKi8mkbXEe8",
+      authDomain: "glow-y-crunch.firebaseapp.com",
+      projectId: "glow-y-crunch",
+      storageBucket: "glow-y-crunch.firebasestorage.app",
+      messagingSenderId: "168300469547",
+      appId: "1:168300469547:web:a6eacfab1a50e49117396e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const proveedorGoogle = new GoogleAuthProvider();
+
+    setPersistence(auth, browserLocalPersistence).catch(console.error);
+
+    const $ = (id) => document.getElementById(id);
+
+    let usuarioActual = null;
+    let expresionCalculadora = "";
+    let productosPedido = [];
+    let productosReserva = [];
+    let ultimoDocumento = null;
+
+    const cacheImprimible = new Map();
+
+    const productos = [
+      { nombre: "Banderilla hot", categoria: "Comida", precio: 2.25 },
+      { nombre: "Banderilla clásica", categoria: "Comida", precio: 1.75 },
+      { nombre: "Banderilla con papa", categoria: "Comida", precio: 2.25 },
+      { nombre: "Avatar", categoria: "Bebida", precio: 1.25 },
+      { nombre: "Dragón Lagoon", categoria: "Bebida", precio: 1.25 }
+    ];
+
+    /* ============================================================
+       ⚙️ AJUSTES (persistidos en localStorage)
+       ============================================================ */
+    const AJUSTES_DEF = {
+      fogata: false,
+      sonidos: true,
+      efectos3D: true,
+      gestos: true,
+      tema: "rosa"
+    };
+
+    let ajustes = { ...AJUSTES_DEF };
+    try {
+      const guardados = JSON.parse(localStorage.getItem("gc_admin_ajustes") || "{}");
+      ajustes = { ...AJUSTES_DEF, ...guardados };
+    } catch {}
+
+    function guardarAjustes() {
+      try { localStorage.setItem("gc_admin_ajustes", JSON.stringify(ajustes)); } catch {}
+    }
+
+    function aplicarAjustes() {
+      document.body.dataset.tema = ajustes.tema;
+      document.body.classList.toggle("sin-3d", !ajustes.efectos3D);
+    }
+
+    /* ============================================================
+       🎧 SISTEMA DE AUDIO
+       ============================================================ */
+    let audioCtx = null;
+    let campfireActivo = false;
+    let campfireNodos = null;
+    let crackleTimeoutId = null;
+
+    function asegurarAudioCtx() {
+      if (!audioCtx) {
+        try {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) { return null; }
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
+      return audioCtx;
+    }
+
+    function reproducirCrack(ctx, destino) {
+      const dur = 0.015 + Math.random() * 0.035;
+      const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * dur));
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const env = Math.pow(1 - i / bufferSize, 3);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      const filtro = ctx.createBiquadFilter();
+      filtro.type = "highpass";
+      filtro.frequency.value = 1400 + Math.random() * 2200;
+      filtro.Q.value = 0.8;
+      const g = ctx.createGain();
+      g.gain.value = 0.05 + Math.random() * 0.1;
+      src.connect(filtro).connect(g).connect(destino);
+      src.start();
+    }
+
+    function programarChispas() {
+      const ctx = audioCtx;
+      if (!ctx || !campfireActivo || !campfireNodos) return;
+      const siguiente = 90 + Math.random() * 500;
+      crackleTimeoutId = setTimeout(() => {
+        if (!campfireActivo || !campfireNodos) return;
+        reproducirCrack(ctx, campfireNodos.gain);
+        if (Math.random() < 0.25) {
+          setTimeout(() => reproducirCrack(ctx, campfireNodos.gain), 40 + Math.random() * 80);
+        }
+        programarChispas();
+      }, siguiente);
+    }
+
+    function iniciarFogata() {
+      const ctx = asegurarAudioCtx();
+      if (!ctx || campfireActivo) return;
+
+      const dur = 2;
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let ultimo = 0;
+      for (let i = 0; i < data.length; i++) {
+        const blanco = Math.random() * 2 - 1;
+        ultimo = (ultimo + 0.02 * blanco) / 1.02;
+        data[i] = ultimo * 3.5;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.loop = true;
+
+      const filtro = ctx.createBiquadFilter();
+      filtro.type = "lowpass";
+      filtro.frequency.value = 650;
+      filtro.Q.value = 0.6;
+
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+
+      src.connect(filtro).connect(gain).connect(ctx.destination);
+      src.start();
+
+      const ahora = ctx.currentTime;
+      gain.gain.cancelScheduledValues(ahora);
+      gain.gain.setValueAtTime(0, ahora);
+      gain.gain.linearRampToValueAtTime(0.14, ahora + 1.2);
+
+      campfireNodos = { src, filtro, gain };
+      campfireActivo = true;
+      programarChispas();
+    }
+
+    function detenerFogata() {
+      if (!audioCtx || !campfireNodos) return;
+      const ahora = audioCtx.currentTime;
+      const g = campfireNodos.gain;
+      g.gain.cancelScheduledValues(ahora);
+      g.gain.setValueAtTime(g.gain.value, ahora);
+      g.gain.linearRampToValueAtTime(0, ahora + 0.5);
+
+      const nodos = campfireNodos;
+      setTimeout(() => { try { nodos.src.stop(); } catch {} }, 600);
+
+      campfireActivo = false;
+      campfireNodos = null;
+      if (crackleTimeoutId) { clearTimeout(crackleTimeoutId); crackleTimeoutId = null; }
+    }
+
+    function sonidoClick() {
+      if (!ajustes.sonidos) return;
+      const ctx = asegurarAudioCtx(); if (!ctx) return;
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.exponentialRampToValueAtTime(420, t + 0.08);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.13, t + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+      osc.connect(g).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.13);
+    }
+
+    function sonidoPagina() {
+      if (!ajustes.sonidos) return;
+      const ctx = asegurarAudioCtx(); if (!ctx) return;
+      const t = ctx.currentTime;
+      const dur = 0.42;
+      const bufferSize = Math.floor(ctx.sampleRate * dur);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const p = i / bufferSize;
+        const env = Math.sin(p * Math.PI) * (1 - p * 0.35);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      const filtro = ctx.createBiquadFilter();
+      filtro.type = "bandpass";
+      filtro.frequency.setValueAtTime(1800, t);
+      filtro.frequency.exponentialRampToValueAtTime(700, t + dur);
+      filtro.Q.value = 1.6;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.16, t + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(filtro).connect(g).connect(ctx.destination);
+      src.start(t);
+    }
+
+    function sonidoExito() {
+      if (!ajustes.sonidos) return;
+      const ctx = asegurarAudioCtx(); if (!ctx) return;
+      const t = ctx.currentTime;
+      [660, 990].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const g = ctx.createGain();
+        const start = t + i * 0.08;
+        g.gain.setValueAtTime(0.0001, start);
+        g.gain.linearRampToValueAtTime(0.14, start + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, start + 0.35);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.4);
+      });
+    }
+
+    /* ============================================================
+       ⚙️ PANEL DE AJUSTES
+       ============================================================ */
+    const modalAjustes = $("modalAjustes");
+    const modalAyuda = $("modalAyuda");
+
+    function abrirAjustes() {
+      // Sincronizar UI con estado actual
+      $("toggleFogata").checked = ajustes.fogata;
+      $("toggleSonidos").checked = ajustes.sonidos;
+      $("toggle3D").checked = ajustes.efectos3D;
+      $("toggleGestos").checked = ajustes.gestos;
+      $("selectTema").value = ajustes.tema;
+      modalAjustes.classList.remove("oculto");
+    }
+    function cerrarAjustes() { modalAjustes.classList.add("oculto"); }
+    function abrirAyuda() { modalAyuda.classList.remove("oculto"); }
+    function cerrarAyuda() { modalAyuda.classList.add("oculto"); }
+
+    $("botonAjustes").addEventListener("click", (e) => {
+      e.stopPropagation();
+      sonidoClick();
+      abrirAjustes();
+    });
+
+    $("botonAyuda").addEventListener("click", (e) => {
+      e.stopPropagation();
+      sonidoClick();
+      abrirAyuda();
+    });
+
+    $("cerrarAjustes").addEventListener("click", () => { sonidoClick(); cerrarAjustes(); });
+    $("cerrarAyuda").addEventListener("click", () => { sonidoClick(); cerrarAyuda(); });
+
+    modalAjustes.addEventListener("click", (e) => {
+      if (e.target === modalAjustes) cerrarAjustes();
+    });
+    modalAyuda.addEventListener("click", (e) => {
+      if (e.target === modalAyuda) cerrarAyuda();
+    });
+
+    $("toggleFogata").addEventListener("change", (e) => {
+      ajustes.fogata = e.target.checked;
+      guardarAjustes();
+      if (ajustes.fogata) iniciarFogata();
+      else detenerFogata();
+    });
+
+    $("toggleSonidos").addEventListener("change", (e) => {
+      ajustes.sonidos = e.target.checked;
+      guardarAjustes();
+      if (ajustes.sonidos) sonidoClick();
+    });
+
+    $("toggle3D").addEventListener("change", (e) => {
+      ajustes.efectos3D = e.target.checked;
+      guardarAjustes();
+      aplicarAjustes();
+    });
+
+    $("toggleGestos").addEventListener("change", (e) => {
+      ajustes.gestos = e.target.checked;
+      guardarAjustes();
+    });
+
+    $("selectTema").addEventListener("change", (e) => {
+      ajustes.tema = e.target.value;
+      guardarAjustes();
+      aplicarAjustes();
+    });
+
+    aplicarAjustes();
+
+    /* ============================================================
+       👋 GESTOS TÁCTILES
+       ============================================================ */
+    let maxToques = 0;
+    let gestoYaDisparado = false;
+
+    document.addEventListener("touchstart", (e) => {
+      if (!ajustes.gestos || !usuarioActual) return;
+      if (e.touches.length > maxToques) maxToques = e.touches.length;
+    }, { passive: true });
+
+    document.addEventListener("touchend", (e) => {
+      if (!ajustes.gestos || !usuarioActual) return;
+      if (e.touches.length === 0) {
+        if (gestoYaDisparado) { gestoYaDisparado = false; return; }
+        const n = maxToques;
+        maxToques = 0;
+
+        // Ignorar si el toque fue dentro de un input/textarea/select
+        const elTocado = e.target;
+        if (elTocado && /INPUT|TEXTAREA|SELECT/.test(elTocado.tagName)) return;
+
+        if (n === 2) {
+          gestoYaDisparado = true;
+          navegar("pedidos");
+        } else if (n === 3) {
+          gestoYaDisparado = true;
+          navegar("reservas");
+        } else if (n === 4) {
+          gestoYaDisparado = true;
+          if (ultimoDocumento) {
+            compartirPDF(ultimoDocumento);
+          } else {
+            mostrarToast("Todavía no hay un comprobante para compartir.");
+          }
+        } else if (n === 5) {
+          gestoYaDisparado = true;
+          navegar("inicio");
+        }
+      }
+    }, { passive: true });
+
+    function navegar(nombreVista) {
+      const boton = document.querySelector(`.boton-menu[data-vista="${nombreVista}"]`);
+      if (boton) boton.click();
+    }
+
+    /* ============================================================
+       UTILIDADES
+       ============================================================ */
+    function escaparHTML(valor) {
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function mostrarMensaje(id, texto, tipo = "") {
+      const el = $(id); if (!el) return;
+      el.textContent = texto;
+      el.className = "mensaje";
+      if (tipo) el.classList.add(tipo);
+      el.classList.remove("oculto");
+    }
+
+    function ocultarMensaje(id) {
+      const el = $(id); if (!el) return;
+      el.textContent = "";
+      el.className = "mensaje oculto";
+    }
+
+    function dinero(valor) {
+      return Number(valor || 0).toLocaleString("en-US", {
+        style: "currency", currency: "USD"
+      });
+    }
+
+    function fechaLocal() {
+      return new Date().toLocaleString("es-SV");
+    }
+
+    function mostrarLogin() {
+      $("pantallaLogin").classList.remove("oculto");
+      $("pantallaPanel").classList.add("oculto");
+      document.querySelector(".flotantes").style.display = "flex";
+    }
+
+    function mostrarPanel() {
+      $("pantallaLogin").classList.add("oculto");
+      $("pantallaPanel").classList.remove("oculto");
+    }
+
+    /* Toast simple para feedback de gestos */
+    let toastTimeout = null;
+    function mostrarToast(texto) {
+      let t = $("toastGC");
+      if (!t) {
+        t = document.createElement("div");
+        t.id = "toastGC";
+        t.style.cssText = `
+          position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+          background: rgba(107,58,74,0.95); color: #fff;
+          padding: 12px 20px; border-radius: 99px;
+          font-size: 13px; font-weight: bold; z-index: 2000;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+          pointer-events: none; opacity: 0; transition: opacity 0.3s, transform 0.3s;
+        `;
+        document.body.appendChild(t);
+      }
+      t.textContent = texto;
+      t.style.opacity = "1";
+      t.style.transform = "translateX(-50%) translateY(-6px)";
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        t.style.opacity = "0";
+        t.style.transform = "translateX(-50%) translateY(0)";
+      }, 2200);
+    }
+
+    /* ============================================================
+       SELECTOR DE PRODUCTOS
+       ============================================================ */
+    function renderizarProductosEn(contenedorId, tipo) {
+      const contenedor = $(contenedorId);
+      contenedor.innerHTML = "";
+
+      productos.forEach((producto, indice) => {
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "producto-factura";
+        tarjeta.innerHTML = `
+          <div>
+            <span class="etiqueta">${escaparHTML(producto.categoria)}</span>
+            <h3>${escaparHTML(producto.nombre)}</h3>
+            <div class="producto-precio">${dinero(producto.precio)}</div>
+          </div>
+          <div class="producto-cantidad">
+            <button type="button" data-op="restar" data-tipo="${tipo}" data-idx="${indice}">−</button>
+            <span id="cant-${tipo}-${indice}">0</span>
+            <button type="button" data-op="sumar" data-tipo="${tipo}" data-idx="${indice}">+</button>
+          </div>
+        `;
+        contenedor.appendChild(tarjeta);
+      });
+
+      contenedor.querySelectorAll("button[data-op]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const i = Number(b.dataset.idx);
+          const cambio = b.dataset.op === "sumar" ? 1 : -1;
+          cambiarCantidad(b.dataset.tipo, i, cambio);
+        });
+      });
+    }
+
+    function listaPorTipo(tipo) {
+      return tipo === "pedido" ? productosPedido : productosReserva;
+    }
+    function setListaPorTipo(tipo, nuevaLista) {
+      if (tipo === "pedido") productosPedido = nuevaLista;
+      else productosReserva = nuevaLista;
+    }
+
+    function cambiarCantidad(tipo, indice, cambio) {
+      const producto = productos[indice];
+      let lista = listaPorTipo(tipo);
+      const existente = lista.find((i) => i.nombre === producto.nombre);
+
+      if (!existente && cambio > 0) {
+        lista.push({
+          nombre: producto.nombre,
+          categoria: producto.categoria,
+          precio: producto.precio,
+          cantidad: 1
+        });
+      } else if (existente) {
+        existente.cantidad += cambio;
+        if (existente.cantidad <= 0) {
+          lista = lista.filter((i) => i.nombre !== producto.nombre);
+        }
+      }
+      setListaPorTipo(tipo, lista);
+      actualizarVistaProductos(tipo);
+    }
+
+    function totalDe(tipo) {
+      return listaPorTipo(tipo).reduce((t, p) => t + p.precio * p.cantidad, 0);
+    }
+
+    function actualizarVistaProductos(tipo) {
+      productos.forEach((producto, indice) => {
+        const sel = listaPorTipo(tipo).find((i) => i.nombre === producto.nombre);
+        const el = $(`cant-${tipo}-${indice}`);
+        if (el) el.textContent = sel ? sel.cantidad : 0;
+      });
+
+      const total = totalDe(tipo);
+      if (tipo === "pedido") {
+        $("totalPedido").textContent = dinero(total);
+      } else {
+        $("totalReserva").textContent = dinero(total);
+        if (total > 0) {
+          $("pagoReservaInfo").textContent =
+            `Pago adelantado requerido: ${dinero(total * 0.5)} (50%). ` +
+            `Saldo pendiente: ${dinero(total * 0.5)}.`;
+        } else {
+          $("pagoReservaInfo").textContent = "";
+        }
+      }
+    }
+
+    renderizarProductosEn("productosPedido", "pedido");
+    renderizarProductosEn("productosReserva", "reserva");
+
+    /* ============================================================
+       LOGIN
+       ============================================================ */
+    $("botonGoogle").addEventListener("click", async () => {
+      const boton = $("botonGoogle");
+      boton.disabled = true;
+      boton.textContent = "Conectando...";
+      ocultarMensaje("mensajeLogin");
+
+      try {
+        await signInWithPopup(auth, proveedorGoogle);
+      } catch (error) {
+        console.error("Error login:", error);
+        if (
+          error.code === "auth/popup-blocked" ||
+          error.code === "auth/operation-not-supported-in-this-environment" ||
+          error.code === "auth/cancelled-popup-request"
+        ) {
+          try {
+            await signInWithRedirect(auth, proveedorGoogle);
+            return;
+          } catch (e2) {
+            mostrarMensaje("mensajeLogin", "No se pudo iniciar sesión. " + e2.message, "error");
+          }
+        } else {
+          mostrarMensaje("mensajeLogin", "No se pudo iniciar sesión con Google. " + error.message, "error");
+        }
+        boton.disabled = false;
+        boton.textContent = "Iniciar sesión con Google";
+      }
+    });
+
+    getRedirectResult(auth).catch((error) => {
+      console.error("Error de redirect:", error);
+      if (error && error.message) {
+        mostrarMensaje("mensajeLogin", "Error al volver de Google: " + error.message, "error");
+      }
+    });
+
+    $("botonCerrarSesion").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, async (usuario) => {
+      if (!usuario) {
+        usuarioActual = null;
+        mostrarLogin();
+        return;
+      }
+      try {
+        const ref = doc(db, "usuarios", usuario.email);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists() || snap.data().rol !== "admin") {
+          mostrarMensaje("mensajeLogin", "Este sitio solo es para personal autorizado.", "error");
+          await signOut(auth);
+          return;
+        }
+        usuarioActual = usuario;
+        $("nombreUsuario").textContent =
+          usuario.displayName || snap.data().nombre || "Administrador";
+        $("correoUsuario").textContent = usuario.email;
+
+        mostrarPanel();
+        await cargarRegistros();
+
+        // Reanudar fogata si el usuario la tenía activa
+        if (ajustes.fogata) {
+          // Esperamos al primer gesto del usuario para poder reanudar audio
+          const reanudar = () => {
+            iniciarFogata();
+            document.removeEventListener("click", reanudar);
+            document.removeEventListener("touchstart", reanudar);
+          };
+          document.addEventListener("click", reanudar, { once: true });
+          document.addEventListener("touchstart", reanudar, { once: true });
+        }
+      } catch (error) {
+        console.error("Error verificando autorización:", error);
+        mostrarMensaje("mensajeLogin", "No se pudo verificar tu autorización. " + error.message, "error");
+        await signOut(auth);
+      }
+    });
+
+    /* ============================================================
+       NAVEGACIÓN
+       ============================================================ */
+    document.querySelectorAll(".boton-menu").forEach((boton) => {
+      boton.addEventListener("click", () => {
+        const nombreVista = boton.dataset.vista;
+
+        document.querySelectorAll(".vista").forEach((v) => v.classList.remove("activa"));
+        const vista = $(`vista-${nombreVista}`);
+        if (vista) vista.classList.add("activa");
+
+        document.querySelectorAll(".boton-menu").forEach((item) => {
+          item.classList.toggle("activo", item.dataset.vista === nombreVista);
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        if (nombreVista === "pedidos") cargarPedidos();
+        if (nombreVista === "reservas") cargarReservas();
+        if (nombreVista === "inicio") actualizarEstadisticas();
+      });
+    });
+
+    /* ============================================================
+       GUARDAR PEDIDO
+       ============================================================ */
+    $("formularioPedido").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!usuarioActual) return;
+
+      const boton = e.target.querySelector("button[type='submit']");
+      boton.disabled = true;
+
+      const total = totalDe("pedido");
+
+      const datosPedido = {
+        tipoDocumento: "pedido",
+        cliente: $("pedidoCliente").value.trim(),
+        detalle: $("pedidoDetalle").value.trim(),
+        paraCuando: $("pedidoFecha").value,
+        hora: $("pedidoHora").value,
+        productos: [...productosPedido],
+        total,
+        estado: "recibido",
+        fechaRegistro: fechaLocal(),
+        creadoEn: serverTimestamp(),
+        cajeroNombre: usuarioActual.displayName || "",
+        cajeroCuenta: usuarioActual.email
+      };
+
+      try {
+        await addDoc(collection(db, "pedidos"), datosPedido);
+        e.target.reset();
+        productosPedido = [];
+        actualizarVistaProductos("pedido");
+        sonidoExito();
+        mostrarMensaje("mensajePedido", "Pedido guardado correctamente.", "");
+        await cargarPedidos();
+        await actualizarEstadisticas();
+      } catch (error) {
+        console.error(error);
+        mostrarMensaje("mensajePedido", "No se pudo guardar el pedido. " + error.message, "error");
+      } finally {
+        boton.disabled = false;
+      }
+    });
+
+    /* ============================================================
+       GUARDAR RESERVA
+       ============================================================ */
+    $("formularioReserva").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!usuarioActual) return;
+
+      const boton = e.target.querySelector("button[type='submit']");
+      boton.disabled = true;
+
+      const total = totalDe("reserva");
+      const pagoAdelantado = total * 0.5;
+      const saldoPendiente = total - pagoAdelantado;
+
+      const datosReserva = {
+        tipoDocumento: "reserva",
+        cliente: $("reservaCliente").value.trim(),
+        cuentaUsuario: $("reservaCuenta").value.trim(),
+        paraCuando: $("reservaFecha").value,
+        hora: $("reservaHora").value,
+        mesas: Number($("reservaMesas").value || 0),
+        sillas: Number($("reservaSillas").value || 0),
+        detalle: $("reservaDetalle").value.trim(),
+        productos: [...productosReserva],
+        total,
+        pagoAdelantado,
+        saldoPendiente,
+        pagoAdelantadoPorcentaje: 50,
+        estado: "pendiente",
+        fechaRegistro: fechaLocal(),
+        creadoEn: serverTimestamp(),
+        recepcionistaNombre: usuarioActual.displayName || "",
+        recepcionistaCuenta: usuarioActual.email
+      };
+
+      try {
+        await addDoc(collection(db, "reservas"), datosReserva);
+        e.target.reset();
+        productosReserva = [];
+        actualizarVistaProductos("reserva");
+        sonidoExito();
+        mostrarMensaje("mensajeReserva", "Reserva guardada correctamente.", "");
+        await cargarReservas();
+        await actualizarEstadisticas();
+      } catch (error) {
+        console.error(error);
+        mostrarMensaje("mensajeReserva", "No se pudo guardar la reserva. " + error.message, "error");
+      } finally {
+        boton.disabled = false;
+      }
+    });
+
+    /* ============================================================
+       RENDER REGISTROS
+       ============================================================ */
+    const etiquetasCampo = {
+      cliente: "Cliente",
+      detalle: "Detalle",
+      paraCuando: "Para cuándo",
+      hora: "Hora",
+      estado: "Estado",
+      fechaRegistro: "Registrado",
+      cuentaUsuario: "Cuenta",
+      mesas: "Mesas",
+      sillas: "Sillas",
+      productos: "Productos",
+      total: "Total",
+      pagoAdelantado: "Pago adelantado (50%)",
+      saldoPendiente: "Saldo pendiente",
+      cajeroNombre: "Cajero",
+      recepcionistaNombre: "Recepcionista"
+    };
+
+    const camposOcultos = new Set([
+      "creadoEn", "usuarioCuenta", "cajeroCuenta", "recepcionistaCuenta",
+      "pagoAdelantadoPorcentaje", "tipoDocumento"
+    ]);
+
+    function formatearValor(valor) {
+      if (valor === null || valor === undefined) return "";
+      if (Array.isArray(valor)) {
+        if (valor.length === 0) return "";
+        if (valor.every((v) => v && typeof v === "object" && "nombre" in v)) {
+          return valor.map((p) => `${p.cantidad ?? 1}× ${p.nombre}`).join(", ");
+        }
+        return valor.map((v) => formatearValor(v)).join(", ");
+      }
+      if (typeof valor === "object") {
+        if (typeof valor.toDate === "function") return valor.toDate().toLocaleString("es-SV");
+        return "";
+      }
+      return String(valor);
+    }
+
+    function crearRegistroHTML(id, titulo, datos, etiqueta) {
+      const filas = Object.entries(datos)
+        .filter(([k]) => !camposOcultos.has(k) && k !== "total")
+        .map(([k, v]) => {
+          const texto = formatearValor(v);
+          if (!texto) return "";
+          const label = etiquetasCampo[k] || k;
+          return `<div class="campo"><strong>${escaparHTML(label)}:</strong> ${escaparHTML(texto)}</div>`;
+        })
+        .filter(Boolean)
+        .join("");
+
+      const total = Number(datos.total || 0);
+      const totalLinea = total > 0
+        ? `<div class="campo total-linea"><strong>Total:</strong> ${dinero(total)}</div>`
+        : "";
+
+      return `
+        <article class="registro">
+          <div class="registro-cabecera">
+            <strong>${escaparHTML(titulo)}</strong>
+            <span class="etiqueta">${escaparHTML(etiqueta)}</span>
+          </div>
+          ${filas}
+          ${totalLinea}
+          <div class="botones-registro">
+            <button type="button" class="boton-principal" data-pdf-id="${escaparHTML(id)}">
+              📄 PDF
+            </button>
+            <button type="button" class="boton-secundario" data-share-id="${escaparHTML(id)}">
+              📤 Compartir
+            </button>
+          </div>
+        </article>
+      `;
+    }
+
+    async function cargarPedidos() {
+      const c = $("listaPedidos");
+      try {
+        let docs;
+        try {
+          const q = query(collection(db, "pedidos"), orderBy("creadoEn", "desc"));
+          docs = (await getDocs(q)).docs;
+        } catch {
+          docs = [...(await getDocs(collection(db, "pedidos"))).docs].reverse();
+        }
+
+        if (docs.length === 0) {
+          c.innerHTML = `<p class="sin-registros">Todavía no hay pedidos registrados.</p>`;
+          return;
+        }
+
+        c.innerHTML = docs.map((d) => {
+          const datos = d.data();
+          const idDoc = "pedido_" + d.id;
+          cacheImprimible.set(idDoc, datos);
+          return crearRegistroHTML(idDoc, datos.cliente || "Pedido", datos, "Pedido");
+        }).join("");
+
+        conectarBotonesAccion();
+      } catch (e) {
+        console.error(e);
+        c.innerHTML = `<p class="mensaje error">No se pudieron cargar los pedidos.</p>`;
+      }
+    }
+
+    async function cargarReservas() {
+      const c = $("listaReservas");
+      try {
+        let docs;
+        try {
+          const q = query(collection(db, "reservas"), orderBy("creadoEn", "desc"));
+          docs = (await getDocs(q)).docs;
+        } catch {
+          docs = [...(await getDocs(collection(db, "reservas"))).docs].reverse();
+        }
+
+        if (docs.length === 0) {
+          c.innerHTML = `<p class="sin-registros">Todavía no hay reservas registradas.</p>`;
+          return;
+        }
+
+        c.innerHTML = docs.map((d) => {
+          const datos = d.data();
+          const idDoc = "reserva_" + d.id;
+          cacheImprimible.set(idDoc, datos);
+          return crearRegistroHTML(idDoc, datos.cliente || "Reserva", datos, "Reserva");
+        }).join("");
+
+        conectarBotonesAccion();
+      } catch (e) {
+        console.error(e);
+        c.innerHTML = `<p class="mensaje error">No se pudieron cargar las reservas.</p>`;
+      }
+    }
+
+    function conectarBotonesAccion() {
+      document.querySelectorAll("button[data-pdf-id]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const datos = cacheImprimible.get(b.dataset.pdfId);
+          if (!datos) { alert("No se encontraron los datos."); return; }
+          ultimoDocumento = datos;
+          descargarPDF(datos);
+        });
+      });
+
+      document.querySelectorAll("button[data-share-id]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const datos = cacheImprimible.get(b.dataset.shareId);
+          if (!datos) { alert("No se encontraron los datos."); return; }
+          ultimoDocumento = datos;
+          compartirPDF(datos);
+        });
+      });
+    }
+
+    /* ============================================================
+       🖼️ CONSTRUIR PLANTILLA HTML DEL PDF
+       ============================================================ */
+    function construirHTMLComprobante(datos) {
+      const esReserva = datos.tipoDocumento === "reserva";
+      const titulo = esReserva ? "Comprobante de Reserva" : "Comprobante de Pedido";
+
+      const productosArr = Array.isArray(datos.productos) ? datos.productos : [];
+      const filas = productosArr.map((p) => `
+        <tr>
+          <td>${escaparHTML(p.nombre)}</td>
+          <td>${escaparHTML(p.cantidad)}</td>
+          <td>${dinero(p.precio)}</td>
+          <td>${dinero(p.precio * p.cantidad)}</td>
+        </tr>
+      `).join("");
+
+      const tablaProductos = productosArr.length > 0
+        ? `<table class="tabla-factura">
+             <thead>
+               <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
+             </thead>
+             <tbody>${filas}</tbody>
+           </table>`
+        : "";
+
+      const total = Number(datos.total || 0);
+
+      // ✅ Bloque reserva reforzado con mesas/sillas SIEMPRE visibles
+      const bloqueReserva = esReserva
+        ? `
+          <p class="info-linea"><strong>Mesas reservadas:</strong> ${escaparHTML(datos.mesas ?? 0)}</p>
+          <p class="info-linea"><strong>Sillas reservadas:</strong> ${escaparHTML(datos.sillas ?? 0)}</p>
+          ${total > 0 ? `
+            <p class="info-linea"><strong>Pago adelantado (50%):</strong> ${dinero(total * 0.5)}</p>
+            <p class="info-linea"><strong>Saldo pendiente:</strong> ${dinero(total * 0.5)}</p>
+          ` : ""}
+        `
+        : "";
+
+      return `
+        <div class="encabezado-print">
+          <div class="logo-pdf">G&C</div>
+          <div>
+            <h1>Glow &amp; Crunch</h1>
+            <h2>${titulo}</h2>
+          </div>
+        </div>
+
+        <p class="info-linea"><strong>Fecha de emisión:</strong> ${escaparHTML(fechaLocal())}</p>
+        <p class="info-linea"><strong>Cliente:</strong> ${escaparHTML(datos.cliente || "—")}</p>
+        ${esReserva && datos.cuentaUsuario ? `<p class="info-linea"><strong>Cuenta:</strong> ${escaparHTML(datos.cuentaUsuario)}</p>` : ""}
+        <p class="info-linea"><strong>Para cuándo:</strong> ${escaparHTML(datos.paraCuando || "—")} ${escaparHTML(datos.hora || "")}</p>
+        ${datos.detalle ? `<p class="info-linea"><strong>Detalle:</strong> ${escaparHTML(datos.detalle)}</p>` : ""}
+
+        ${bloqueReserva}
+        ${tablaProductos}
+
+        ${total > 0 ? `<div class="total-final">Total: ${dinero(total)}</div>` : ""}
+
+        <div class="firma-bloque">
+          <div class="firma-caja">
+            <div class="firma-linea"></div>
+            <div>Firma del cliente</div>
+          </div>
+          <div class="firma-caja">
+            <div class="firma-linea"></div>
+            <div>Firma autorizada<br>${escaparHTML(datos.cajeroNombre || datos.recepcionistaNombre || "Glow & Crunch")}</div>
+          </div>
+        </div>
+
+        <p class="pie">
+          Atendido por: ${escaparHTML(datos.cajeroNombre || datos.recepcionistaNombre || "—")}
+          ${datos.cajeroCuenta || datos.recepcionistaCuenta ? `(${escaparHTML(datos.cajeroCuenta || datos.recepcionistaCuenta)})` : ""}
+          <br>Gracias por su preferencia 🌸 · Glow &amp; Crunch
+        </p>
+      `;
+    }
+
+    /* ============================================================
+       📄 DESCARGAR PDF REAL (con html2pdf)
+       ============================================================ */
+    async function generarBlobPDF(datos) {
+      const plantilla = $("plantillaPDF");
+      plantilla.innerHTML = construirHTMLComprobante(datos);
+
+      // Esperamos un tick para asegurar el renderizado
+      await new Promise((r) => setTimeout(r, 60));
+
+      if (typeof html2pdf === "undefined") {
+        throw new Error("html2pdf no se cargó. Revisa tu conexión a internet.");
+      }
+
+      const nombreArchivo = `comprobante-${(datos.cliente || "cliente").replace(/[^a-zA-Z0-9-_]/g, "_")}-${Date.now()}.pdf`;
+
+      const opciones = {
+        margin: [10, 10, 10, 10],
+        filename: nombreArchivo,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          logging: false,
+          windowWidth: 800
+        },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+      };
+
+      const worker = html2pdf().set(opciones).from(plantilla);
+
+      // Devolvemos el worker para poder pedir .save() o .output('blob')
+      return { worker, nombreArchivo, opciones };
+    }
+
+    async function descargarPDF(datos) {
+      try {
+        mostrarToast("Generando PDF…");
+        const { worker, nombreArchivo } = await generarBlobPDF(datos);
+        await worker.save();
+        mostrarToast(`✅ PDF guardado: ${nombreArchivo}`);
+      } catch (e) {
+        console.error("Error al generar PDF:", e);
+        mostrarToast("❌ No se pudo generar el PDF. " + e.message);
+      }
+    }
+
+    /* ============================================================
+       📤 COMPARTIR PDF (Web Share API)
+       ============================================================ */
+    async function compartirPDF(datos) {
+      try {
+        mostrarToast("Preparando PDF para compartir…");
+
+        const { worker, nombreArchivo, opciones } = await generarBlobPDF(datos);
+
+        // Generamos blob SIN descargar
+        const blob = await worker.set({
+          ...opciones,
+          // evitamos que se descargue al generar
+        }).outputPdf("blob");
+
+        const archivo = new File([blob], nombreArchivo, { type: "application/pdf" });
+
+        // Verificar soporte de compartir archivos
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            title: `Comprobante ${datos.tipoDocumento === "reserva" ? "de Reserva" : "de Pedido"} — Glow & Crunch`,
+            text: `Comprobante de ${datos.cliente || "cliente"} — Total: ${dinero(datos.total)}`
+          });
+          mostrarToast("✅ Comprobante compartido");
+        } else {
+          // Fallback: descargar
+          mostrarToast("Tu navegador no soporta compartir. Descargando PDF…");
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = nombreArchivo;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+        }
+      } catch (e) {
+        if (e && e.name === "AbortError") {
+          // El usuario canceló
+          return;
+        }
+        console.error("Error al compartir PDF:", e);
+        mostrarToast("❌ No se pudo compartir. " + e.message);
+      }
+    }
+
+    /* ============================================================
+       ESTADÍSTICAS
+       ============================================================ */
+    async function actualizarEstadisticas() {
+      try {
+        const [p, r] = await Promise.all([
+          getDocs(collection(db, "pedidos")),
+          getDocs(collection(db, "reservas"))
+        ]);
+
+        let totalVentas = 0;
+        p.forEach((d) => { totalVentas += Number(d.data().total || 0); });
+        r.forEach((d) => { totalVentas += Number(d.data().total || 0); });
+
+        $("totalVentas").textContent = dinero(totalVentas);
+        $("cantidadPedidos").textContent = p.size;
+        $("cantidadReservas").textContent = r.size;
+      } catch (e) {
+        console.error("Estadísticas:", e);
+      }
+    }
+
+    async function cargarRegistros() {
+      await Promise.all([cargarPedidos(), cargarReservas()]);
+      await actualizarEstadisticas();
+    }
+
+    /* ============================================================
+       CALCULADORA
+       ============================================================ */
+    const caracteresValidos = /^[0-9+\-*/.() ]*$/;
+
+    document.querySelectorAll("[data-calculadora]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const t = b.dataset.calculadora;
+        if (t === "limpiar") {
+          expresionCalculadora = "";
+        } else if (t === "=") {
+          try {
+            if (!expresionCalculadora.trim()) return;
+            if (!caracteresValidos.test(expresionCalculadora)) {
+              expresionCalculadora = "Error";
+            } else {
+              const r = Function(`"use strict"; return (${expresionCalculadora})`)();
+              expresionCalculadora = Number.isFinite(r) ? String(r) : "Error";
+            }
+          } catch {
+            expresionCalculadora = "Error";
+          }
+        } else {
+          if (expresionCalculadora === "Error") expresionCalculadora = "";
+          expresionCalculadora += t;
+        }
+        $("pantallaCalculadora").value = expresionCalculadora;
+      });
+    });
+
+    /* ============================================================
+       BOTONES EXTERNOS
+       ============================================================ */
+    $("botonAbrirGithub").addEventListener("click", () => {
+      window.open("https://papiromesa-ux.github.io/Glow-y-Crunch-/", "_blank", "noopener,noreferrer");
+    });
+    $("botonAbrirVercel").addEventListener("click", () => {
+      window.open("https://glow-y-crunch.vercel.app/", "_blank", "noopener,noreferrer");
+    });
+
+    /* ============================================================
+       PWA
+       ============================================================ */
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js")
+          .then((reg) => console.log("SW registrado:", reg.scope))
+          .catch((err) => console.info("SW no disponible:", err.message));
+      });
+    }
+
+    let eventoInstalar = null;
+    const botonInstalar = $("botonInstalar");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      eventoInstalar = e;
+      botonInstalar.classList.add("visible");
+    });
+
+    botonInstalar.addEventListener("click", async () => {
+      if (!eventoInstalar) return;
+      eventoInstalar.prompt();
+      const { outcome } = await eventoInstalar.userChoice;
+      console.log("Resultado instalación:", outcome);
+      eventoInstalar = null;
+      botonInstalar.classList.remove("visible");
+    });
+
+    window.addEventListener("appinstalled", () => {
+      console.log("PWA instalada ✅");
+      botonInstalar.classList.remove("visible");
+      eventoInstalar = null;
+    });
+
+    const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const enStandalone = window.matchMedia("(display-mode: standalone)").matches
+                      || window.navigator.standalone === true;
+
+    if (esIOS && !enStandalone) {
+      $("pistaInstalar").classList.remove("oculto");
+    }
+  </script>
+</body>
+</html>

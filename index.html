@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- ✅ ZOOM PERMITIDO -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes">
   <meta name="theme-color" content="#9D6377">
   <meta name="mobile-web-app-capable" content="yes">
@@ -14,7 +13,9 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='66' font-size='44' text-anchor='middle' fill='%23fff' font-family='Georgia' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- ✅ NUEVAS LIBRERÍAS para PDF (reemplazan html2pdf) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
     :root {
@@ -75,7 +76,6 @@
       z-index: -1;
     }
 
-    /* ✅ 3D APAGABLE — usamos html[data-3d="off"] para forzar sin !important conflict */
     html[data-3d="off"] *,
     html[data-3d="off"] *:hover,
     html[data-3d="off"] *:active {
@@ -99,7 +99,6 @@
     }
 
     @media (hover: hover) {
-      /* ✅ 3D MÁS SUTIL Y ELEGANTE */
       button:hover {
         filter: brightness(1.05);
         transform: translateY(-2px);
@@ -159,7 +158,6 @@
       text-shadow: 0 2px 0 #4A2530, 0 3px 6px rgba(0,0,0,0.35);
     }
 
-    /* ====== PANTALLA CRÉDITOS ====== */
     .pantalla-creditos {
       position: fixed; inset: 0; z-index: 10000;
       background: #000;
@@ -252,7 +250,6 @@
       transition: width 0.1s linear;
     }
 
-    /* ====== LOGIN ====== */
     .login-pantalla {
       min-height: 100vh; min-height: 100dvh;
       display: grid; place-items: center;
@@ -378,7 +375,6 @@
     .texto-suave { color: #8B6070; }
     .margen-arriba { margin-top: 16px; }
 
-    /* ====== CALCULADORA MEJORADA ====== */
     .calc-wrapper {
       max-width: 420px;
       margin: 0 auto;
@@ -444,7 +440,6 @@
       min-height: 54px;
     }
 
-    /* ====== PRODUCTOS ====== */
     .producto-factura {
       display: flex; flex-direction: column; justify-content: space-between;
       min-height: 145px; padding: 14px;
@@ -464,7 +459,6 @@
     }
     .producto-cantidad span { min-width: 28px; text-align: center; font-weight: bold; font-size: 18px; }
 
-    /* ====== REGISTROS ====== */
     .registro {
       margin: 10px 0; padding: 14px;
       border: 2px solid var(--madera-clara); border-radius: 17px;
@@ -491,7 +485,6 @@
       color: var(--madera-oscura);
     }
 
-    /* ✅ Botones del registro: PDF + Compartir + Eliminar en grid */
     .botones-registro {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -516,7 +509,6 @@
     }
     .sin-registros { padding: 14px; border-radius: 15px; background: var(--crema-oscura); }
 
-    /* ====== PERFIL ====== */
     .perfil-avatar {
       width: 100px; height: 100px;
       border-radius: 50%;
@@ -539,7 +531,6 @@
     .perfil-info:last-of-type { border-bottom: 0; }
     .perfil-info strong { color: var(--madera-oscura); }
 
-    /* ====== MODALES ====== */
     .modal {
       position: fixed; inset: 0; z-index: 1000;
       background: rgba(75, 44, 58, 0.55);
@@ -624,7 +615,6 @@
       margin-bottom: 14px;
     }
 
-    /* ====== FLOTANTES ====== */
     .flotantes {
       position: fixed;
       top: calc(16px + var(--safe-top));
@@ -728,7 +718,6 @@
 
 <body data-tema="rosa">
 
-  <!-- ============ PANTALLA CRÉDITOS (aparece al inicio) ============ -->
   <div id="pantallaCreditos" class="pantalla-creditos">
     <video autoplay muted loop playsinline preload="auto">
       <source src="ALACR%C3%81N.mp4" type="video/mp4">
@@ -748,13 +737,11 @@
     </div>
   </div>
 
-  <!-- ============ FLOTANTES ============ -->
   <div class="flotantes">
     <button id="botonAyuda" class="boton-flotante" title="Cómo usar" aria-label="Ayuda">📖</button>
     <button id="botonAjustes" class="boton-flotante" title="Ajustes" aria-label="Ajustes">⚙️</button>
   </div>
 
-  <!-- ============ LOGIN ============ -->
   <section id="pantallaLogin" class="login-pantalla">
     <div class="tarjeta login-tarjeta">
       <div class="logo-madera">G&C</div>
@@ -776,7 +763,6 @@
     </div>
   </section>
 
-  <!-- ============ PANEL ============ -->
   <section id="pantallaPanel" class="oculto">
     <div class="contenedor">
 
@@ -806,7 +792,6 @@
         </nav>
 
         <main>
-          <!-- INICIO -->
           <section id="vista-inicio" class="vista activa">
             <div class="cuadricula">
               <article class="tarjeta estadistica">
@@ -834,7 +819,6 @@
             </div>
           </section>
 
-          <!-- PEDIDOS -->
           <section id="vista-pedidos" class="vista">
             <div class="tarjeta">
               <h2>Registrar pedido</h2>
@@ -875,7 +859,6 @@
             </div>
           </section>
 
-          <!-- RESERVAS -->
           <section id="vista-reservas" class="vista">
             <div class="tarjeta">
               <h2>Crear reserva</h2>
@@ -936,7 +919,6 @@
             </div>
           </section>
 
-          <!-- CALCULADORA -->
           <section id="vista-calculadora" class="vista">
             <div class="tarjeta">
               <h2>Calculadora</h2>
@@ -970,7 +952,6 @@
             </div>
           </section>
 
-          <!-- PERFIL -->
           <section id="vista-perfil" class="vista">
             <div class="tarjeta">
               <h2>👤 Mi perfil</h2>
@@ -1004,7 +985,6 @@
             </div>
           </section>
 
-          <!-- CONTENIDO -->
           <section id="vista-contenido" class="vista">
             <div class="tarjeta">
               <h2>Administrar página principal</h2>
@@ -1043,7 +1023,6 @@
 
   <button id="botonInstalar">📲 Instalar app</button>
 
-  <!-- MODAL AJUSTES -->
   <div id="modalAjustes" class="modal oculto">
     <div class="modal-contenido">
       <h2>⚙️ Ajustes</h2>
@@ -1079,7 +1058,6 @@
     </div>
   </div>
 
-  <!-- MODAL AYUDA -->
   <div id="modalAyuda" class="modal oculto">
     <div class="modal-contenido">
       <h2>📖 Cómo usar el panel</h2>
@@ -1177,9 +1155,7 @@
       { nombre: "Dragón Lagoon", categoria: "Bebida", precio: 1.25 }
     ];
 
-    /* ============================================================
-       CRÉDITOS
-       ============================================================ */
+    /* ============ CRÉDITOS ============ */
     (function inicializarCreditos() {
       const pantalla = $("pantallaCreditos");
       const boton = $("saltarCreditos");
@@ -1191,19 +1167,14 @@
       let cerrado = false;
 
       const video = pantalla.querySelector("video");
-      if (video) {
-        video.play().catch(() => {});
-      }
+      if (video) video.play().catch(() => {});
 
       function animarProgreso() {
         if (cerrado) return;
         const t = Math.min((performance.now() - inicio) / DURACION, 1);
         if (barra) barra.style.width = (t * 100) + "%";
-        if (t >= 1) {
-          cerrar();
-        } else {
-          requestAnimationFrame(animarProgreso);
-        }
+        if (t >= 1) cerrar();
+        else requestAnimationFrame(animarProgreso);
       }
       requestAnimationFrame(animarProgreso);
 
@@ -1225,9 +1196,7 @@
       });
     })();
 
-    /* ============================================================
-       AJUSTES
-       ============================================================ */
+    /* ============ AJUSTES ============ */
     const AJUSTES_DEF = { fogata: false, sonidos: true, efectos3D: true, gestos: true, creditos: true, tema: "rosa" };
     let ajustes = { ...AJUSTES_DEF };
     try {
@@ -1237,13 +1206,10 @@
     function guardarAjustes() { try { localStorage.setItem("gc_admin_ajustes", JSON.stringify(ajustes)); } catch {} }
     function aplicarAjustes() {
       document.body.dataset.tema = ajustes.tema;
-      // ✅ 3D apagable de forma garantizada
       document.documentElement.setAttribute("data-3d", ajustes.efectos3D ? "on" : "off");
     }
 
-    /* ============================================================
-       AUDIO
-       ============================================================ */
+    /* ============ AUDIO ============ */
     let audioCtx = null, campfireActivo = false, campfireNodos = null, crackleTimeoutId = null;
 
     function asegurarAudioCtx() {
@@ -1333,32 +1299,6 @@
       osc.connect(g).connect(ctx.destination);
       osc.start(t); osc.stop(t + 0.13);
     }
-    function sonidoPagina() {
-      if (!ajustes.sonidos) return;
-      const ctx = asegurarAudioCtx(); if (!ctx) return;
-      const t = ctx.currentTime;
-      const dur = 0.42;
-      const bufferSize = Math.floor(ctx.sampleRate * dur);
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        const p = i / bufferSize;
-        const env = Math.sin(p * Math.PI) * (1 - p * 0.35);
-        data[i] = (Math.random() * 2 - 1) * env;
-      }
-      const src = ctx.createBufferSource(); src.buffer = buffer;
-      const filtro = ctx.createBiquadFilter();
-      filtro.type = "bandpass";
-      filtro.frequency.setValueAtTime(1800, t);
-      filtro.frequency.exponentialRampToValueAtTime(700, t + dur);
-      filtro.Q.value = 1.6;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.16, t + 0.06);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      src.connect(filtro).connect(g).connect(ctx.destination);
-      src.start(t);
-    }
     function sonidoExito() {
       if (!ajustes.sonidos) return;
       const ctx = asegurarAudioCtx(); if (!ctx) return;
@@ -1376,9 +1316,7 @@
       });
     }
 
-    /* ============================================================
-       MODALES
-       ============================================================ */
+    /* ============ MODALES ============ */
     const modalAjustes = $("modalAjustes");
     const modalAyuda = $("modalAyuda");
     function abrirAjustes() {
@@ -1413,9 +1351,7 @@
 
     aplicarAjustes();
 
-    /* ============================================================
-       GESTOS
-       ============================================================ */
+    /* ============ GESTOS ============ */
     let maxToques = 0, gestoYaDisparado = false;
     document.addEventListener("touchstart", (e) => {
       if (!ajustes.gestos || !usuarioActual) return;
@@ -1443,9 +1379,7 @@
       if (boton) boton.click();
     }
 
-    /* ============================================================
-       UTILIDADES
-       ============================================================ */
+    /* ============ UTILIDADES ============ */
     function escaparHTML(valor) {
       return String(valor ?? "")
         .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -1500,9 +1434,7 @@
       }, 2400);
     }
 
-    /* ============================================================
-       FOLIO + HUELLA
-       ============================================================ */
+    /* ============ FOLIO + HUELLA ============ */
     function generarFolio() {
       const f = new Date();
       const y = f.getFullYear();
@@ -1528,9 +1460,7 @@
       return hash.toString(36).toUpperCase().padStart(8, "0").substring(0, 8);
     }
 
-    /* ============================================================
-       PRODUCTOS
-       ============================================================ */
+    /* ============ PRODUCTOS ============ */
     function renderizarProductosEn(contenedorId, tipo) {
       const contenedor = $(contenedorId);
       contenedor.innerHTML = "";
@@ -1596,9 +1526,7 @@
     renderizarProductosEn("productosPedido", "pedido");
     renderizarProductosEn("productosReserva", "reserva");
 
-    /* ============================================================
-       LOGIN
-       ============================================================ */
+    /* ============ LOGIN ============ */
     $("botonGoogle").addEventListener("click", async () => {
       const boton = $("botonGoogle");
       boton.disabled = true; boton.textContent = "Conectando...";
@@ -1635,7 +1563,6 @@
         $("nombreUsuario").textContent = nombreMostrar;
         $("correoUsuario").textContent = usuario.email;
 
-        // Cargar vista de perfil
         $("perfilAvatar").textContent = (nombreMostrar[0] || "A").toUpperCase();
         $("perfilCorreoTexto").textContent = usuario.email;
         $("perfilNombre").value = perfilDatos.nombre || usuario.displayName || "";
@@ -1655,9 +1582,7 @@
       }
     });
 
-    /* ============================================================
-       PERFIL
-       ============================================================ */
+    /* ============ PERFIL ============ */
     $("botonGuardarPerfil").addEventListener("click", async () => {
       if (!usuarioActual) return;
       const boton = $("botonGuardarPerfil");
@@ -1678,9 +1603,7 @@
       } finally { boton.disabled = false; }
     });
 
-    /* ============================================================
-       NAVEGACIÓN
-       ============================================================ */
+    /* ============ NAVEGACIÓN ============ */
     document.querySelectorAll(".boton-menu").forEach((boton) => {
       boton.addEventListener("click", () => {
         const nombreVista = boton.dataset.vista;
@@ -1697,9 +1620,7 @@
       });
     });
 
-    /* ============================================================
-       GUARDAR PEDIDO
-       ============================================================ */
+    /* ============ GUARDAR PEDIDO ============ */
     $("formularioPedido").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!usuarioActual) return;
@@ -1732,9 +1653,7 @@
       } finally { boton.disabled = false; }
     });
 
-    /* ============================================================
-       GUARDAR RESERVA
-       ============================================================ */
+    /* ============ GUARDAR RESERVA ============ */
     $("formularioReserva").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!usuarioActual) return;
@@ -1774,9 +1693,7 @@
       } finally { boton.disabled = false; }
     });
 
-    /* ============================================================
-       REGISTROS
-       ============================================================ */
+    /* ============ REGISTROS ============ */
     const etiquetasCampo = {
       folio: "Folio", cliente: "Cliente", detalle: "Detalle", paraCuando: "Para cuándo",
       hora: "Hora", estado: "Estado", fechaRegistro: "Registrado",
@@ -1921,7 +1838,6 @@
           if (!ok) return;
 
           try {
-            // 1) Guardar comprobante en archivo permanente
             await addDoc(collection(db, "comprobantes"), {
               folio: datos.folio || "SIN-FOLIO",
               tipoDocumento: datos.tipoDocumento || coleccion,
@@ -1931,7 +1847,6 @@
               archivadoEn: serverTimestamp(),
               archivadoPor: usuarioActual.email
             });
-            // 2) Borrar documento original
             await deleteDoc(doc(db, coleccion, datos._firestoreId));
             mostrarToast("✅ Eliminado y comprobante archivado");
             if (coleccion === "pedidos") await cargarPedidos();
@@ -1945,7 +1860,7 @@
     }
 
     /* ============================================================
-       📄 CONSTRUIR HTML DEL PDF
+       📄 CONSTRUIR HTML DEL COMPROBANTE
        ============================================================ */
     function construirHTMLComprobante(datos) {
       const esReserva = datos.tipoDocumento === "reserva";
@@ -1975,13 +1890,10 @@
 
       return `
         <div style="position:relative;padding:24px 28px;background:#fff;color:#000;font-family:Arial,sans-serif;font-size:12px;line-height:1.45;width:794px;box-sizing:border-box;overflow:hidden;">
-
           <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:64px;font-weight:900;color:rgba(157,99,119,0.07);letter-spacing:6px;pointer-events:none;white-space:nowrap;z-index:0;font-family:Georgia,serif;">
             GLOW &amp; CRUNCH · ORIGINAL
           </div>
-
           <div style="position:relative;z-index:1;">
-
             <div style="display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #9D6377;padding-bottom:10px;margin-bottom:14px;">
               <div style="width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:Georgia,serif;font-weight:bold;font-size:19px;color:#FFF6E5;background:linear-gradient(135deg,#C48B9F,#6B3A4A);border:2px solid #6B3A4A;">G&amp;C</div>
               <div style="flex:1;">
@@ -2052,119 +1964,112 @@
               ${datos.cajeroCuenta || datos.recepcionistaCuenta ? `(${escaparHTML(datos.cajeroCuenta || datos.recepcionistaCuenta)})` : ""}
               <br>Gracias por su preferencia · Glow &amp; Crunch 🌸
             </p>
-
           </div>
         </div>
       `;
     }
 
     /* ============================================================
-       📄 GENERAR PDF — método VISIBLE + OVERLAY
+       📄 GENERAR PDF — método IFRAME OCULTO (100% confiable)
        ============================================================ */
-    function generarWorkerPDF(datos) {
-      return new Promise(async (resolve, reject) => {
-        if (typeof html2pdf === "undefined") {
-          reject(new Error("html2pdf no cargó."));
-          return;
+    async function generarBlobPDF(datos) {
+      if (typeof html2canvas === "undefined") {
+        throw new Error("html2canvas no cargó. Recarga la página.");
+      }
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        throw new Error("jsPDF no cargó. Recarga la página.");
+      }
+
+      // 1) Crear iframe oculto
+      const iframe = document.createElement("iframe");
+      iframe.setAttribute("aria-hidden", "true");
+      iframe.style.cssText = "position:fixed;left:-10000px;top:0;width:794px;height:2400px;border:0;visibility:hidden;";
+      document.body.appendChild(iframe);
+
+      try {
+        // 2) Escribir el HTML del comprobante dentro del iframe
+        const idoc = iframe.contentDocument || iframe.contentWindow.document;
+        idoc.open();
+        idoc.write(`<!doctype html><html><head><meta charset="UTF-8">
+          <style>
+            * { box-sizing: border-box; }
+            html, body { margin: 0; padding: 0; background: #fff; font-family: Arial, sans-serif; }
+            img { display: block; }
+          </style>
+        </head><body>${construirHTMLComprobante(datos)}</body></html>`);
+        idoc.close();
+
+        // 3) Esperar render + fuentes
+        try { if (idoc.fonts && idoc.fonts.ready) await idoc.fonts.ready; } catch {}
+        await new Promise(r => setTimeout(r, 600));
+
+        const target = idoc.body.firstElementChild;
+        if (!target) throw new Error("No se generó el contenido del comprobante.");
+
+        const altoReal = Math.max(target.scrollHeight, target.offsetHeight) + 20;
+        iframe.style.height = altoReal + "px";
+        await new Promise(r => setTimeout(r, 300));
+
+        // 4) Capturar con html2canvas
+        const canvas = await html2canvas(target, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+          logging: false,
+          windowWidth: 794,
+          width: 794,
+          height: altoReal
+        });
+
+        // 5) Generar PDF con jsPDF (una sola página A4)
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+        const pdfW = pdf.internal.pageSize.getWidth();
+        const pdfH = pdf.internal.pageSize.getHeight();
+
+        let imgW = pdfW;
+        let imgH = (canvas.height * pdfW) / canvas.width;
+        if (imgH > pdfH) {
+          imgH = pdfH;
+          imgW = (canvas.width * pdfH) / canvas.height;
         }
+        pdf.addImage(imgData, "JPEG", (pdfW - imgW) / 2, 0, imgW, imgH, undefined, "FAST");
 
-        const wrapper = document.createElement("div");
-        wrapper.id = "pdfWrapperTemp";
-        wrapper.style.cssText = `
-          position: fixed;
-          top: 0; left: 0;
-          width: 100vw; height: 100vh;
-          z-index: 999999;
-          background: #ffffff;
-          overflow: hidden;
-          pointer-events: none;
-        `;
-
-        const target = document.createElement("div");
-        target.style.cssText = `
-          position: absolute;
-          top: 0; left: 0;
-          width: 794px;
-          background: #ffffff;
-          color: #000000;
-          z-index: 1;
-        `;
-        target.innerHTML = construirHTMLComprobante(datos);
-
-        const loading = document.createElement("div");
-        loading.style.cssText = `
-          position: absolute;
-          inset: 0;
-          display: flex; align-items: center; justify-content: center;
-          background: rgba(255, 248, 250, 0.99);
-          font-family: Arial, sans-serif;
-          font-size: 16px;
-          color: #9D6377;
-          font-weight: bold;
-          z-index: 5;
-          letter-spacing: 0.5px;
-        `;
-        loading.textContent = "⏳ Generando PDF…";
-
-        wrapper.appendChild(target);
-        wrapper.appendChild(loading);
-        document.body.appendChild(wrapper);
-
-        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-        await new Promise(r => setTimeout(r, 120));
-
+        const blob = pdf.output("blob");
         const nombreArchivo = `comprobante-${(datos.cliente || "cliente").replace(/[^a-zA-Z0-9-_]/g, "_")}-${Date.now()}.pdf`;
 
-        const opciones = {
-          margin: 0,
-          filename: nombreArchivo,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            allowTaint: false,
-            backgroundColor: "#ffffff",
-            logging: false,
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: 794,
-            width: 794
-          },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: { mode: [] }
-        };
-
-        const worker = html2pdf().set(opciones).from(target);
-        resolve({ worker, wrapper, target, nombreArchivo });
-      });
+        return { blob, nombreArchivo };
+      } finally {
+        // 6) Limpiar iframe SIEMPRE
+        try { iframe.remove(); } catch {}
+      }
     }
 
     async function descargarPDF(datos) {
-      let wrapperTemp = null;
       try {
-        mostrarToast("Generando PDF…");
-        const { worker, wrapper } = await generarWorkerPDF(datos);
-        wrapperTemp = wrapper;
-        await worker.save();
-        mostrarToast(`✅ PDF guardado`);
+        mostrarToast("⏳ Generando PDF…");
+        const { blob, nombreArchivo } = await generarBlobPDF(datos);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = nombreArchivo;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+        mostrarToast("✅ PDF guardado");
       } catch (e) {
-        console.error("Error al generar PDF:", e);
-        mostrarToast("❌ No se pudo generar el PDF. " + e.message);
-      } finally {
-        if (wrapperTemp && wrapperTemp.parentNode) {
-          wrapperTemp.parentNode.removeChild(wrapperTemp);
-        }
+        console.error("Error PDF:", e);
+        mostrarToast("❌ Error: " + e.message);
       }
     }
 
     async function compartirPDF(datos) {
-      let wrapperTemp = null;
       try {
-        mostrarToast("Preparando PDF…");
-        const { worker, wrapper, nombreArchivo } = await generarWorkerPDF(datos);
-        wrapperTemp = wrapper;
-
-        const blob = await worker.outputPdf("blob");
+        mostrarToast("⏳ Preparando PDF…");
+        const { blob, nombreArchivo } = await generarBlobPDF(datos);
         const archivo = new File([blob], nombreArchivo, { type: "application/pdf" });
 
         if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
@@ -2175,27 +2080,21 @@
           });
           mostrarToast("✅ Comprobante compartido");
         } else {
-          mostrarToast("Descargando PDF…");
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url; a.download = nombreArchivo;
           document.body.appendChild(a); a.click(); document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          setTimeout(() => URL.revokeObjectURL(url), 3000);
+          mostrarToast("📥 PDF descargado");
         }
       } catch (e) {
         if (e && e.name === "AbortError") return;
-        console.error("Error al compartir:", e);
-        mostrarToast("❌ No se pudo compartir. " + e.message);
-      } finally {
-        if (wrapperTemp && wrapperTemp.parentNode) {
-          wrapperTemp.parentNode.removeChild(wrapperTemp);
-        }
+        console.error("Error compartir:", e);
+        mostrarToast("❌ Error: " + e.message);
       }
     }
 
-    /* ============================================================
-       ESTADÍSTICAS
-       ============================================================ */
+    /* ============ ESTADÍSTICAS ============ */
     async function actualizarEstadisticas() {
       try {
         const [p, r] = await Promise.all([
@@ -2215,9 +2114,7 @@
       await actualizarEstadisticas();
     }
 
-    /* ============================================================
-       CALCULADORA
-       ============================================================ */
+    /* ============ CALCULADORA ============ */
     const caracteresValidos = /^[0-9+\-*/.() ]*$/;
     document.querySelectorAll("[data-calculadora]").forEach((b) => {
       b.addEventListener("click", () => {
@@ -2240,9 +2137,7 @@
       });
     });
 
-    /* ============================================================
-       BOTONES EXTERNOS
-       ============================================================ */
+    /* ============ BOTONES EXTERNOS ============ */
     $("botonAbrirGithub").addEventListener("click", () => {
       window.open("https://papiromesa-ux.github.io/Glow-y-Crunch-/", "_blank", "noopener,noreferrer");
     });
@@ -2250,9 +2145,7 @@
       window.open("https://glow-y-crunch.vercel.app/", "_blank", "noopener,noreferrer");
     });
 
-    /* ============================================================
-       PWA
-       ============================================================ */
+    /* ============ PWA ============ */
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("sw.js").catch(() => {});

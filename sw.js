@@ -1,11 +1,11 @@
 // =====================================================
 // Service Worker — Glow & Crunch Admin
-// Versión: gc-admin-v5-final
+// Versión: gc-admin-v6-perfil
 // Al cambiar este número, fuerza actualización
 // en TODOS los dispositivos automáticamente.
 // =====================================================
 
-const VERSION = 'gc-admin-v5-final';
+const VERSION = 'gc-admin-v6-perfil';
 
 const CACHE_NAME = `glow-crunch-${VERSION}`;
 const RECURSOS = [
@@ -22,8 +22,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // addAll es estricto: si un archivo falla, falla todo.
-      // Usamos add() uno por uno para que sea tolerante.
+      // add() uno por uno para que sea tolerante si algún archivo no existe
       return Promise.all(
         RECURSOS.map((r) =>
           cache.add(r).catch((err) => {

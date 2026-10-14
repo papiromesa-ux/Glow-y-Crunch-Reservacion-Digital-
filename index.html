@@ -746,7 +746,7 @@
       <div class="logo-madera">G&C</div>
       <h1>Glow & Crunch</h1>
       <p class="texto-suave">Panel privado de administración y facturación.</p>
-      <p>Solo el personal autorizado con rol <strong>admin</strong> puede entrar.</p>
+      <p>Inicia sesión con tu cuenta de Google para entrar.</p>
 
       <button id="botonGoogle" class="boton-principal" style="width:100%;">Iniciar sesión con Google</button>
 
@@ -807,7 +807,7 @@
               </article>
               <article class="tarjeta estadistica">
                 <h3>Estado de la cuenta</h3>
-                <div class="numero-grande">Admin</div>
+                <div class="numero-grande">Activa</div>
               </article>
             </div>
 
@@ -1139,7 +1139,6 @@
     const $ = (id) => document.getElementById(id);
 
     let usuarioActual = null;
-    let perfilDatos = null;
     let expresionCalculadora = "";
     let productosPedido = [];
     let productosReserva = [];
@@ -1547,7 +1546,7 @@
     });
     $("botonCerrarSesion").addEventListener("click", async () => { await signOut(auth); });
 
-    /* ============ ✅ LOGIN ARREGLADO: espera + reintentos ============ */
+    /* ============ ✅ CUALQUIER CUENTA GOOGLE PUEDE ENTRAR ============ */
     onAuthStateChanged(auth, async (usuario) => {
       if (!usuario) {
         usuarioActual = null;
@@ -1555,91 +1554,55 @@
         return;
       }
 
-      // Mostrar mensaje de espera
-      mostrarMensaje("mensajeLogin", "Verificando permisos...", "aviso");
+      usuarioActual = usuario;
+      const nombreMostrar = usuario.displayName || usuario.email.split("@")[0];
 
-      // ⏳ Esperar 800ms a que Firestore sincronice el token
-      await new Promise(r => setTimeout(r, 800));
-
-      // 🔄 Hasta 3 intentos de leer el doc del usuario
-      let snap = null;
-      let errorFinal = null;
-      for (let intento = 0; intento < 3; intento++) {
-        try {
-          snap = await getDoc(doc(db, "usuarios", usuario.email));
-          errorFinal = null;
-          break;
-        } catch (e) {
-          errorFinal = e;
-          console.warn("Intento " + (intento + 1) + " falló:", e.message);
-          if (intento < 2) await new Promise(r => setTimeout(r, 700));
-        }
-      }
-
-      if (!snap) {
-        console.error("No se pudo leer el doc después de 3 intentos:", errorFinal);
-        mostrarMensaje("mensajeLogin",
-          "No se pudo verificar tu cuenta. Revisa tu conexión e intenta de nuevo.",
-          "error");
-        await signOut(auth);
-        return;
-      }
-
+      let perfilNombreLocal = nombreMostrar;
+      let perfilTelLocal = "";
       try {
-        if (!snap.exists() || snap.data().rol !== "admin") {
-          mostrarMensaje("mensajeLogin", "Este sitio solo es para personal autorizado.", "error");
-          await signOut(auth);
-          return;
-        }
+        const g = JSON.parse(localStorage.getItem("gc_perfil_" + usuario.email) || "{}");
+        if (g.nombre) perfilNombreLocal = g.nombre;
+        if (g.telefono) perfilTelLocal = g.telefono;
+      } catch {}
 
-        usuarioActual = usuario;
-        perfilDatos = snap.data();
-        const nombreMostrar = perfilDatos.nombre || usuario.displayName || "Administrador";
-        $("nombreUsuario").textContent = nombreMostrar;
-        $("correoUsuario").textContent = usuario.email;
+      $("nombreUsuario").textContent = perfilNombreLocal;
+      $("correoUsuario").textContent = usuario.email;
+      $("perfilAvatar").textContent = (perfilNombreLocal[0] || "A").toUpperCase();
+      $("perfilCorreoTexto").textContent = usuario.email;
+      $("perfilNombre").value = perfilNombreLocal;
+      $("perfilTelefono").value = perfilTelLocal;
+      $("perfilUltimoIngreso").textContent = fechaLocal();
 
-        $("perfilAvatar").textContent = (nombreMostrar[0] || "A").toUpperCase();
-        $("perfilCorreoTexto").textContent = usuario.email;
-        $("perfilNombre").value = perfilDatos.nombre || usuario.displayName || "";
-        $("perfilTelefono").value = perfilDatos.telefono || "";
-        $("perfilUltimoIngreso").textContent = perfilDatos.ultimoIngreso || fechaLocal();
+      ocultarMensaje("mensajeLogin");
+      mostrarPanel();
+      await cargarRegistros();
 
-        ocultarMensaje("mensajeLogin");
-        mostrarPanel();
-        await cargarRegistros();
-        if (ajustes.fogata) {
-          const reanudar = () => { iniciarFogata(); document.removeEventListener("click", reanudar); document.removeEventListener("touchstart", reanudar); };
-          document.addEventListener("click", reanudar, { once: true });
-          document.addEventListener("touchstart", reanudar, { once: true });
-        }
-      } catch (error) {
-        console.error("Error verificando autorización:", error);
-        mostrarMensaje("mensajeLogin",
-          "No se pudo verificar tu autorización: " + error.message,
-          "error");
-        await signOut(auth);
+      if (ajustes.fogata) {
+        const reanudar = () => {
+          iniciarFogata();
+          document.removeEventListener("click", reanudar);
+          document.removeEventListener("touchstart", reanudar);
+        };
+        document.addEventListener("click", reanudar, { once: true });
+        document.addEventListener("touchstart", reanudar, { once: true });
       }
     });
 
-    /* ============ PERFIL ============ */
-    $("botonGuardarPerfil").addEventListener("click", async () => {
+    /* ============ PERFIL — guarda localmente ============ */
+    $("botonGuardarPerfil").addEventListener("click", () => {
       if (!usuarioActual) return;
-      const boton = $("botonGuardarPerfil");
-      boton.disabled = true;
+      const nombre = $("perfilNombre").value.trim();
+      const telefono = $("perfilTelefono").value.trim();
+      if (nombre) {
+        $("nombreUsuario").textContent = nombre;
+        $("perfilAvatar").textContent = nombre[0].toUpperCase();
+      }
+      $("perfilUltimoIngreso").textContent = fechaLocal();
       try {
-        const nombre = $("perfilNombre").value.trim();
-        const telefono = $("perfilTelefono").value.trim();
-        await updateDoc(doc(db, "usuarios", usuarioActual.email), {
-          nombre, telefono, ultimoIngreso: fechaLocal()
-        });
-        $("nombreUsuario").textContent = nombre || usuarioActual.displayName || "Administrador";
-        $("perfilAvatar").textContent = ((nombre || "A")[0] || "A").toUpperCase();
-        $("perfilUltimoIngreso").textContent = fechaLocal();
-        sonidoExito();
-        mostrarMensaje("mensajePerfil", "✅ Perfil actualizado correctamente.", "");
-      } catch (e) {
-        mostrarMensaje("mensajePerfil", "❌ " + e.message, "error");
-      } finally { boton.disabled = false; }
+        localStorage.setItem("gc_perfil_" + usuarioActual.email, JSON.stringify({ nombre, telefono }));
+      } catch {}
+      sonidoExito();
+      mostrarMensaje("mensajePerfil", "✅ Perfil actualizado.", "");
     });
 
     /* ============ NAVEGACIÓN ============ */

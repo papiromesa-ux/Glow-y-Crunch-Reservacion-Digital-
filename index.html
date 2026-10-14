@@ -15,7 +15,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='66' font-size='44' text-anchor='middle' fill='%23fff' font-family='Georgia' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239D6377'/%3E%3Ctext x='50' y='66' font-size='44' text-anchor='middle' fill='%23fff' font-family='Georgia' font-weight='bold'%3EG%26C%3C/text%3E%3C/svg%3E">
 
-  <!-- 📄 html2pdf para generar PDFs reales y descargables -->
+  <!-- html2pdf para generar PDFs reales -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
@@ -31,7 +31,6 @@
       --blanco: #ffffff;
       --rojo: #F5B5BE;
       --madera-clara: #E9CDD5;
-
       --sombra: 0 12px 28px rgba(157, 99, 119, 0.22);
       --sombra-suave: 0 4px 12px rgba(157, 99, 119, 0.12);
       --radio: 26px;
@@ -40,26 +39,15 @@
       --alto-nav-movil: 74px;
     }
 
-    /* ====== Temas alternativos ====== */
     body[data-tema="menta"] {
-      --madera-oscura: #4F7A6B;
-      --madera: #8FBBA9;
-      --durazno: #C4E6D8;
-      --menta: #E0F2EA;
-      --lavanda: #D3E9E0;
-      --crema-oscura: #EDF7F2;
-      --madera-clara: #C8E0D5;
-      --texto: #2E463D;
+      --madera-oscura: #4F7A6B; --madera: #8FBBA9;
+      --durazno: #C4E6D8; --menta: #E0F2EA; --lavanda: #D3E9E0;
+      --crema-oscura: #EDF7F2; --madera-clara: #C8E0D5; --texto: #2E463D;
     }
     body[data-tema="lavanda"] {
-      --madera-oscura: #6B5B95;
-      --madera: #A796C9;
-      --durazno: #D9CCF0;
-      --menta: #EDE5F8;
-      --lavanda: #DFD3F2;
-      --crema-oscura: #F3EEFB;
-      --madera-clara: #D5C9EB;
-      --texto: #3A3055;
+      --madera-oscura: #6B5B95; --madera: #A796C9;
+      --durazno: #D9CCF0; --menta: #EDE5F8; --lavanda: #DFD3F2;
+      --crema-oscura: #F3EEFB; --madera-clara: #D5C9EB; --texto: #3A3055;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -77,7 +65,6 @@
         linear-gradient(160deg, #FFF3F7 0%, #FCE4EC 50%, #F4D9E5 100%);
       background-attachment: fixed;
       overscroll-behavior-y: contain;
-      perspective: 1200px;
     }
 
     body::before {
@@ -91,11 +78,7 @@
       z-index: -1;
     }
 
-    /* Bloquear 3D si el usuario lo apaga */
-    body.sin-3d * {
-      transform: none !important;
-      perspective: none !important;
-    }
+    body.sin-3d * { transform: none !important; perspective: none !important; }
 
     input, select, textarea { font-size: 16px !important; }
     button, input, select, textarea { font: inherit; }
@@ -106,13 +89,10 @@
       min-height: 48px;
       background: var(--menta);
       box-shadow: 0 4px 0 rgba(164, 128, 178, 0.35), 0 8px 18px rgba(157, 99, 119, 0.12);
-      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s;
       -webkit-user-select: none; user-select: none; touch-action: manipulation;
-      transform-style: preserve-3d;
-      position: relative;
     }
 
-    /* Efectos 3D al hover/press */
     @media (hover: hover) {
       button:hover {
         filter: brightness(1.05);
@@ -122,7 +102,7 @@
     }
 
     button:active {
-      transform: translateY(2px) scale(0.98) rotateX(-2deg);
+      transform: translateY(2px) scale(0.98);
       box-shadow: 0 2px 0 rgba(164, 128, 178, 0.35);
     }
 
@@ -146,20 +126,10 @@
       padding: 18px;
       border: 2px solid var(--blanco);
       border-radius: var(--radio);
-      background:
-        linear-gradient(180deg, rgba(255, 251, 253, 0.98), rgba(255, 243, 247, 0.98));
+      background: linear-gradient(180deg, rgba(255, 251, 253, 0.98), rgba(255, 243, 247, 0.98));
       box-shadow: var(--sombra);
       position: relative;
       overflow: hidden;
-      transition: transform 0.35s cubic-bezier(.2,.7,.3,1), box-shadow 0.35s;
-      transform-style: preserve-3d;
-    }
-
-    @media (hover: hover) {
-      .tarjeta:hover {
-        transform: translateY(-4px) rotateX(2deg);
-        box-shadow: 0 20px 40px rgba(157, 99, 119, 0.25);
-      }
     }
 
     .tarjeta::before {
@@ -169,34 +139,19 @@
       opacity: 0.7;
     }
 
-    /* ====== LOGO MADERA "G&C" ====== */
+    /* ====== LOGO MADERA G&C ====== */
     .logo-madera {
       width: 108px; height: 108px;
       display: grid; place-items: center;
       margin: 0 auto 14px;
       border-radius: 24px;
       font-family: "Georgia", "Times New Roman", serif;
-      font-weight: 900;
-      font-size: 42px;
-      letter-spacing: -2px;
+      font-weight: 900; font-size: 42px; letter-spacing: -2px;
       color: #FFF6E5;
-      background:
-        linear-gradient(135deg, #C48B9F 0%, #9D6377 45%, #6B3A4A 100%),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 3px, transparent 3px 8px);
-      background-blend-mode: overlay;
+      background: linear-gradient(135deg, #C48B9F 0%, #9D6377 45%, #6B3A4A 100%);
       border: 4px solid #6B3A4A;
-      box-shadow:
-        inset 0 -6px 0 rgba(0,0,0,0.15),
-        inset 0 4px 8px rgba(255,255,255,0.2),
-        0 14px 30px rgba(157, 99, 119, 0.4);
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,0.15), inset 0 4px 8px rgba(255,255,255,0.2), 0 14px 30px rgba(157, 99, 119, 0.4);
       text-shadow: 0 2px 0 #4A2530, 0 3px 6px rgba(0,0,0,0.35);
-      transform-style: preserve-3d;
-      animation: girarLogo 8s ease-in-out infinite;
-    }
-
-    @keyframes girarLogo {
-      0%, 100% { transform: rotateY(0deg) rotateX(0deg); }
-      50%      { transform: rotateY(8deg) rotateX(-4deg); }
     }
 
     /* ====== LOGIN ====== */
@@ -205,14 +160,10 @@
       display: grid; place-items: center;
       padding: 24px 20px calc(24px + var(--safe-bottom));
     }
-
     .login-tarjeta { width: min(440px, 100%); text-align: center; }
-
     .login-tarjeta h1 {
-      margin: 0 0 8px;
-      color: var(--madera-oscura);
-      font-family: "Georgia", "Times New Roman", serif;
-      letter-spacing: 0.5px;
+      margin: 0 0 8px; color: var(--madera-oscura);
+      font-family: "Georgia", serif; letter-spacing: 0.5px;
     }
     .login-tarjeta p { line-height: 1.5; }
 
@@ -232,9 +183,7 @@
       box-shadow: var(--sombra);
       position: relative;
       overflow: hidden;
-      transform-style: preserve-3d;
     }
-
     .encabezado::after {
       content: "";
       position: absolute; top: 0; left: 0; right: 0; height: 8px;
@@ -244,11 +193,9 @@
 
     .marca h1 {
       margin: 0; font-size: 19px;
-      font-family: "Georgia", "Times New Roman", serif;
-      letter-spacing: 0.5px;
+      font-family: "Georgia", serif;
       display: flex; align-items: center; gap: 8px;
     }
-
     .mini-logo-madera {
       width: 30px; height: 30px;
       display: inline-grid; place-items: center;
@@ -261,7 +208,6 @@
       box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
       text-shadow: 0 1px 0 #4A2530;
     }
-
     .marca small { opacity: 0.9; font-size: 12px; }
 
     .usuario-barra { display: flex; align-items: center; gap: 8px; text-align: right; }
@@ -271,7 +217,6 @@
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       opacity: 0.9;
     }
-
     .boton-salir { padding: 10px 14px; min-height: 42px; font-size: 13px; }
 
     /* ====== ESTRUCTURA ====== */
@@ -287,28 +232,23 @@
       border-radius: var(--radio);
       background: rgba(255, 250, 252, 0.98);
       box-shadow: var(--sombra);
-      transform-style: preserve-3d;
     }
-
     .navegacion button { width: 100%; margin: 4px 0; text-align: left; }
     .navegacion button.activo {
       background: linear-gradient(180deg, #FFD3DF, var(--durazno));
-      box-shadow: 0 4px 0 rgba(184, 111, 133, 0.45), 0 10px 22px rgba(184, 111, 133, 0.25);
+      box-shadow: 0 4px 0 rgba(184, 111, 133, 0.45);
       color: #6B3040;
-      transform: translateZ(6px);
     }
 
-    .vista { display: none; animation: aparecer 0.4s cubic-bezier(.2,.7,.3,1); }
+    .vista { display: none; animation: aparecer 0.35s cubic-bezier(.2,.7,.3,1); }
     .vista.activa { display: block; }
     .vista h2 {
       margin-top: 0; color: var(--madera-oscura);
-      font-family: "Georgia", "Times New Roman", serif;
-      letter-spacing: 0.3px;
+      font-family: "Georgia", serif;
     }
-
     @keyframes aparecer {
-      from { opacity: 0; transform: translateY(10px) rotateX(4deg); }
-      to { opacity: 1; transform: translateY(0) rotateX(0); }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ====== CUADRÍCULAS ====== */
@@ -317,37 +257,31 @@
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 14px;
     }
-
     .estadistica h3 { margin: 0 0 10px; font-size: 14px; }
     .numero-grande {
       font-size: 28px; font-weight: bold; color: var(--madera-oscura);
       font-family: "Georgia", serif;
     }
-
     .fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
     label { display: block; margin-top: 6px; font-weight: bold; font-size: 14px; }
 
     input, select, textarea {
-      width: 100%; margin: 6px 0 14px; padding: 14px 14px;
+      width: 100%; margin: 6px 0 14px; padding: 14px;
       color: var(--texto);
       border: 2px solid var(--madera-clara); border-radius: 15px;
       outline: none; background: #FFFBFC;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-
     input:focus, select:focus, textarea:focus {
       border-color: var(--madera);
-      box-shadow: 0 0 0 3px rgba(212, 155, 174, 0.22), 0 6px 14px rgba(157, 99, 119, 0.12);
-      transform: translateY(-1px);
+      box-shadow: 0 0 0 3px rgba(212, 155, 174, 0.22);
     }
 
     textarea { min-height: 90px; resize: vertical; }
     .separador { height: 1px; margin: 18px 0; background: linear-gradient(90deg, transparent, var(--madera-clara), transparent); }
     .texto-suave { color: #8B6070; }
-    .texto-centro { text-align: center; }
     .margen-arriba { margin-top: 16px; }
-    .margen-abajo { margin-bottom: 16px; }
 
     /* ====== CALCULADORA ====== */
     #pantallaCalculadora {
@@ -356,7 +290,6 @@
       color: var(--madera-oscura); background: #FFF6F9;
       border: 2px solid var(--madera-clara);
     }
-
     .calculadora-grid { grid-template-columns: repeat(4, minmax(60px, 1fr)); }
     .calculadora-grid button { padding: 16px 8px; font-size: 18px; }
     .calculadora-grid button:last-child { grid-column: 1 / -1; }
@@ -368,24 +301,12 @@
       border: 2px solid var(--madera-clara); border-radius: 20px;
       background: #FFFBFC;
       box-shadow: 0 5px 12px rgba(157, 99, 119, 0.12);
-      transition: transform 0.3s cubic-bezier(.2,.7,.3,1), box-shadow 0.3s;
-      transform-style: preserve-3d;
     }
-
-    @media (hover: hover) {
-      .producto-factura:hover {
-        transform: translateY(-4px) rotateX(4deg) rotateY(-3deg);
-        box-shadow: 0 14px 26px rgba(157, 99, 119, 0.24);
-      }
-    }
-
     .producto-factura h3 { margin: 0 0 6px; color: var(--madera-oscura); font-size: 15px; }
     .producto-precio { margin-bottom: 10px; font-size: 18px; font-weight: bold; color: #7A4457; }
-
     .producto-cantidad {
       display: flex; align-items: center; justify-content: space-between; gap: 6px;
     }
-
     .producto-cantidad button {
       min-width: 44px; min-height: 42px; padding: 6px 10px; font-size: 18px;
       background: linear-gradient(180deg, #FFE3ED, #FFC7D6);
@@ -400,36 +321,36 @@
       background: #FFFBFC; line-height: 1.5;
       font-size: 14px; word-break: break-word;
       box-shadow: var(--sombra-suave);
-      transition: transform 0.3s, box-shadow 0.3s;
     }
-
-    @media (hover: hover) {
-      .registro:hover {
-        transform: translateY(-2px) rotateX(1deg);
-        box-shadow: 0 10px 22px rgba(157, 99, 119, 0.2);
-      }
-    }
-
     .registro-cabecera {
       display: flex; align-items: center; justify-content: space-between;
       gap: 10px; margin-bottom: 8px;
     }
-
     .registro-cabecera strong { font-size: 15px; color: var(--madera-oscura); }
-
     .registro .campo { margin: 3px 0; }
     .registro .campo strong { color: var(--madera-oscura); }
     .registro .total-linea {
       margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--madera-clara);
       font-size: 15px;
     }
-
-    .botones-registro {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;
+    .registro .folio-linea {
+      margin-top: 4px; padding: 5px 8px;
+      background: #FFF8FA; border: 1px dashed var(--madera);
+      border-radius: 6px; font-size: 11px;
+      font-family: Consolas, monospace;
+      color: var(--madera-oscura);
     }
 
+    /* ✅ Botones del registro: en móvil uno arriba del otro */
+    .botones-registro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
     .botones-registro button {
       padding: 11px 10px; min-height: 44px; font-size: 13px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     .etiqueta {
@@ -438,10 +359,9 @@
       background: linear-gradient(135deg, var(--durazno), var(--lavanda));
       color: #6B3040;
     }
-
     .sin-registros { padding: 14px; border-radius: 15px; background: var(--crema-oscura); }
 
-    /* ====== MODALES (Ajustes / Ayuda) ====== */
+    /* ====== MODALES ====== */
     .modal {
       position: fixed; inset: 0; z-index: 1000;
       background: rgba(75, 44, 58, 0.55);
@@ -451,12 +371,12 @@
       padding: 20px;
       animation: fadeInModal 0.25s ease;
     }
-
     @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
 
     .modal-contenido {
       width: min(520px, 100%);
       max-height: 88vh; overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       padding: 22px 20px;
       border: 2px solid #fff;
       border-radius: 24px;
@@ -464,12 +384,10 @@
       box-shadow: 0 30px 60px rgba(157, 99, 119, 0.4);
       animation: subirModal 0.35s cubic-bezier(.2,.7,.3,1);
     }
-
     @keyframes subirModal {
-      from { transform: translateY(30px) scale(0.96); opacity: 0; }
-      to   { transform: translateY(0) scale(1); opacity: 1; }
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
     }
-
     .modal-contenido h2 {
       margin-top: 0; color: var(--madera-oscura);
       font-family: "Georgia", serif;
@@ -483,32 +401,18 @@
     .ajuste-fila:last-of-type { border-bottom: 0; }
     .ajuste-fila span { font-weight: bold; font-size: 14px; }
 
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 52px; height: 30px;
-      flex-shrink: 0;
-    }
+    .switch { position: relative; display: inline-block; width: 52px; height: 30px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider {
-      position: absolute; inset: 0;
-      cursor: pointer;
-      background: #ddd;
-      border-radius: 30px;
-      transition: background 0.3s;
+      position: absolute; inset: 0; cursor: pointer;
+      background: #ddd; border-radius: 30px; transition: background 0.3s;
     }
     .slider::before {
-      content: "";
-      position: absolute; height: 22px; width: 22px;
-      left: 4px; top: 4px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.3s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      content: ""; position: absolute; height: 22px; width: 22px;
+      left: 4px; top: 4px; background: white; border-radius: 50%;
+      transition: transform 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .switch input:checked + .slider {
-      background: linear-gradient(135deg, #FF8A5B, #FFC7D6);
-    }
+    .switch input:checked + .slider { background: linear-gradient(135deg, #FF8A5B, #FFC7D6); }
     .switch input:checked + .slider::before { transform: translateX(22px); }
 
     .instruccion {
@@ -522,34 +426,39 @@
 
     .gesto {
       display: flex; align-items: center; gap: 12px;
-      margin: 10px 0;
-      padding: 10px 12px;
-      background: #FFFBFC;
-      border-radius: 12px;
+      margin: 10px 0; padding: 10px 12px;
+      background: #FFFBFC; border-radius: 12px;
       font-size: 13px;
     }
     .gesto-icono {
       min-width: 60px; text-align: center;
-      font-size: 18px;
-      letter-spacing: 2px;
+      font-size: 18px; letter-spacing: 2px;
     }
 
-    /* ====== BOTONES FLOTANTES (Ajustes + Ayuda) ====== */
+    /* Video créditos */
+    .video-creditos {
+      width: 100%; border-radius: 16px; display: block;
+      margin: 12px 0; box-shadow: var(--sombra-suave);
+      background: #000;
+    }
+    .video-caption {
+      text-align: center; font-size: 12px;
+      color: var(--madera-oscura); font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    /* ====== FLOTANTES ====== */
     .flotantes {
       position: fixed;
       top: calc(16px + var(--safe-top));
       right: 16px;
       z-index: 900;
-      display: flex;
-      gap: 8px;
+      display: flex; gap: 8px;
     }
-
     .boton-flotante {
       width: 46px; height: 46px; min-height: 46px;
-      padding: 0;
-      border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 20px;
+      padding: 0; border-radius: 50%;
+      display: grid; place-items: center; font-size: 20px;
       background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 6px 18px rgba(157, 99, 119, 0.3);
       border: 2px solid #fff;
@@ -557,35 +466,17 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    .boton-flotante.activo {
-      background: radial-gradient(circle at 50% 60%, #FFD3A0, #FF8A5B 70%);
-      color: #fff;
-      box-shadow: 0 6px 22px rgba(255, 138, 91, 0.55);
-      animation: latirFuego 2.6s ease-in-out infinite;
-    }
-
-    @keyframes latirFuego {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.08); }
-    }
-
     /* ====== BOTÓN INSTALAR ====== */
     #botonInstalar {
       position: fixed;
       bottom: calc(24px + var(--safe-bottom));
-      right: 20px;
-      z-index: 850;
+      right: 20px; z-index: 850;
       padding: 14px 22px;
       background: linear-gradient(135deg, #9D6377, #C48B9F);
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: bold;
+      color: #ffffff; font-size: 14px; font-weight: bold;
       box-shadow: 0 8px 20px rgba(157, 99, 119, 0.4);
       border-radius: 999px;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      min-height: auto;
+      display: none; align-items: center; gap: 8px; min-height: auto;
     }
     #botonInstalar.visible { display: inline-flex; }
 
@@ -602,103 +493,20 @@
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 -6px 20px rgba(157, 99, 119, 0.18);
     }
-
-    .nav-movil-inner {
-      display: flex; justify-content: space-around; align-items: center; gap: 4px;
-    }
-
+    .nav-movil-inner { display: flex; justify-content: space-around; align-items: center; gap: 4px; }
     .nav-movil button {
-      flex: 1;
-      background: transparent;
-      box-shadow: none;
-      padding: 8px 4px;
-      min-height: 56px;
+      flex: 1; background: transparent; box-shadow: none;
+      padding: 8px 4px; min-height: 56px;
       font-size: 10px; font-weight: bold;
-      color: var(--madera-oscura);
-      border-radius: 14px;
+      color: var(--madera-oscura); border-radius: 14px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 3px; line-height: 1.1;
     }
-
     .nav-movil button .icono { font-size: 20px; line-height: 1; }
-
     .nav-movil button.activo {
       background: linear-gradient(180deg, #FFD3DF, var(--durazno));
       box-shadow: 0 3px 0 rgba(184, 111, 133, 0.4);
       color: #6B3040;
-    }
-
-    /* ====== PDF OCULTO (solo se usa para generar el PDF) ====== */
-    #plantillaPDF {
-      position: fixed;
-      left: -10000px; top: 0;
-      width: 800px;
-      padding: 40px;
-      background: #fff;
-      color: #000;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    #plantillaPDF h1 { font-family: Georgia, serif; margin: 0; color: #6B3A4A; }
-    #plantillaPDF h2 { font-size: 16px; margin: 4px 0 16px; color: #9D6377; }
-    #plantillaPDF .encabezado-print {
-      border-bottom: 3px solid #9D6377;
-      padding-bottom: 12px;
-      margin-bottom: 18px;
-      display: flex; align-items: center; gap: 16px;
-    }
-    #plantillaPDF .logo-pdf {
-      width: 60px; height: 60px;
-      display: grid; place-items: center;
-      border-radius: 12px;
-      font-family: Georgia, serif;
-      font-weight: bold; font-size: 22px;
-      color: #FFF6E5;
-      background: linear-gradient(135deg, #C48B9F, #6B3A4A);
-      border: 2px solid #6B3A4A;
-    }
-    #plantillaPDF .info-linea { margin: 4px 0; font-size: 13px; }
-    #plantillaPDF .tabla-factura {
-      width: 100%; border-collapse: collapse;
-      margin: 18px 0 12px;
-      font-size: 13px;
-    }
-    #plantillaPDF .tabla-factura th {
-      text-align: left; padding: 9px 8px;
-      background: #FDEFF3; color: #6B3A4A;
-      border-bottom: 2px solid #9D6377;
-    }
-    #plantillaPDF .tabla-factura td {
-      padding: 8px; border-bottom: 1px solid #eee;
-    }
-    #plantillaPDF .tabla-factura th:last-child,
-    #plantillaPDF .tabla-factura td:last-child { text-align: right; }
-    #plantillaPDF .total-final {
-      margin-top: 16px; padding-top: 12px;
-      border-top: 2px solid #9D6377;
-      font-size: 20px; text-align: right;
-      font-weight: bold; color: #6B3A4A;
-    }
-    #plantillaPDF .firma-bloque {
-      margin-top: 40px; padding-top: 20px;
-      border-top: 1px dashed #999;
-      display: flex; justify-content: space-between;
-      gap: 30px;
-    }
-    #plantillaPDF .firma-caja {
-      flex: 1; text-align: center;
-      font-size: 11px; color: #666;
-    }
-    #plantillaPDF .firma-linea {
-      height: 40px;
-      border-bottom: 1px solid #333;
-      margin-bottom: 4px;
-    }
-    #plantillaPDF .pie {
-      margin-top: 24px; font-size: 11px; color: #777;
-      text-align: center;
     }
 
     /* ====== RESPONSIVE ====== */
@@ -706,7 +514,7 @@
       .estructura {
         grid-template-columns: 1fr;
         gap: 0;
-        margin: 14px 0 calc(var(--alto-nav-movil) + var(--safe-bottom) + 20px);
+        margin: 14px 0 calc(var(--alto-nav-movil) + var(--safe-bottom) + 40px);
       }
       .navegacion { display: none; }
       .nav-movil { display: block; }
@@ -723,13 +531,11 @@
       .tarjeta { padding: 16px; border-radius: 22px; }
       .login-tarjeta { padding: 24px 20px; }
 
-      #botonInstalar {
-        bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px);
-      }
+      #botonInstalar { bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px); }
 
       .flotantes {
-        top: auto;
-        bottom: calc(var(--alto-nav-movil) + var(--safe-bottom) + 14px);
+        top: calc(16px + var(--safe-top));
+        bottom: auto;
         right: 16px;
       }
 
@@ -745,7 +551,7 @@
 
 <body data-tema="rosa">
 
-  <!-- ============ BOTONES FLOTANTES (Ajustes + Ayuda) ============ -->
+  <!-- ============ FLOTANTES ============ -->
   <div class="flotantes">
     <button id="botonAyuda" class="boton-flotante" title="Cómo usar" aria-label="Ayuda">📖</button>
     <button id="botonAjustes" class="boton-flotante" title="Ajustes" aria-label="Ajustes">⚙️</button>
@@ -793,7 +599,6 @@
       </header>
 
       <div class="estructura">
-
         <nav class="navegacion">
           <button class="boton-menu activo" data-vista="inicio">🏠 Inicio</button>
           <button class="boton-menu" data-vista="pedidos">🛍️ Pedidos</button>
@@ -827,7 +632,7 @@
             <div class="tarjeta margen-arriba">
               <h2>Bienvenida al panel</h2>
               <p>Registra pedidos y reservas, agrega productos, imprime o comparte el comprobante en PDF con tus clientes.</p>
-              <p class="texto-suave">Toca el botón <strong>📖</strong> (arriba derecha) para ver las instrucciones completas y los atajos con gestos.</p>
+              <p class="texto-suave">Toca el botón <strong>📖</strong> (arriba derecha) para ver las instrucciones y los créditos.</p>
             </div>
           </section>
 
@@ -946,22 +751,18 @@
                 <button type="button" data-calculadora="8">8</button>
                 <button type="button" data-calculadora="9">9</button>
                 <button type="button" data-calculadora="/">÷</button>
-
                 <button type="button" data-calculadora="4">4</button>
                 <button type="button" data-calculadora="5">5</button>
                 <button type="button" data-calculadora="6">6</button>
                 <button type="button" data-calculadora="*">×</button>
-
                 <button type="button" data-calculadora="1">1</button>
                 <button type="button" data-calculadora="2">2</button>
                 <button type="button" data-calculadora="3">3</button>
                 <button type="button" data-calculadora="-">−</button>
-
                 <button type="button" data-calculadora="0">0</button>
                 <button type="button" data-calculadora=".">.</button>
                 <button type="button" data-calculadora="=">=</button>
                 <button type="button" data-calculadora="+">+</button>
-
                 <button type="button" data-calculadora="limpiar" class="boton-peligro">Limpiar</button>
               </div>
             </div>
@@ -979,73 +780,55 @@
                 <button id="botonAbrirVercel" type="button" class="boton-secundario">Abrir Vercel</button>
               </div>
             </div>
+
+            <div class="tarjeta margen-arriba">
+              <h2>🎬 Créditos</h2>
+              <p class="texto-suave">Video oficial de Glow & Crunch.</p>
+              <video class="video-creditos" controls autoplay muted loop playsinline preload="metadata">
+                <source src="ALACR%C3%81N.mp4" type="video/mp4">
+                Tu navegador no soporta video HTML5.
+              </video>
+              <p class="video-caption">🌸 Glow &amp; Crunch · Hecho con amor 🌸</p>
+            </div>
           </section>
         </main>
       </div>
     </div>
 
-    <!-- Navegación inferior (móvil) -->
+    <!-- NAV MÓVIL -->
     <nav class="nav-movil">
       <div class="nav-movil-inner">
-        <button class="boton-menu activo" data-vista="inicio">
-          <span class="icono">🏠</span><span>Inicio</span>
-        </button>
-        <button class="boton-menu" data-vista="pedidos">
-          <span class="icono">🛍️</span><span>Pedidos</span>
-        </button>
-        <button class="boton-menu" data-vista="reservas">
-          <span class="icono">📅</span><span>Reservas</span>
-        </button>
-        <button class="boton-menu" data-vista="calculadora">
-          <span class="icono">🧮</span><span>Calc</span>
-        </button>
-        <button class="boton-menu" data-vista="contenido">
-          <span class="icono">🎨</span><span>Web</span>
-        </button>
+        <button class="boton-menu activo" data-vista="inicio"><span class="icono">🏠</span><span>Inicio</span></button>
+        <button class="boton-menu" data-vista="pedidos"><span class="icono">🛍️</span><span>Pedidos</span></button>
+        <button class="boton-menu" data-vista="reservas"><span class="icono">📅</span><span>Reservas</span></button>
+        <button class="boton-menu" data-vista="calculadora"><span class="icono">🧮</span><span>Calc</span></button>
+        <button class="boton-menu" data-vista="contenido"><span class="icono">🎨</span><span>Web</span></button>
       </div>
     </nav>
   </section>
 
-  <!-- Botón instalar PWA -->
   <button id="botonInstalar">📲 Instalar app</button>
 
-  <!-- ============ MODAL AJUSTES ============ -->
+  <!-- MODAL AJUSTES -->
   <div id="modalAjustes" class="modal oculto">
     <div class="modal-contenido">
       <h2>⚙️ Ajustes</h2>
-
       <div class="ajuste-fila">
         <span>🔥 Sonido de fogata</span>
-        <label class="switch">
-          <input type="checkbox" id="toggleFogata">
-          <span class="slider"></span>
-        </label>
+        <label class="switch"><input type="checkbox" id="toggleFogata"><span class="slider"></span></label>
       </div>
-
       <div class="ajuste-fila">
         <span>🔊 Sonidos de interfaz</span>
-        <label class="switch">
-          <input type="checkbox" id="toggleSonidos" checked>
-          <span class="slider"></span>
-        </label>
+        <label class="switch"><input type="checkbox" id="toggleSonidos" checked><span class="slider"></span></label>
       </div>
-
       <div class="ajuste-fila">
         <span>✨ Efectos 3D</span>
-        <label class="switch">
-          <input type="checkbox" id="toggle3D" checked>
-          <span class="slider"></span>
-        </label>
+        <label class="switch"><input type="checkbox" id="toggle3D" checked><span class="slider"></span></label>
       </div>
-
       <div class="ajuste-fila">
         <span>👋 Atajos por gestos</span>
-        <label class="switch">
-          <input type="checkbox" id="toggleGestos" checked>
-          <span class="slider"></span>
-        </label>
+        <label class="switch"><input type="checkbox" id="toggleGestos" checked><span class="slider"></span></label>
       </div>
-
       <div class="ajuste-fila">
         <span>🎨 Tema de colores</span>
         <select id="selectTema" style="width:auto;margin:0;">
@@ -1054,75 +837,61 @@
           <option value="lavanda">💜 Lavanda suave</option>
         </select>
       </div>
-
       <button id="cerrarAjustes" class="boton-principal" style="width:100%;margin-top:16px;">Cerrar</button>
     </div>
   </div>
 
-  <!-- ============ MODAL AYUDA ============ -->
+  <!-- MODAL AYUDA -->
   <div id="modalAyuda" class="modal oculto">
     <div class="modal-contenido">
       <h2>📖 Cómo usar el panel</h2>
 
       <div class="instruccion">
         <strong>1️⃣ Cómo registrar un pedido</strong>
-        Entra a <b>🛍️ Pedidos</b> → escribe el nombre del cliente, detalle, fecha y hora → toca <b>+</b> en los productos que quieras agregar → verifica el total → toca <b>Guardar pedido</b>.
+        Entra a <b>🛍️ Pedidos</b> → escribe el nombre del cliente, detalle, fecha y hora → toca <b>+</b> en los productos → verifica el total → <b>Guardar pedido</b>.
       </div>
 
       <div class="instruccion">
         <strong>2️⃣ Cómo crear una reserva</strong>
-        Entra a <b>📅 Reservas</b> → llena datos del cliente, fecha, hora, mesas y sillas → agrega productos → revisa el adelanto (50%) que se calcula solo → toca <b>Guardar reserva</b>.
+        Entra a <b>📅 Reservas</b> → llena datos, fecha, hora, mesas y sillas → agrega productos → revisa el adelanto (50%) → <b>Guardar reserva</b>.
       </div>
 
       <div class="instruccion">
-        <strong>3️⃣ Cómo imprimir o descargar el PDF</strong>
-        En cualquier pedido o reserva ya guardada verás dos botones: <b>📄 PDF</b> (descarga el archivo) y <b>📤 Compartir</b> (lo envía por WhatsApp, Gmail, etc.).
+        <strong>3️⃣ Cómo descargar o compartir el PDF</strong>
+        En cada pedido/reserva guardado verás <b>📄 PDF</b> (descarga) y <b>📤 Compartir</b> (WhatsApp, Gmail, etc.). El PDF incluye folio único, huella digital y firma autorizada.
       </div>
 
       <div class="instruccion">
         <strong>4️⃣ Cómo usar la calculadora</strong>
-        Entra a <b>🧮 Calculadora</b> → toca los números y operadores → <b>=</b> para ver el resultado → <b>Limpiar</b> para empezar de cero.
+        <b>🧮 Calculadora</b> → toca números y operadores → <b>=</b> → <b>Limpiar</b> para empezar.
       </div>
 
       <div class="instruccion">
         <strong>5️⃣ Cómo activar el sonido de fogata</strong>
-        Toca el engranaje <b>⚙️</b> arriba a la derecha → activa <b>Sonido de fogata</b>. También puedes cambiar el tema de colores y los efectos 3D desde ahí.
+        Toca <b>⚙️</b> arriba a la derecha → activa <b>Sonido de fogata</b>. Cambia tema y 3D desde ahí.
       </div>
 
       <div class="instruccion">
         <strong>6️⃣ Cómo administrar la página principal</strong>
-        Entra a <b>🎨 Página principal</b> → abre GitHub o Vercel con tu cuenta autorizada para editar el contenido.
+        <b>🎨 Página principal</b> → abre GitHub o Vercel con tu cuenta autorizada. Ahí abajo encuentras el video de créditos.
       </div>
 
       <div class="instruccion">
         <strong>👋 Atajos con gestos</strong>
-        <div class="gesto">
-          <div class="gesto-icono">✌️</div>
-          <div><b>2 dedos</b> → Ir a Pedidos</div>
-        </div>
-        <div class="gesto">
-          <div class="gesto-icono">🤟</div>
-          <div><b>3 dedos</b> → Ir a Reservas</div>
-        </div>
-        <div class="gesto">
-          <div class="gesto-icono">🖖</div>
-          <div><b>4 dedos</b> → Compartir el último pedido/reserva</div>
-        </div>
-        <div class="gesto">
-          <div class="gesto-icono">🖐️</div>
-          <div><b>5 dedos</b> → Ir al inicio</div>
-        </div>
-        <p class="texto-suave" style="font-size:12px;margin:8px 0 0;">
-          Los gestos funcionan en cualquier parte del panel mientras tengas sesión activa. Se pueden apagar desde ⚙️ Ajustes.
-        </p>
+        <div class="gesto"><div class="gesto-icono">✌️</div><div><b>2 dedos</b> → Ir a Pedidos</div></div>
+        <div class="gesto"><div class="gesto-icono">🤟</div><div><b>3 dedos</b> → Ir a Reservas</div></div>
+        <div class="gesto"><div class="gesto-icono">🖖</div><div><b>4 dedos</b> → Compartir el último comprobante</div></div>
+        <div class="gesto"><div class="gesto-icono">🖐️</div><div><b>5 dedos</b> → Ir al inicio</div></div>
+      </div>
+
+      <div class="instruccion">
+        <strong>🛡️ Cómo verificar un comprobante</strong>
+        Cada PDF tiene un <b>folio único</b> arriba a la derecha y una <b>huella digital</b> abajo. Si alguien altera el nombre, el monto o los productos → la huella ya no coincide y el sello se ve falso.
       </div>
 
       <button id="cerrarAyuda" class="boton-principal" style="width:100%;margin-top:16px;">Entendido ✓</button>
     </div>
   </div>
-
-  <!-- Plantilla oculta para generar PDF -->
-  <div id="plantillaPDF"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1159,7 +928,6 @@
     let productosPedido = [];
     let productosReserva = [];
     let ultimoDocumento = null;
-
     const cacheImprimible = new Map();
 
     const productos = [
@@ -1171,44 +939,28 @@
     ];
 
     /* ============================================================
-       ⚙️ AJUSTES (persistidos en localStorage)
+       AJUSTES
        ============================================================ */
-    const AJUSTES_DEF = {
-      fogata: false,
-      sonidos: true,
-      efectos3D: true,
-      gestos: true,
-      tema: "rosa"
-    };
-
+    const AJUSTES_DEF = { fogata: false, sonidos: true, efectos3D: true, gestos: true, tema: "rosa" };
     let ajustes = { ...AJUSTES_DEF };
     try {
       const guardados = JSON.parse(localStorage.getItem("gc_admin_ajustes") || "{}");
       ajustes = { ...AJUSTES_DEF, ...guardados };
     } catch {}
-
-    function guardarAjustes() {
-      try { localStorage.setItem("gc_admin_ajustes", JSON.stringify(ajustes)); } catch {}
-    }
-
+    function guardarAjustes() { try { localStorage.setItem("gc_admin_ajustes", JSON.stringify(ajustes)); } catch {} }
     function aplicarAjustes() {
       document.body.dataset.tema = ajustes.tema;
       document.body.classList.toggle("sin-3d", !ajustes.efectos3D);
     }
 
     /* ============================================================
-       🎧 SISTEMA DE AUDIO
+       AUDIO
        ============================================================ */
-    let audioCtx = null;
-    let campfireActivo = false;
-    let campfireNodos = null;
-    let crackleTimeoutId = null;
+    let audioCtx = null, campfireActivo = false, campfireNodos = null, crackleTimeoutId = null;
 
     function asegurarAudioCtx() {
       if (!audioCtx) {
-        try {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (e) { return null; }
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; }
       }
       if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
       return audioCtx;
@@ -1223,14 +975,10 @@
         const env = Math.pow(1 - i / bufferSize, 3);
         data[i] = (Math.random() * 2 - 1) * env;
       }
-      const src = ctx.createBufferSource();
-      src.buffer = buffer;
+      const src = ctx.createBufferSource(); src.buffer = buffer;
       const filtro = ctx.createBiquadFilter();
-      filtro.type = "highpass";
-      filtro.frequency.value = 1400 + Math.random() * 2200;
-      filtro.Q.value = 0.8;
-      const g = ctx.createGain();
-      g.gain.value = 0.05 + Math.random() * 0.1;
+      filtro.type = "highpass"; filtro.frequency.value = 1400 + Math.random() * 2200; filtro.Q.value = 0.8;
+      const g = ctx.createGain(); g.gain.value = 0.05 + Math.random() * 0.1;
       src.connect(filtro).connect(g).connect(destino);
       src.start();
     }
@@ -1242,9 +990,7 @@
       crackleTimeoutId = setTimeout(() => {
         if (!campfireActivo || !campfireNodos) return;
         reproducirCrack(ctx, campfireNodos.gain);
-        if (Math.random() < 0.25) {
-          setTimeout(() => reproducirCrack(ctx, campfireNodos.gain), 40 + Math.random() * 80);
-        }
+        if (Math.random() < 0.25) setTimeout(() => reproducirCrack(ctx, campfireNodos.gain), 40 + Math.random() * 80);
         programarChispas();
       }, siguiente);
     }
@@ -1252,7 +998,6 @@
     function iniciarFogata() {
       const ctx = asegurarAudioCtx();
       if (!ctx || campfireActivo) return;
-
       const dur = 2;
       const buffer = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -1262,26 +1007,16 @@
         ultimo = (ultimo + 0.02 * blanco) / 1.02;
         data[i] = ultimo * 3.5;
       }
-      const src = ctx.createBufferSource();
-      src.buffer = buffer;
-      src.loop = true;
-
+      const src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
       const filtro = ctx.createBiquadFilter();
-      filtro.type = "lowpass";
-      filtro.frequency.value = 650;
-      filtro.Q.value = 0.6;
-
-      const gain = ctx.createGain();
-      gain.gain.value = 0;
-
+      filtro.type = "lowpass"; filtro.frequency.value = 650; filtro.Q.value = 0.6;
+      const gain = ctx.createGain(); gain.gain.value = 0;
       src.connect(filtro).connect(gain).connect(ctx.destination);
       src.start();
-
       const ahora = ctx.currentTime;
       gain.gain.cancelScheduledValues(ahora);
       gain.gain.setValueAtTime(0, ahora);
       gain.gain.linearRampToValueAtTime(0.14, ahora + 1.2);
-
       campfireNodos = { src, filtro, gain };
       campfireActivo = true;
       programarChispas();
@@ -1294,12 +1029,9 @@
       g.gain.cancelScheduledValues(ahora);
       g.gain.setValueAtTime(g.gain.value, ahora);
       g.gain.linearRampToValueAtTime(0, ahora + 0.5);
-
       const nodos = campfireNodos;
       setTimeout(() => { try { nodos.src.stop(); } catch {} }, 600);
-
-      campfireActivo = false;
-      campfireNodos = null;
+      campfireActivo = false; campfireNodos = null;
       if (crackleTimeoutId) { clearTimeout(crackleTimeoutId); crackleTimeoutId = null; }
     }
 
@@ -1316,8 +1048,7 @@
       g.gain.linearRampToValueAtTime(0.13, t + 0.005);
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
       osc.connect(g).connect(ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.13);
+      osc.start(t); osc.stop(t + 0.13);
     }
 
     function sonidoPagina() {
@@ -1333,8 +1064,7 @@
         const env = Math.sin(p * Math.PI) * (1 - p * 0.35);
         data[i] = (Math.random() * 2 - 1) * env;
       }
-      const src = ctx.createBufferSource();
-      src.buffer = buffer;
+      const src = ctx.createBufferSource(); src.buffer = buffer;
       const filtro = ctx.createBiquadFilter();
       filtro.type = "bandpass";
       filtro.frequency.setValueAtTime(1800, t);
@@ -1354,27 +1084,23 @@
       const t = ctx.currentTime;
       [660, 990].forEach((freq, i) => {
         const osc = ctx.createOscillator();
-        osc.type = "sine";
-        osc.frequency.value = freq;
+        osc.type = "sine"; osc.frequency.value = freq;
         const g = ctx.createGain();
         const start = t + i * 0.08;
         g.gain.setValueAtTime(0.0001, start);
         g.gain.linearRampToValueAtTime(0.14, start + 0.02);
         g.gain.exponentialRampToValueAtTime(0.0001, start + 0.35);
         osc.connect(g).connect(ctx.destination);
-        osc.start(start);
-        osc.stop(start + 0.4);
+        osc.start(start); osc.stop(start + 0.4);
       });
     }
 
     /* ============================================================
-       ⚙️ PANEL DE AJUSTES
+       MODALES
        ============================================================ */
     const modalAjustes = $("modalAjustes");
     const modalAyuda = $("modalAyuda");
-
     function abrirAjustes() {
-      // Sincronizar UI con estado actual
       $("toggleFogata").checked = ajustes.fogata;
       $("toggleSonidos").checked = ajustes.sonidos;
       $("toggle3D").checked = ajustes.efectos3D;
@@ -1386,66 +1112,28 @@
     function abrirAyuda() { modalAyuda.classList.remove("oculto"); }
     function cerrarAyuda() { modalAyuda.classList.add("oculto"); }
 
-    $("botonAjustes").addEventListener("click", (e) => {
-      e.stopPropagation();
-      sonidoClick();
-      abrirAjustes();
-    });
-
-    $("botonAyuda").addEventListener("click", (e) => {
-      e.stopPropagation();
-      sonidoClick();
-      abrirAyuda();
-    });
-
+    $("botonAjustes").addEventListener("click", (e) => { e.stopPropagation(); sonidoClick(); abrirAjustes(); });
+    $("botonAyuda").addEventListener("click", (e) => { e.stopPropagation(); sonidoClick(); abrirAyuda(); });
     $("cerrarAjustes").addEventListener("click", () => { sonidoClick(); cerrarAjustes(); });
     $("cerrarAyuda").addEventListener("click", () => { sonidoClick(); cerrarAyuda(); });
-
-    modalAjustes.addEventListener("click", (e) => {
-      if (e.target === modalAjustes) cerrarAjustes();
-    });
-    modalAyuda.addEventListener("click", (e) => {
-      if (e.target === modalAyuda) cerrarAyuda();
-    });
+    modalAjustes.addEventListener("click", (e) => { if (e.target === modalAjustes) cerrarAjustes(); });
+    modalAyuda.addEventListener("click", (e) => { if (e.target === modalAyuda) cerrarAyuda(); });
 
     $("toggleFogata").addEventListener("change", (e) => {
-      ajustes.fogata = e.target.checked;
-      guardarAjustes();
-      if (ajustes.fogata) iniciarFogata();
-      else detenerFogata();
+      ajustes.fogata = e.target.checked; guardarAjustes();
+      if (ajustes.fogata) iniciarFogata(); else detenerFogata();
     });
-
-    $("toggleSonidos").addEventListener("change", (e) => {
-      ajustes.sonidos = e.target.checked;
-      guardarAjustes();
-      if (ajustes.sonidos) sonidoClick();
-    });
-
-    $("toggle3D").addEventListener("change", (e) => {
-      ajustes.efectos3D = e.target.checked;
-      guardarAjustes();
-      aplicarAjustes();
-    });
-
-    $("toggleGestos").addEventListener("change", (e) => {
-      ajustes.gestos = e.target.checked;
-      guardarAjustes();
-    });
-
-    $("selectTema").addEventListener("change", (e) => {
-      ajustes.tema = e.target.value;
-      guardarAjustes();
-      aplicarAjustes();
-    });
+    $("toggleSonidos").addEventListener("change", (e) => { ajustes.sonidos = e.target.checked; guardarAjustes(); if (ajustes.sonidos) sonidoClick(); });
+    $("toggle3D").addEventListener("change", (e) => { ajustes.efectos3D = e.target.checked; guardarAjustes(); aplicarAjustes(); });
+    $("toggleGestos").addEventListener("change", (e) => { ajustes.gestos = e.target.checked; guardarAjustes(); });
+    $("selectTema").addEventListener("change", (e) => { ajustes.tema = e.target.value; guardarAjustes(); aplicarAjustes(); });
 
     aplicarAjustes();
 
     /* ============================================================
-       👋 GESTOS TÁCTILES
+       GESTOS
        ============================================================ */
-    let maxToques = 0;
-    let gestoYaDisparado = false;
-
+    let maxToques = 0, gestoYaDisparado = false;
     document.addEventListener("touchstart", (e) => {
       if (!ajustes.gestos || !usuarioActual) return;
       if (e.touches.length > maxToques) maxToques = e.touches.length;
@@ -1455,30 +1143,17 @@
       if (!ajustes.gestos || !usuarioActual) return;
       if (e.touches.length === 0) {
         if (gestoYaDisparado) { gestoYaDisparado = false; return; }
-        const n = maxToques;
-        maxToques = 0;
-
-        // Ignorar si el toque fue dentro de un input/textarea/select
+        const n = maxToques; maxToques = 0;
         const elTocado = e.target;
         if (elTocado && /INPUT|TEXTAREA|SELECT/.test(elTocado.tagName)) return;
-
-        if (n === 2) {
+        if (n === 2) { gestoYaDisparado = true; navegar("pedidos"); }
+        else if (n === 3) { gestoYaDisparado = true; navegar("reservas"); }
+        else if (n === 4) {
           gestoYaDisparado = true;
-          navegar("pedidos");
-        } else if (n === 3) {
-          gestoYaDisparado = true;
-          navegar("reservas");
-        } else if (n === 4) {
-          gestoYaDisparado = true;
-          if (ultimoDocumento) {
-            compartirPDF(ultimoDocumento);
-          } else {
-            mostrarToast("Todavía no hay un comprobante para compartir.");
-          }
-        } else if (n === 5) {
-          gestoYaDisparado = true;
-          navegar("inicio");
+          if (ultimoDocumento) compartirPDF(ultimoDocumento);
+          else mostrarToast("Todavía no hay un comprobante para compartir.");
         }
+        else if (n === 5) { gestoYaDisparado = true; navegar("inicio"); }
       }
     }, { passive: true });
 
@@ -1492,49 +1167,32 @@
        ============================================================ */
     function escaparHTML(valor) {
       return String(valor ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
-
     function mostrarMensaje(id, texto, tipo = "") {
       const el = $(id); if (!el) return;
-      el.textContent = texto;
-      el.className = "mensaje";
+      el.textContent = texto; el.className = "mensaje";
       if (tipo) el.classList.add(tipo);
       el.classList.remove("oculto");
     }
-
     function ocultarMensaje(id) {
       const el = $(id); if (!el) return;
-      el.textContent = "";
-      el.className = "mensaje oculto";
+      el.textContent = ""; el.className = "mensaje oculto";
     }
-
-    function dinero(valor) {
-      return Number(valor || 0).toLocaleString("en-US", {
-        style: "currency", currency: "USD"
-      });
+    function dinero(v) {
+      return Number(v || 0).toLocaleString("en-US", { style: "currency", currency: "USD" });
     }
-
-    function fechaLocal() {
-      return new Date().toLocaleString("es-SV");
-    }
-
+    function fechaLocal() { return new Date().toLocaleString("es-SV"); }
     function mostrarLogin() {
       $("pantallaLogin").classList.remove("oculto");
       $("pantallaPanel").classList.add("oculto");
-      document.querySelector(".flotantes").style.display = "flex";
     }
-
     function mostrarPanel() {
       $("pantallaLogin").classList.add("oculto");
       $("pantallaPanel").classList.remove("oculto");
     }
 
-    /* Toast simple para feedback de gestos */
     let toastTimeout = null;
     function mostrarToast(texto) {
       let t = $("toastGC");
@@ -1548,6 +1206,7 @@
           font-size: 13px; font-weight: bold; z-index: 2000;
           box-shadow: 0 8px 24px rgba(0,0,0,0.3);
           pointer-events: none; opacity: 0; transition: opacity 0.3s, transform 0.3s;
+          max-width: 90vw; text-align: center;
         `;
         document.body.appendChild(t);
       }
@@ -1558,16 +1217,46 @@
       toastTimeout = setTimeout(() => {
         t.style.opacity = "0";
         t.style.transform = "translateX(-50%) translateY(0)";
-      }, 2200);
+      }, 2400);
     }
 
     /* ============================================================
-       SELECTOR DE PRODUCTOS
+       FOLIO + HUELLA DIGITAL
+       ============================================================ */
+    function generarFolio() {
+      const f = new Date();
+      const y = f.getFullYear();
+      const m = String(f.getMonth() + 1).padStart(2, "0");
+      const d = String(f.getDate()).padStart(2, "0");
+      const h = String(f.getHours()).padStart(2, "0");
+      const mi = String(f.getMinutes()).padStart(2, "0");
+      const r = Math.random().toString(36).substring(2, 7).toUpperCase();
+      return `GC-${y}${m}${d}-${h}${mi}-${r}`;
+    }
+
+    function huellaDigital(datos) {
+      const cadena = [
+        datos.cliente || "",
+        datos.tipoDocumento || "",
+        datos.paraCuando || "",
+        datos.hora || "",
+        String(datos.total || 0),
+        (datos.productos || []).map(p => `${p.nombre}x${p.cantidad}`).join("|")
+      ].join("::");
+      let hash = 2166136261;
+      for (let i = 0; i < cadena.length; i++) {
+        hash ^= cadena.charCodeAt(i);
+        hash = (hash * 16777619) >>> 0;
+      }
+      return hash.toString(36).toUpperCase().padStart(8, "0").substring(0, 8);
+    }
+
+    /* ============================================================
+       PRODUCTOS
        ============================================================ */
     function renderizarProductosEn(contenedorId, tipo) {
       const contenedor = $(contenedorId);
       contenedor.innerHTML = "";
-
       productos.forEach((producto, indice) => {
         const tarjeta = document.createElement("article");
         tarjeta.className = "producto-factura";
@@ -1585,7 +1274,6 @@
         `;
         contenedor.appendChild(tarjeta);
       });
-
       contenedor.querySelectorAll("button[data-op]").forEach((b) => {
         b.addEventListener("click", () => {
           const i = Number(b.dataset.idx);
@@ -1594,63 +1282,40 @@
         });
       });
     }
-
-    function listaPorTipo(tipo) {
-      return tipo === "pedido" ? productosPedido : productosReserva;
+    function listaPorTipo(tipo) { return tipo === "pedido" ? productosPedido : productosReserva; }
+    function setListaPorTipo(tipo, lista) {
+      if (tipo === "pedido") productosPedido = lista; else productosReserva = lista;
     }
-    function setListaPorTipo(tipo, nuevaLista) {
-      if (tipo === "pedido") productosPedido = nuevaLista;
-      else productosReserva = nuevaLista;
-    }
-
     function cambiarCantidad(tipo, indice, cambio) {
       const producto = productos[indice];
       let lista = listaPorTipo(tipo);
       const existente = lista.find((i) => i.nombre === producto.nombre);
-
       if (!existente && cambio > 0) {
-        lista.push({
-          nombre: producto.nombre,
-          categoria: producto.categoria,
-          precio: producto.precio,
-          cantidad: 1
-        });
+        lista.push({ nombre: producto.nombre, categoria: producto.categoria, precio: producto.precio, cantidad: 1 });
       } else if (existente) {
         existente.cantidad += cambio;
-        if (existente.cantidad <= 0) {
-          lista = lista.filter((i) => i.nombre !== producto.nombre);
-        }
+        if (existente.cantidad <= 0) lista = lista.filter((i) => i.nombre !== producto.nombre);
       }
       setListaPorTipo(tipo, lista);
       actualizarVistaProductos(tipo);
     }
-
-    function totalDe(tipo) {
-      return listaPorTipo(tipo).reduce((t, p) => t + p.precio * p.cantidad, 0);
-    }
-
+    function totalDe(tipo) { return listaPorTipo(tipo).reduce((t, p) => t + p.precio * p.cantidad, 0); }
     function actualizarVistaProductos(tipo) {
       productos.forEach((producto, indice) => {
         const sel = listaPorTipo(tipo).find((i) => i.nombre === producto.nombre);
         const el = $(`cant-${tipo}-${indice}`);
         if (el) el.textContent = sel ? sel.cantidad : 0;
       });
-
       const total = totalDe(tipo);
       if (tipo === "pedido") {
         $("totalPedido").textContent = dinero(total);
       } else {
         $("totalReserva").textContent = dinero(total);
-        if (total > 0) {
-          $("pagoReservaInfo").textContent =
-            `Pago adelantado requerido: ${dinero(total * 0.5)} (50%). ` +
-            `Saldo pendiente: ${dinero(total * 0.5)}.`;
-        } else {
-          $("pagoReservaInfo").textContent = "";
-        }
+        $("pagoReservaInfo").textContent = total > 0
+          ? `Pago adelantado requerido: ${dinero(total * 0.5)} (50%). Saldo pendiente: ${dinero(total * 0.5)}.`
+          : "";
       }
     }
-
     renderizarProductosEn("productosPedido", "pedido");
     renderizarProductosEn("productosReserva", "reserva");
 
@@ -1659,80 +1324,46 @@
        ============================================================ */
     $("botonGoogle").addEventListener("click", async () => {
       const boton = $("botonGoogle");
-      boton.disabled = true;
-      boton.textContent = "Conectando...";
+      boton.disabled = true; boton.textContent = "Conectando...";
       ocultarMensaje("mensajeLogin");
-
       try {
         await signInWithPopup(auth, proveedorGoogle);
       } catch (error) {
-        console.error("Error login:", error);
-        if (
-          error.code === "auth/popup-blocked" ||
-          error.code === "auth/operation-not-supported-in-this-environment" ||
-          error.code === "auth/cancelled-popup-request"
-        ) {
-          try {
-            await signInWithRedirect(auth, proveedorGoogle);
-            return;
-          } catch (e2) {
-            mostrarMensaje("mensajeLogin", "No se pudo iniciar sesión. " + e2.message, "error");
-          }
+        if (error.code === "auth/popup-blocked" || error.code === "auth/operation-not-supported-in-this-environment" || error.code === "auth/cancelled-popup-request") {
+          try { await signInWithRedirect(auth, proveedorGoogle); return; }
+          catch (e2) { mostrarMensaje("mensajeLogin", "No se pudo iniciar sesión. " + e2.message, "error"); }
         } else {
           mostrarMensaje("mensajeLogin", "No se pudo iniciar sesión con Google. " + error.message, "error");
         }
-        boton.disabled = false;
-        boton.textContent = "Iniciar sesión con Google";
+        boton.disabled = false; boton.textContent = "Iniciar sesión con Google";
       }
     });
 
     getRedirectResult(auth).catch((error) => {
-      console.error("Error de redirect:", error);
-      if (error && error.message) {
-        mostrarMensaje("mensajeLogin", "Error al volver de Google: " + error.message, "error");
-      }
+      if (error && error.message) mostrarMensaje("mensajeLogin", "Error al volver de Google: " + error.message, "error");
     });
 
-    $("botonCerrarSesion").addEventListener("click", async () => {
-      await signOut(auth);
-    });
+    $("botonCerrarSesion").addEventListener("click", async () => { await signOut(auth); });
 
     onAuthStateChanged(auth, async (usuario) => {
-      if (!usuario) {
-        usuarioActual = null;
-        mostrarLogin();
-        return;
-      }
+      if (!usuario) { usuarioActual = null; mostrarLogin(); return; }
       try {
-        const ref = doc(db, "usuarios", usuario.email);
-        const snap = await getDoc(ref);
-
+        const snap = await getDoc(doc(db, "usuarios", usuario.email));
         if (!snap.exists() || snap.data().rol !== "admin") {
           mostrarMensaje("mensajeLogin", "Este sitio solo es para personal autorizado.", "error");
-          await signOut(auth);
-          return;
+          await signOut(auth); return;
         }
         usuarioActual = usuario;
-        $("nombreUsuario").textContent =
-          usuario.displayName || snap.data().nombre || "Administrador";
+        $("nombreUsuario").textContent = usuario.displayName || snap.data().nombre || "Administrador";
         $("correoUsuario").textContent = usuario.email;
-
         mostrarPanel();
         await cargarRegistros();
-
-        // Reanudar fogata si el usuario la tenía activa
         if (ajustes.fogata) {
-          // Esperamos al primer gesto del usuario para poder reanudar audio
-          const reanudar = () => {
-            iniciarFogata();
-            document.removeEventListener("click", reanudar);
-            document.removeEventListener("touchstart", reanudar);
-          };
+          const reanudar = () => { iniciarFogata(); document.removeEventListener("click", reanudar); document.removeEventListener("touchstart", reanudar); };
           document.addEventListener("click", reanudar, { once: true });
           document.addEventListener("touchstart", reanudar, { once: true });
         }
       } catch (error) {
-        console.error("Error verificando autorización:", error);
         mostrarMensaje("mensajeLogin", "No se pudo verificar tu autorización. " + error.message, "error");
         await signOut(auth);
       }
@@ -1744,17 +1375,13 @@
     document.querySelectorAll(".boton-menu").forEach((boton) => {
       boton.addEventListener("click", () => {
         const nombreVista = boton.dataset.vista;
-
         document.querySelectorAll(".vista").forEach((v) => v.classList.remove("activa"));
         const vista = $(`vista-${nombreVista}`);
         if (vista) vista.classList.add("activa");
-
         document.querySelectorAll(".boton-menu").forEach((item) => {
           item.classList.toggle("activo", item.dataset.vista === nombreVista);
         });
-
         window.scrollTo({ top: 0, behavior: "smooth" });
-
         if (nombreVista === "pedidos") cargarPedidos();
         if (nombreVista === "reservas") cargarReservas();
         if (nombreVista === "inicio") actualizarEstadisticas();
@@ -1767,42 +1394,33 @@
     $("formularioPedido").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!usuarioActual) return;
-
       const boton = e.target.querySelector("button[type='submit']");
       boton.disabled = true;
-
       const total = totalDe("pedido");
-
       const datosPedido = {
+        folio: generarFolio(),
         tipoDocumento: "pedido",
         cliente: $("pedidoCliente").value.trim(),
         detalle: $("pedidoDetalle").value.trim(),
         paraCuando: $("pedidoFecha").value,
         hora: $("pedidoHora").value,
         productos: [...productosPedido],
-        total,
-        estado: "recibido",
-        fechaRegistro: fechaLocal(),
+        total, estado: "recibido", fechaRegistro: fechaLocal(),
         creadoEn: serverTimestamp(),
         cajeroNombre: usuarioActual.displayName || "",
         cajeroCuenta: usuarioActual.email
       };
-
       try {
         await addDoc(collection(db, "pedidos"), datosPedido);
         e.target.reset();
         productosPedido = [];
         actualizarVistaProductos("pedido");
         sonidoExito();
-        mostrarMensaje("mensajePedido", "Pedido guardado correctamente.", "");
-        await cargarPedidos();
-        await actualizarEstadisticas();
+        mostrarMensaje("mensajePedido", `Pedido guardado. Folio: ${datosPedido.folio}`, "");
+        await cargarPedidos(); await actualizarEstadisticas();
       } catch (error) {
-        console.error(error);
         mostrarMensaje("mensajePedido", "No se pudo guardar el pedido. " + error.message, "error");
-      } finally {
-        boton.disabled = false;
-      }
+      } finally { boton.disabled = false; }
     });
 
     /* ============================================================
@@ -1811,15 +1429,13 @@
     $("formularioReserva").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!usuarioActual) return;
-
       const boton = e.target.querySelector("button[type='submit']");
       boton.disabled = true;
-
       const total = totalDe("reserva");
       const pagoAdelantado = total * 0.5;
       const saldoPendiente = total - pagoAdelantado;
-
       const datosReserva = {
+        folio: generarFolio(),
         tipoDocumento: "reserva",
         cliente: $("reservaCliente").value.trim(),
         cuentaUsuario: $("reservaCuenta").value.trim(),
@@ -1829,55 +1445,37 @@
         sillas: Number($("reservaSillas").value || 0),
         detalle: $("reservaDetalle").value.trim(),
         productos: [...productosReserva],
-        total,
-        pagoAdelantado,
-        saldoPendiente,
-        pagoAdelantadoPorcentaje: 50,
-        estado: "pendiente",
+        total, pagoAdelantado, saldoPendiente,
+        pagoAdelantadoPorcentaje: 50, estado: "pendiente",
         fechaRegistro: fechaLocal(),
         creadoEn: serverTimestamp(),
         recepcionistaNombre: usuarioActual.displayName || "",
         recepcionistaCuenta: usuarioActual.email
       };
-
       try {
         await addDoc(collection(db, "reservas"), datosReserva);
         e.target.reset();
         productosReserva = [];
         actualizarVistaProductos("reserva");
         sonidoExito();
-        mostrarMensaje("mensajeReserva", "Reserva guardada correctamente.", "");
-        await cargarReservas();
-        await actualizarEstadisticas();
+        mostrarMensaje("mensajeReserva", `Reserva guardada. Folio: ${datosReserva.folio}`, "");
+        await cargarReservas(); await actualizarEstadisticas();
       } catch (error) {
-        console.error(error);
         mostrarMensaje("mensajeReserva", "No se pudo guardar la reserva. " + error.message, "error");
-      } finally {
-        boton.disabled = false;
-      }
+      } finally { boton.disabled = false; }
     });
 
     /* ============================================================
        RENDER REGISTROS
        ============================================================ */
     const etiquetasCampo = {
-      cliente: "Cliente",
-      detalle: "Detalle",
-      paraCuando: "Para cuándo",
-      hora: "Hora",
-      estado: "Estado",
-      fechaRegistro: "Registrado",
-      cuentaUsuario: "Cuenta",
-      mesas: "Mesas",
-      sillas: "Sillas",
-      productos: "Productos",
-      total: "Total",
-      pagoAdelantado: "Pago adelantado (50%)",
-      saldoPendiente: "Saldo pendiente",
-      cajeroNombre: "Cajero",
-      recepcionistaNombre: "Recepcionista"
+      folio: "Folio", cliente: "Cliente", detalle: "Detalle", paraCuando: "Para cuándo",
+      hora: "Hora", estado: "Estado", fechaRegistro: "Registrado",
+      cuentaUsuario: "Cuenta", mesas: "Mesas", sillas: "Sillas",
+      productos: "Productos", total: "Total",
+      pagoAdelantado: "Pago adelantado (50%)", saldoPendiente: "Saldo pendiente",
+      cajeroNombre: "Cajero", recepcionistaNombre: "Recepcionista"
     };
-
     const camposOcultos = new Set([
       "creadoEn", "usuarioCuenta", "cajeroCuenta", "recepcionistaCuenta",
       "pagoAdelantadoPorcentaje", "tipoDocumento"
@@ -1901,7 +1499,7 @@
 
     function crearRegistroHTML(id, titulo, datos, etiqueta) {
       const filas = Object.entries(datos)
-        .filter(([k]) => !camposOcultos.has(k) && k !== "total")
+        .filter(([k]) => !camposOcultos.has(k) && k !== "total" && k !== "folio")
         .map(([k, v]) => {
           const texto = formatearValor(v);
           if (!texto) return "";
@@ -1910,12 +1508,13 @@
         })
         .filter(Boolean)
         .join("");
-
       const total = Number(datos.total || 0);
       const totalLinea = total > 0
         ? `<div class="campo total-linea"><strong>Total:</strong> ${dinero(total)}</div>`
         : "";
-
+      const folioLinea = datos.folio
+        ? `<div class="folio-linea">🆔 Folio: <b>${escaparHTML(datos.folio)}</b></div>`
+        : "";
       return `
         <article class="registro">
           <div class="registro-cabecera">
@@ -1924,13 +1523,10 @@
           </div>
           ${filas}
           ${totalLinea}
+          ${folioLinea}
           <div class="botones-registro">
-            <button type="button" class="boton-principal" data-pdf-id="${escaparHTML(id)}">
-              📄 PDF
-            </button>
-            <button type="button" class="boton-secundario" data-share-id="${escaparHTML(id)}">
-              📤 Compartir
-            </button>
+            <button type="button" class="boton-principal" data-pdf-id="${escaparHTML(id)}">📄 PDF</button>
+            <button type="button" class="boton-secundario" data-share-id="${escaparHTML(id)}">📤 Compartir</button>
           </div>
         </article>
       `;
@@ -1946,22 +1542,15 @@
         } catch {
           docs = [...(await getDocs(collection(db, "pedidos"))).docs].reverse();
         }
-
-        if (docs.length === 0) {
-          c.innerHTML = `<p class="sin-registros">Todavía no hay pedidos registrados.</p>`;
-          return;
-        }
-
+        if (docs.length === 0) { c.innerHTML = `<p class="sin-registros">Todavía no hay pedidos registrados.</p>`; return; }
         c.innerHTML = docs.map((d) => {
           const datos = d.data();
           const idDoc = "pedido_" + d.id;
           cacheImprimible.set(idDoc, datos);
           return crearRegistroHTML(idDoc, datos.cliente || "Pedido", datos, "Pedido");
         }).join("");
-
         conectarBotonesAccion();
       } catch (e) {
-        console.error(e);
         c.innerHTML = `<p class="mensaje error">No se pudieron cargar los pedidos.</p>`;
       }
     }
@@ -1976,22 +1565,15 @@
         } catch {
           docs = [...(await getDocs(collection(db, "reservas"))).docs].reverse();
         }
-
-        if (docs.length === 0) {
-          c.innerHTML = `<p class="sin-registros">Todavía no hay reservas registradas.</p>`;
-          return;
-        }
-
+        if (docs.length === 0) { c.innerHTML = `<p class="sin-registros">Todavía no hay reservas registradas.</p>`; return; }
         c.innerHTML = docs.map((d) => {
           const datos = d.data();
           const idDoc = "reserva_" + d.id;
           cacheImprimible.set(idDoc, datos);
           return crearRegistroHTML(idDoc, datos.cliente || "Reserva", datos, "Reserva");
         }).join("");
-
         conectarBotonesAccion();
       } catch (e) {
-        console.error(e);
         c.innerHTML = `<p class="mensaje error">No se pudieron cargar las reservas.</p>`;
       }
     }
@@ -2005,7 +1587,6 @@
           descargarPDF(datos);
         });
       });
-
       document.querySelectorAll("button[data-share-id]").forEach((b) => {
         b.addEventListener("click", () => {
           const datos = cacheImprimible.get(b.dataset.shareId);
@@ -2017,177 +1598,222 @@
     }
 
     /* ============================================================
-       🖼️ CONSTRUIR PLANTILLA HTML DEL PDF
+       📄 CONSTRUIR HTML DEL PDF (A4 + folio + huella + firma)
        ============================================================ */
     function construirHTMLComprobante(datos) {
       const esReserva = datos.tipoDocumento === "reserva";
       const titulo = esReserva ? "Comprobante de Reserva" : "Comprobante de Pedido";
-
       const productosArr = Array.isArray(datos.productos) ? datos.productos : [];
+      const total = Number(datos.total || 0);
+      const folio = datos.folio || generarFolio();
+      const huella = huellaDigital(datos);
+
       const filas = productosArr.map((p) => `
         <tr>
-          <td>${escaparHTML(p.nombre)}</td>
-          <td>${escaparHTML(p.cantidad)}</td>
-          <td>${dinero(p.precio)}</td>
-          <td>${dinero(p.precio * p.cantidad)}</td>
+          <td style="padding:6px;border-bottom:1px solid #eee;">${escaparHTML(p.nombre)}</td>
+          <td style="padding:6px;border-bottom:1px solid #eee;">${escaparHTML(p.cantidad)}</td>
+          <td style="padding:6px;border-bottom:1px solid #eee;">${dinero(p.precio)}</td>
+          <td style="padding:6px;border-bottom:1px solid #eee;text-align:right;">${dinero(p.precio * p.cantidad)}</td>
         </tr>
       `).join("");
 
-      const tablaProductos = productosArr.length > 0
-        ? `<table class="tabla-factura">
-             <thead>
-               <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
-             </thead>
-             <tbody>${filas}</tbody>
-           </table>`
-        : "";
-
-      const total = Number(datos.total || 0);
-
-      // ✅ Bloque reserva reforzado con mesas/sillas SIEMPRE visibles
       const bloqueReserva = esReserva
         ? `
-          <p class="info-linea"><strong>Mesas reservadas:</strong> ${escaparHTML(datos.mesas ?? 0)}</p>
-          <p class="info-linea"><strong>Sillas reservadas:</strong> ${escaparHTML(datos.sillas ?? 0)}</p>
+          <p style="margin:4px 0;font-size:12px;"><b>Mesas:</b> ${escaparHTML(datos.mesas ?? 0)} &nbsp;·&nbsp; <b>Sillas:</b> ${escaparHTML(datos.sillas ?? 0)}</p>
           ${total > 0 ? `
-            <p class="info-linea"><strong>Pago adelantado (50%):</strong> ${dinero(total * 0.5)}</p>
-            <p class="info-linea"><strong>Saldo pendiente:</strong> ${dinero(total * 0.5)}</p>
+            <p style="margin:4px 0;font-size:12px;"><b>Adelanto (50%):</b> ${dinero(total * 0.5)} &nbsp;·&nbsp; <b>Saldo pendiente:</b> ${dinero(total * 0.5)}</p>
           ` : ""}
         `
         : "";
 
       return `
-        <div class="encabezado-print">
-          <div class="logo-pdf">G&C</div>
-          <div>
-            <h1>Glow &amp; Crunch</h1>
-            <h2>${titulo}</h2>
+        <div style="position:relative;padding:24px 28px;background:#fff;color:#000;font-family:Arial,sans-serif;font-size:12px;line-height:1.45;width:100%;box-sizing:border-box;overflow:hidden;">
+
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:64px;font-weight:900;color:rgba(157,99,119,0.07);letter-spacing:6px;pointer-events:none;white-space:nowrap;z-index:0;font-family:Georgia,serif;">
+            GLOW &amp; CRUNCH · ORIGINAL
+          </div>
+
+          <div style="position:relative;z-index:1;">
+
+            <div style="display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #9D6377;padding-bottom:10px;margin-bottom:14px;">
+              <div style="width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:Georgia,serif;font-weight:bold;font-size:19px;color:#FFF6E5;background:linear-gradient(135deg,#C48B9F,#6B3A4A);border:2px solid #6B3A4A;">G&amp;C</div>
+              <div style="flex:1;">
+                <div style="font-family:Georgia,serif;font-size:22px;font-weight:bold;color:#6B3A4A;margin:0;">Glow &amp; Crunch</div>
+                <div style="font-size:12px;color:#9D6377;margin-top:2px;">${titulo}</div>
+              </div>
+              <div style="text-align:right;font-size:10.5px;color:#6B3A4A;border:1.5px solid #9D6377;border-radius:8px;padding:6px 10px;background:#FFF8FA;">
+                <div style="font-weight:bold;font-size:9px;letter-spacing:1px;color:#9D6377;">FOLIO</div>
+                <div style="font-family:Consolas,monospace;font-weight:bold;font-size:11.5px;">${escaparHTML(folio)}</div>
+              </div>
+            </div>
+
+            <p style="margin:4px 0;font-size:12px;"><b>Fecha:</b> ${escaparHTML(fechaLocal())}</p>
+            <p style="margin:4px 0;font-size:12px;"><b>Cliente:</b> ${escaparHTML(datos.cliente || "—")}</p>
+            ${esReserva && datos.cuentaUsuario ? `<p style="margin:4px 0;font-size:12px;"><b>Cuenta:</b> ${escaparHTML(datos.cuentaUsuario)}</p>` : ""}
+            <p style="margin:4px 0;font-size:12px;"><b>Para cuándo:</b> ${escaparHTML(datos.paraCuando || "—")} ${escaparHTML(datos.hora || "")}</p>
+            ${datos.detalle ? `<p style="margin:4px 0;font-size:12px;"><b>Detalle:</b> ${escaparHTML(datos.detalle)}</p>` : ""}
+            ${bloqueReserva}
+
+            ${productosArr.length > 0 ? `
+              <table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:7px 6px;background:#FDEFF3;color:#6B3A4A;border-bottom:2px solid #9D6377;">Producto</th>
+                    <th style="text-align:left;padding:7px 6px;background:#FDEFF3;color:#6B3A4A;border-bottom:2px solid #9D6377;width:60px;">Cant.</th>
+                    <th style="text-align:left;padding:7px 6px;background:#FDEFF3;color:#6B3A4A;border-bottom:2px solid #9D6377;width:70px;">Precio</th>
+                    <th style="text-align:right;padding:7px 6px;background:#FDEFF3;color:#6B3A4A;border-bottom:2px solid #9D6377;width:80px;">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>${filas}</tbody>
+              </table>
+            ` : ""}
+
+            ${total > 0 ? `
+              <div style="margin-top:14px;padding-top:10px;border-top:2px solid #9D6377;font-size:17px;text-align:right;font-weight:bold;color:#6B3A4A;">
+                Total: ${dinero(total)}
+              </div>
+            ` : ""}
+
+            <div style="margin-top:24px;padding-top:12px;border-top:1px dashed #999;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;">
+              <div style="flex:1;text-align:center;font-size:10.5px;color:#666;">
+                <div style="height:34px;border-bottom:1px solid #333;margin-bottom:4px;"></div>
+                Firma del cliente
+              </div>
+              <div style="flex:1;text-align:center;">
+                <img src="./firma.png" alt="Glow &amp; Crunch"
+                     style="max-width:160px;max-height:60px;height:auto;display:block;margin:0 auto 4px;"
+                     onerror="this.style.display='none';">
+                <div style="font-size:10px;color:#666;border-top:1px solid #333;padding-top:3px;">Firma autorizada</div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;padding:8px 10px;background:#FFF8FA;border:1px dashed #9D6377;border-radius:8px;font-size:10px;color:#6B3A4A;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div>
+                <div><b>🔒 Sello de autenticidad</b></div>
+                <div style="font-family:Consolas,monospace;font-size:9.5px;margin-top:2px;">
+                  Huella: <b>${escaparHTML(huella)}</b>
+                </div>
+              </div>
+              <div style="text-align:right;font-size:9.5px;line-height:1.3;">
+                Verificar en:<br>
+                <b>glow-y-crunch.vercel.app</b>
+              </div>
+            </div>
+
+            <p style="margin-top:12px;font-size:10.5px;color:#777;text-align:center;">
+              Atendido por: ${escaparHTML(datos.cajeroNombre || datos.recepcionistaNombre || "—")}
+              ${datos.cajeroCuenta || datos.recepcionistaCuenta ? `(${escaparHTML(datos.cajeroCuenta || datos.recepcionistaCuenta)})` : ""}
+              <br>Gracias por su preferencia · Glow &amp; Crunch 🌸
+            </p>
+
           </div>
         </div>
-
-        <p class="info-linea"><strong>Fecha de emisión:</strong> ${escaparHTML(fechaLocal())}</p>
-        <p class="info-linea"><strong>Cliente:</strong> ${escaparHTML(datos.cliente || "—")}</p>
-        ${esReserva && datos.cuentaUsuario ? `<p class="info-linea"><strong>Cuenta:</strong> ${escaparHTML(datos.cuentaUsuario)}</p>` : ""}
-        <p class="info-linea"><strong>Para cuándo:</strong> ${escaparHTML(datos.paraCuando || "—")} ${escaparHTML(datos.hora || "")}</p>
-        ${datos.detalle ? `<p class="info-linea"><strong>Detalle:</strong> ${escaparHTML(datos.detalle)}</p>` : ""}
-
-        ${bloqueReserva}
-        ${tablaProductos}
-
-        ${total > 0 ? `<div class="total-final">Total: ${dinero(total)}</div>` : ""}
-
-        <div class="firma-bloque">
-          <div class="firma-caja">
-            <div class="firma-linea"></div>
-            <div>Firma del cliente</div>
-          </div>
-          <div class="firma-caja">
-            <div class="firma-linea"></div>
-            <div>Firma autorizada<br>${escaparHTML(datos.cajeroNombre || datos.recepcionistaNombre || "Glow & Crunch")}</div>
-          </div>
-        </div>
-
-        <p class="pie">
-          Atendido por: ${escaparHTML(datos.cajeroNombre || datos.recepcionistaNombre || "—")}
-          ${datos.cajeroCuenta || datos.recepcionistaCuenta ? `(${escaparHTML(datos.cajeroCuenta || datos.recepcionistaCuenta)})` : ""}
-          <br>Gracias por su preferencia 🌸 · Glow &amp; Crunch
-        </p>
       `;
     }
 
     /* ============================================================
-       📄 DESCARGAR PDF REAL (con html2pdf)
+       📄 GENERAR PDF — una sola página
        ============================================================ */
-    async function generarBlobPDF(datos) {
-      const plantilla = $("plantillaPDF");
-      plantilla.innerHTML = construirHTMLComprobante(datos);
-
-      // Esperamos un tick para asegurar el renderizado
-      await new Promise((r) => setTimeout(r, 60));
-
+    async function generarWorkerPDF(datos) {
       if (typeof html2pdf === "undefined") {
-        throw new Error("html2pdf no se cargó. Revisa tu conexión a internet.");
+        throw new Error("html2pdf no cargó. Verifica tu conexión.");
       }
 
       const nombreArchivo = `comprobante-${(datos.cliente || "cliente").replace(/[^a-zA-Z0-9-_]/g, "_")}-${Date.now()}.pdf`;
 
+      const contenedor = document.createElement("div");
+      contenedor.innerHTML = construirHTMLComprobante(datos);
+      contenedor.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: -9999px;
+        width: 794px;
+        background: #ffffff;
+        color: #000000;
+        z-index: -1;
+        font-family: Arial, sans-serif;
+      `;
+      document.body.appendChild(contenedor);
+
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
       const opciones = {
-        margin: [10, 10, 10, 10],
+        margin: 0,
         filename: nombreArchivo,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: {
           scale: 2,
           useCORS: true,
+          allowTaint: false,
           backgroundColor: "#ffffff",
           logging: false,
-          windowWidth: 800
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: 794,
+          width: 794
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+        pagebreak: { mode: [] }
       };
 
-      const worker = html2pdf().set(opciones).from(plantilla);
-
-      // Devolvemos el worker para poder pedir .save() o .output('blob')
-      return { worker, nombreArchivo, opciones };
+      const worker = html2pdf().set(opciones).from(contenedor);
+      return { worker, nombreArchivo, contenedor };
     }
 
     async function descargarPDF(datos) {
+      let contenedorTemp = null;
       try {
         mostrarToast("Generando PDF…");
-        const { worker, nombreArchivo } = await generarBlobPDF(datos);
+        const { worker, contenedor } = await generarWorkerPDF(datos);
+        contenedorTemp = contenedor;
         await worker.save();
-        mostrarToast(`✅ PDF guardado: ${nombreArchivo}`);
+        mostrarToast(`✅ PDF guardado`);
       } catch (e) {
         console.error("Error al generar PDF:", e);
         mostrarToast("❌ No se pudo generar el PDF. " + e.message);
+      } finally {
+        if (contenedorTemp && contenedorTemp.parentNode) {
+          contenedorTemp.parentNode.removeChild(contenedorTemp);
+        }
       }
     }
 
     /* ============================================================
-       📤 COMPARTIR PDF (Web Share API)
+       📤 COMPARTIR PDF
        ============================================================ */
     async function compartirPDF(datos) {
+      let contenedorTemp = null;
       try {
         mostrarToast("Preparando PDF para compartir…");
+        const { worker, nombreArchivo, contenedor } = await generarWorkerPDF(datos);
+        contenedorTemp = contenedor;
 
-        const { worker, nombreArchivo, opciones } = await generarBlobPDF(datos);
-
-        // Generamos blob SIN descargar
-        const blob = await worker.set({
-          ...opciones,
-          // evitamos que se descargue al generar
-        }).outputPdf("blob");
-
+        const blob = await worker.outputPdf("blob");
         const archivo = new File([blob], nombreArchivo, { type: "application/pdf" });
 
-        // Verificar soporte de compartir archivos
         if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
           await navigator.share({
             files: [archivo],
-            title: `Comprobante ${datos.tipoDocumento === "reserva" ? "de Reserva" : "de Pedido"} — Glow & Crunch`,
-            text: `Comprobante de ${datos.cliente || "cliente"} — Total: ${dinero(datos.total)}`
+            title: `Comprobante de ${datos.tipoDocumento === "reserva" ? "Reserva" : "Pedido"} — Glow & Crunch`,
+            text: `Cliente: ${datos.cliente || "—"} · Total: ${dinero(datos.total)}`
           });
           mostrarToast("✅ Comprobante compartido");
         } else {
-          // Fallback: descargar
-          mostrarToast("Tu navegador no soporta compartir. Descargando PDF…");
+          mostrarToast("Descargando PDF…");
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
-          a.href = url;
-          a.download = nombreArchivo;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          a.href = url; a.download = nombreArchivo;
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
           setTimeout(() => URL.revokeObjectURL(url), 2000);
         }
       } catch (e) {
-        if (e && e.name === "AbortError") {
-          // El usuario canceló
-          return;
-        }
-        console.error("Error al compartir PDF:", e);
+        if (e && e.name === "AbortError") return;
+        console.error("Error al compartir:", e);
         mostrarToast("❌ No se pudo compartir. " + e.message);
+      } finally {
+        if (contenedorTemp && contenedorTemp.parentNode) {
+          contenedorTemp.parentNode.removeChild(contenedorTemp);
+        }
       }
     }
 
@@ -2200,17 +1826,13 @@
           getDocs(collection(db, "pedidos")),
           getDocs(collection(db, "reservas"))
         ]);
-
         let totalVentas = 0;
         p.forEach((d) => { totalVentas += Number(d.data().total || 0); });
         r.forEach((d) => { totalVentas += Number(d.data().total || 0); });
-
         $("totalVentas").textContent = dinero(totalVentas);
         $("cantidadPedidos").textContent = p.size;
         $("cantidadReservas").textContent = r.size;
-      } catch (e) {
-        console.error("Estadísticas:", e);
-      }
+      } catch (e) { console.error("Estadísticas:", e); }
     }
 
     async function cargarRegistros() {
@@ -2222,24 +1844,19 @@
        CALCULADORA
        ============================================================ */
     const caracteresValidos = /^[0-9+\-*/.() ]*$/;
-
     document.querySelectorAll("[data-calculadora]").forEach((b) => {
       b.addEventListener("click", () => {
         const t = b.dataset.calculadora;
-        if (t === "limpiar") {
-          expresionCalculadora = "";
-        } else if (t === "=") {
+        if (t === "limpiar") expresionCalculadora = "";
+        else if (t === "=") {
           try {
             if (!expresionCalculadora.trim()) return;
-            if (!caracteresValidos.test(expresionCalculadora)) {
-              expresionCalculadora = "Error";
-            } else {
+            if (!caracteresValidos.test(expresionCalculadora)) expresionCalculadora = "Error";
+            else {
               const r = Function(`"use strict"; return (${expresionCalculadora})`)();
               expresionCalculadora = Number.isFinite(r) ? String(r) : "Error";
             }
-          } catch {
-            expresionCalculadora = "Error";
-          }
+          } catch { expresionCalculadora = "Error"; }
         } else {
           if (expresionCalculadora === "Error") expresionCalculadora = "";
           expresionCalculadora += t;
@@ -2263,43 +1880,31 @@
        ============================================================ */
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js")
-          .then((reg) => console.log("SW registrado:", reg.scope))
-          .catch((err) => console.info("SW no disponible:", err.message));
+        navigator.serviceWorker.register("sw.js").catch(() => {});
       });
     }
 
     let eventoInstalar = null;
     const botonInstalar = $("botonInstalar");
-
     window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      eventoInstalar = e;
+      e.preventDefault(); eventoInstalar = e;
       botonInstalar.classList.add("visible");
     });
-
     botonInstalar.addEventListener("click", async () => {
       if (!eventoInstalar) return;
       eventoInstalar.prompt();
-      const { outcome } = await eventoInstalar.userChoice;
-      console.log("Resultado instalación:", outcome);
+      await eventoInstalar.userChoice;
       eventoInstalar = null;
       botonInstalar.classList.remove("visible");
     });
-
     window.addEventListener("appinstalled", () => {
-      console.log("PWA instalada ✅");
       botonInstalar.classList.remove("visible");
       eventoInstalar = null;
     });
 
     const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const enStandalone = window.matchMedia("(display-mode: standalone)").matches
-                      || window.navigator.standalone === true;
-
-    if (esIOS && !enStandalone) {
-      $("pistaInstalar").classList.remove("oculto");
-    }
+    const enStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if (esIOS && !enStandalone) $("pistaInstalar").classList.remove("oculto");
   </script>
 </body>
 </html>

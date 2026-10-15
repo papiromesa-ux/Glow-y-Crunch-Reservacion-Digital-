@@ -1,122 +1,119 @@
-// =====================================================
-// Service Worker — Glow & Crunch Admin
-// Versión: gc-admin-v11-login-sync
-// =====================================================
+/* ==========================================================
+   Glow & Crunch — Panel administrativo · Service Worker
+   Cada vez que cambies archivos de la app, sube el número de
+   VERSION (por ejemplo gc-admin-v19) para forzar la actualización.
+   ========================================================== */
 
-const VERSION = 'gc-admin-v16-abierto';
+const PREFIJO = 'gc-admin-';               // este SW solo toca cachés que empiecen así
+const VERSION = 'gc-admin-v18-icono-neon';
 
-const CACHE_NAME = 'glow-crunch-' + VERSION;
+// Archivos básicos para que la app abra rápido y funcione sin internet.
+// Si alguno no existe en el repo, no pasa nada: se salta y todo sigue normal.
 const RECURSOS = [
   './',
   './index.html',
   './manifest.json',
-  './firma.png',
-  './ALACR%C3%81N.mp4'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './signature.png',
+  './firma.png'
+  './ALACRÁN.png',
 ];
 
-self.addEventListener('install', function(event) {
-  console.log('[SW] Instalando versión:', VERSION);
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return Promise.all(
-        RECURSOS.map(function(r) {
-          return cache.add(r).catch(function(err) {
-            console.warn('[SW] No se pudo cachear:', r, err);
-          });
-        })
-      );
-    })
-  );
+/* ---------- INSTALAR: guardar lo básico ---------- */
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(VERSION);
+    await Promise.all(RECURSOS.map(async (ruta) => {
+      try {
+        const respuesta = await fetch(new Request(ruta, { cache: 'reload' }));
+        if (respuesta.ok) await cache.put(ruta, respuesta);
+      } catch (error) {
+        /* archivo faltante o sin conexión: se ignora */
+      }
+    }));
+    await self.skipWaiting();
+  })());
 });
 
-self.addEventListener('activate', function(event) {
-  console.log('[SW] Activando versión:', VERSION);
-  event.waitUntil(
-    caches.keys().then(function(nombres) {
-      return Promise.all(
-        nombres.map(function(nombre) {
-          if (nombre !== CACHE_NAME) {
-            console.log('[SW] Borrando caché antiguo:', nombre);
-            return caches.delete(nombre);
-          }
-        })
-      );
-    }).then(function() {
-      return self.clients.claim();
-    })
-  );
+/* ---------- ACTIVAR: borrar versiones viejas (solo de esta app) ---------- */
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const nombres = await caches.keys();
+    await Promise.all(
+      nombres
+        .filter((nombre) => nombre.startsWith(PREFIJO) && nombre !== VERSION)
+        .map((nombre) => caches.delete(nombre))
+    );
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('fetch', function(event) {
-  var req = event.request;
-  var url = new URL(req.url);
+/* ---------- PETICIONES ---------- */
+self.addEventListener('fetch', (event) => {
+  const peticion = event.request;
 
+  // Solo GET y solo archivos de este mismo sitio.
+  // Firebase, Google y las librerías externas pasan directo, sin tocarlas.
+  if (peticion.method !== 'GET') return;
+  if (peticion.cache === 'only-if-cached' && peticion.mode !== 'same-origin') return;
+  const url = new URL(peticion.url);
+  if (url.origin !== self.location.origin) return;
+
+  // El video (y cualquier petición "por pedazos") se deja pasar:
+  // guardarlo en el caché del service worker suele romper la reproducción.
   if (
-    url.hostname.indexOf('firebase') !== -1 ||
-    url.hostname.indexOf('google') !== -1 ||
-    url.hostname.indexOf('gstatic') !== -1 ||
-    url.hostname.indexOf('cdnjs') !== -1 ||
-    url.hostname.indexOf('jsdelivr') !== -1
-  ) {
+    peticion.headers.has('range') ||
+    peticion.destination === 'video' ||
+    peticion.destination === 'audio' ||
+    url.pathname.toLowerCase().endsWith('.mp4')
+  ) return;
+
+  // Páginas (index.html): primero internet; si no hay, la copia guardada.
+  if (peticion.mode === 'navigate') {
+    event.respondWith(paginaPrimeroInternet(event));
     return;
   }
 
-  if (req.method !== 'GET' || url.origin !== self.location.origin) {
-    return;
-  }
+  // Íconos, imágenes, manifest: salen rápido del caché y se actualizan atrás.
+  event.respondWith(cacheYActualizar(event));
+});
 
-  if (req.mode === 'navigate' || req.destination === 'document') {
-    event.respondWith(
-      fetch(req)
-        .then(function(resp) {
-          var copia = resp.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(req, copia);
-          });
-          return resp;
-        })
-        .catch(function() {
-          return caches.match(req).then(function(r) {
-            return r || caches.match('./index.html');
-          });
-        })
-    );
-    return;
+async function paginaPrimeroInternet(event) {
+  const peticion = event.request;
+  const cache = await caches.open(VERSION);
+  try {
+    const respuesta = await fetch(peticion);
+    if (respuesta && respuesta.ok) {
+      event.waitUntil(cache.put(peticion, respuesta.clone()));
+    }
+    return respuesta;
+  } catch (error) {
+    const guardada =
+      (await cache.match(peticion, { ignoreSearch: true })) ||
+      (await cache.match('./index.html')) ||
+      (await cache.match('./'));
+    return guardada || new Response('Sin conexión. Vuelve a intentar cuando tengas internet.', {
+      status: 503,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
   }
+}
 
-  if (req.destination === 'video' || url.pathname.indexOf('.mp4') !== -1) {
-    event.respondWith(
-      fetch(req)
-        .then(function(resp) {
-          var copia = resp.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(req, copia);
-          });
-          return resp;
-        })
-        .catch(function() {
-          return caches.match(req);
-        })
-    );
-    return;
-  }
+async function cacheYActualizar(event) {
+  const peticion = event.request;
+  const cache = await caches.open(VERSION);
+  const guardado = await cache.match(peticion);
 
-  event.respondWith(
-    caches.match(req).then(function(cacheado) {
-      return cacheado || fetch(req).then(function(resp) {
-        var copia = resp.clone();
-        caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(req, copia);
-        });
-        return resp;
-      });
+  const desdeInternet = fetch(peticion)
+    .then((respuesta) => {
+      if (respuesta && respuesta.status === 200) cache.put(peticion, respuesta.clone());
+      return respuesta;
     })
-  );
-});
+    .catch(() => null);
 
-self.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
+  event.waitUntil(desdeInternet);
+
+  return guardado || (await desdeInternet) || new Response('', { status: 504 });
+}

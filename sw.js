@@ -18,7 +18,7 @@ const RECURSOS = [
   './icon-maskable-512.png',
   './signature.png',
   './firma.png'
-  './ALACRÁN.png',
+  './ALACRÁN.mp4',
 ];
 
 /* ---------- INSTALAR: guardar lo básico ---------- */

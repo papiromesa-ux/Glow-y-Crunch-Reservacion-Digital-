@@ -5,14 +5,11 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait",
-  "background_color": "#FCE4EC",
-  "theme_color": "#9D6377",
+  "background_color": "#0A0A0A",
+  "theme_color": "#FF1493",
   "lang": "es",
-  "dir": "ltr",
-  "categories": ["business", "productivity", "food"],
-  "prefer_related_applications": false,
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -31,22 +28,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Registrar pedido",
-      "short_name": "Pedido",
-      "description": "Registrar un pedido nuevo",
-      "url": "./index.html#pedidos",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Crear reserva",
-      "short_name": "Reserva",
-      "description": "Crear una reserva nueva",
-      "url": "./index.html#reservas",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
